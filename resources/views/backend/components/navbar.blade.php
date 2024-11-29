@@ -19,6 +19,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('user') }}">User</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('jenis-dokumen') }}">Jenis Dokumen</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -30,12 +33,14 @@
                 </a>
                 <div class="collapse" id="tahap1">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('usulan-judul') }}">SK CPNS</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('usulan-proposal') }}">SK PNS</a>
-                        </li>
+                        <?php    
+                            $jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->get(); 
+                        ?>
+                        @foreach ($jenis_dokumen as $i)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">{{ $i->jenis_dokumen }}</a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </li>

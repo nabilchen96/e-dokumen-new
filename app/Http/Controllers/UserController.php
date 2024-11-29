@@ -49,10 +49,6 @@ class UserController extends Controller
                 'no_wa'         => $request->no_wa,
             ]);
 
-            if($request->role == "Reviewer") {
-                sendReviewerAccount($request->no_wa, $request->name, $request->email, $request->password);
-            }
-
             $data = [
                 'responCode'    => 1,
                 'respon'        => 'Data Sukses Ditambah'

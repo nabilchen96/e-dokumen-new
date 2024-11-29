@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PenilaianProposalController;
 use Illuminate\Support\Facades\Route;
+// use Barryvdh\DomPDF\Facade as PDF; // Import namespace penuh
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,77 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-user', 'App\Http\Controllers\UserController@store');
     Route::post('/update-user', 'App\Http\Controllers\UserController@update');
     Route::post('/delete-user', 'App\Http\Controllers\UserController@delete');
+
+    //JENIS DOKUMEN
+    Route::get('/jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@index');
+    Route::get('/data-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@data');
+    Route::post('/store-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@store');
+    Route::post('/update-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@update');
+    Route::post('/delete-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@delete');
+
+    //DOKUMEN
+    Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
+    Route::get('/data-file-dokumen', 'App\Http\Controllers\DokumenController@data');
+    Route::post('/store-file-dokumen', 'App\Http\Controllers\DokumenController@store');
+    Route::post('/update-file-dokumen', 'App\Http\Controllers\DokumenController@update');
+    Route::post('/delete-file-dokumen', 'App\Http\Controllers\DokumenController@delete');
+
+    Route::get('/convert-to-pdf/{filename}', function ($filename) {
+        $filePath = public_path('dokumen/' . $filename);
+
+        // Cek apakah file ada
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found.');
+        }
+
+        // Cek apakah file sudah PDF
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        if ($extension === 'pdf') {
+            // Jika file sudah PDF, langsung tampilkan
+            return response()->file($filePath, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } else {
+            // Jika file adalah gambar, konversi ke PDF
+            $imageData = base64_encode(file_get_contents($filePath));
+
+            // Buat HTML untuk menampilkan gambar dalam ukuran A4
+            $html = '<!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh; /* Tinggi penuh layar */
+                        width: 100vw; /* Lebar penuh layar */
+                        overflow: hidden; /* Sembunyikan bagian yang keluar */
+                    }
+    
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                </style>
+            </head>
+            <body>
+                <img src="data:image/png;base64,' . $imageData . '" />
+            </body>
+            </html>';
+
+            // Generate PDF dengan ukuran A4 dan orientasi portrait
+            $pdf = PDF::loadHTML($html)->setPaper('a4', 'portrait');
+
+            // Tampilkan PDF di browser
+            return $pdf->stream($filename . '.pdf');
+        }
+    });
+
 
 });
 

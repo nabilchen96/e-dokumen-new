@@ -203,6 +203,9 @@ class AuthController extends Controller
 
     public function registerProses(Request $request)
     {
+
+        // dd($request->all());
+
         $validator = Validator::make($request->all(), [
             'password' => 'required|min:8',
             'email' => 'unique:users',
@@ -211,7 +214,8 @@ class AuthController extends Controller
             'tanggal_lahir' => 'required',
             'jenis_kelamin' => 'required',
             'alamat' => 'required',
-            'no_wa' => 'required'
+            'no_wa' => 'required',
+            'district_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -235,7 +239,8 @@ class AuthController extends Controller
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'alamat' => $request->alamat,
-                'id_user' => $data->id
+                'id_user' => $data->id,
+                'district_id' => $request->district_id
             ]);
 
             $data = [

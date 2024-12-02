@@ -33,6 +33,9 @@ Route::post('/registerOtpCek', 'App\Http\Controllers\AuthController@registerOtpC
 Route::get('/register2', 'App\Http\Controllers\AuthController@register2');
 Route::post('/registerProses', 'App\Http\Controllers\AuthController@registerProses');
 
+//PENCARIAN DAERAH
+Route::get('/search-district', 'App\Http\Controllers\DistrictController@searchDistrict');
+
 //BACKEND
 Route::group(['middleware' => 'auth'], function () {
 
@@ -52,6 +55,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@store');
     Route::post('/update-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@update');
     Route::post('/delete-jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@delete');
+
+    //DISTRICT
+    Route::get('/district', 'App\Http\Controllers\DistrictController@index');
+    Route::get('/data-district', 'App\Http\Controllers\DistrictController@data');
+    Route::post('/store-district', 'App\Http\Controllers\DistrictController@store');
+    Route::post('/update-district', 'App\Http\Controllers\DistrictController@update');
+    Route::post('/delete-district', 'App\Http\Controllers\DistrictController@delete');
 
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
@@ -116,6 +126,12 @@ Route::group(['middleware' => 'auth'], function () {
         }
     });
 
+    //USER
+    Route::get('/profil', 'App\Http\Controllers\ProfilController@index');
+    Route::get('/data-profil', 'App\Http\Controllers\ProfilController@data');
+    Route::post('/store-profil', 'App\Http\Controllers\ProfilController@store');
+    Route::post('/update-profil', 'App\Http\Controllers\ProfilController@update');
+    Route::post('/delete-profil', 'App\Http\Controllers\ProfilController@delete');
 
 });
 

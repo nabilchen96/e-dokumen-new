@@ -22,30 +22,34 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('jenis-dokumen') }}">Jenis Dokumen</a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false" aria-controls="ui-basic">
-                    <i class="bi bi-file-earmark menu-icon"></i>
-                    <span class="menu-title">Dokumen</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="tahap1">
-                    <ul class="nav flex-column sub-menu">
-                        <?php    
-                            $jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->get(); 
-                        ?>
-                        @foreach ($jenis_dokumen as $i)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">{{ $i->jenis_dokumen }}</a>
-                            </li>
-                        @endforeach
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('district') }}">Daerah</a>
+                        </li>
                     </ul>
                 </div>
             </li>
         @else
         @endif
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false" aria-controls="ui-basic">
+                <i class="bi bi-file-earmark menu-icon"></i>
+                <span class="menu-title">Dokumen</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="tahap1">
+                <ul class="nav flex-column sub-menu">
+                    <?php    
+                            $jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->get(); 
+                        ?>
+                    @foreach ($jenis_dokumen as $i)
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">{{ $i->jenis_dokumen }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </li>
         <!-- <li class="nav-item">
             <a class="nav-link" href="#">
                 <i class="bi bi-file-earmark menu-icon"></i>
@@ -53,7 +57,7 @@
             </a>
         </li> -->
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url('profil') }}">
                 <i class="bi bi-person menu-icon"></i>
                 <span class="menu-title">Profil</span>
             </a>

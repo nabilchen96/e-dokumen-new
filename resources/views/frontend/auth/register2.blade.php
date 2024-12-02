@@ -17,6 +17,24 @@
     <!-- Style -->
     <link rel="stylesheet" href="login-form-02/css/style.css">
 
+    <!-- Select2 CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+    <style>
+        .select2-container .select2-selection--single {
+            height: calc(2.25rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+    </style>
+
     <title>ASNBKL</title>
 </head>
 
@@ -37,8 +55,8 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Nama <sup class="text-danger">*</sup></label>
-                                        <input type="text" name="name" class="form-control" id="name"
-                                            placeholder="Nama" required>
+                                        <input type="text" name="name" class="form-control" id="name" placeholder="Nama"
+                                            required>
                                     </div>
                                     <div class="form-group">
                                         <label>Email <sup class="text-danger">*</sup></label>
@@ -61,7 +79,8 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>NIP <sup class="text-danger">*</sup></label>
-                                        <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP" required>
+                                        <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP"
+                                            required>
                                     </div>
                                     <div class="form-group">
                                         <label>Password <sup class="text-danger">*</sup></label>
@@ -76,13 +95,21 @@
                                     <div class="form-group">
                                         <label>No WA <sup class="text-danger">*</sup></label>
                                         <input type="number" name="no_wa" class="form-control" id="no_wa"
-                                            placeholder="No Whatsapp" readonly value="{{ session('user_otp')->no_wa }}" required>
+                                            placeholder="No Whatsapp" readonly value="{{ session('user_otp')->no_wa }}"
+                                            required>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label>Daerah <sup class="text-danger">*</sup></label>
+                                <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax" required>
+                                    <option value="">Pilih Data</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>Alamat <sup class="text-danger">*</sup></label>
-                                <textarea name="alamat" class="form-control" id="alamat" cols="10" rows="10" placeholder="Alamat" required></textarea>
+                                <textarea name="alamat" class="form-control" id="alamat" cols="10" rows="10"
+                                    placeholder="Alamat" required></textarea>
                             </div>
                             <div class="d-grid">
                                 <button type="submit" id="btnLogin" class="btn btn-primary btn-lg btn-block">Sign
@@ -108,6 +135,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+    <!-- Select2 JS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
         formRegister.onsubmit = (e) => {
@@ -159,6 +191,27 @@
 
         }
 
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#select2-ajax').select2({
+                ajax: {
+                    url: '/search-district',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { q: params.term };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(item => ({ id: item.id, text: item.name+', '+item.regensi_name+', '+item.provinsi_name }))
+                        };
+                    }
+                },
+                placeholder: "Cari Data...",
+                minimumInputLength: 2
+            });
+        });
     </script>
 </body>
 

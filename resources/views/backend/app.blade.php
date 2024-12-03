@@ -18,11 +18,14 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('skydash/css/vertical-layout-light/style.css') }}">
-    <!-- endinject -->
-    <link rel="shortcut icon" href="{{ asset('logosc.png') }}" />
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <!-- Favicons -->
+    <link href="{{ url('ilanding/logo.png') }}" rel="icon">
+    <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
     @stack('style')
     <style>
         .btn {
@@ -69,7 +72,7 @@
             line-height: 1.5 !important;
         }
 
-        .navbar{
+        .navbar {
             box-shadow: none !important;
         }
     </style>
@@ -119,8 +122,8 @@
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" 
-            style="box-shadow: 0px 5px 21px -5px #CDD1E1;">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
+                style="box-shadow: 0px 5px 21px -5px #CDD1E1;">
                 <a class="navbar-brand brand-logo mr-5" style="font-size: 16px; margin-left: 20px;"
                     href="{{ url('/') }}">
                     <h3><b> ASNBKL </b></h3>
@@ -161,7 +164,7 @@
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_settings-panel.html -->
             <div class="theme-setting-wrapper">
-                <div id="settings-trigger"><i class="ti-settings"></i></div>
+                <!-- <div id="settings-trigger"><i class="ti-settings"></i></div> -->
             </div>
 
             <!-- partial -->
@@ -171,8 +174,7 @@
             <!-- partial -->
             <div class="main-panel">
 
-                <div
-                    style="
+                <div style="
                     background: #4b49ac;
                     background-image:  
                     url('https://cdn.pixabay.com/photo/2022/08/05/07/06/background-7366180_1280.jpg'); 
@@ -193,7 +195,7 @@
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
                         <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
                             <!-- Developed by Nabil Sahretech <br> -->
-                            {{-- Distributed by  --}}
+                            {{-- Distributed by --}}
                             <!-- <a href="https://poltekbangplg.ac.id/" target="_blank">
                                 poltekbangplg.ac.id
                             </a> -->

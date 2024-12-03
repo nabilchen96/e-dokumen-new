@@ -34,22 +34,27 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-7">
-            <h3>Register to <br><strong>APLIKASI ASNBKL</strong></h3>
+            <h3>Reset Password <br><strong>APLIKASI ASNBKL</strong></h3>
             <br>
             <form id="formRegister">
-              <div class="form-group">
+              <div class="form-group mb-3">
                 <label>No Whatsapp</label>
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="number" class="form-control" id="no_wa" placeholder="No Whatsapp" name="no_wa">
                   <button class="input-group-text" id="btnSendOtp">🚀 Send</a>
                 </div>
+                <span style="font-size: 12px;" class="text-danger">*Jangan berikan kode OTP kepada orang lain</span>
               </div>
               <div class="form-group">
                 <label>Kode OTP</label>
                 <input type="text" name="otp" class="form-control" id="otp" placeholder="OTP">
               </div>
+              <div class="form-group">
+                <label>New Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+              </div>
               <div class="d-grid">
-                <button type="submit" id="btnLogin" class="btn btn-primary btn-lg btn-block">Sign Up</button>
+                <button type="submit" id="btnLogin" class="btn btn-primary btn-lg btn-block">Reset Password</button>
 
                 <button style="display: none; background: #0d6efd;" id="btnLoginLoading"
                   class="btn btn-info btn-moodle text-white btn-lg btn-block" type="button" disabled>
@@ -80,7 +85,7 @@
 
       axios({
         method: 'post',
-        url: '/registerOtpCek',
+        url: '/reset-password-proses',
         data: formData,
       })
         .then(function (res) {
@@ -89,13 +94,13 @@
 
             Swal.fire({
               icon: 'success',
-              title: 'Kode OTP Ditemukan',
-              text: 'Anda akan diarahkan untuk menlengkapi data profil',
+              title: 'Data Berhasil Disimpan!',
+              text: 'Password baru anda sudah diganti, harap simpan password anda!',
               timer: 1000,
             })
 
             setTimeout(() => {
-              window.location.href = '/register2';
+              window.location.href = '/login';
             }, 1000);
 
           } else {
@@ -141,7 +146,7 @@
       }
 
       // Kirim request ke server
-      axios.post('/registerOtp', { no_wa: noWa })
+      axios.post('/resetOtp', { no_wa: noWa })
         .then(function (response) {
           // Handle sukses
           if (response.data.status == 'success') {

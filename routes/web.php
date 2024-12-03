@@ -36,6 +36,16 @@ Route::post('/registerProses', 'App\Http\Controllers\AuthController@registerPros
 //PENCARIAN DAERAH
 Route::get('/search-district', 'App\Http\Controllers\DistrictController@searchDistrict');
 
+//RESET PASSWORD
+Route::get('/reset-password', function(){
+    return view('frontend.auth.reset_password');
+});
+Route::post('/resetOtp', 'App\Http\Controllers\AuthController@resetOtp');
+Route::post('/reset-password-proses', 'App\Http\Controllers\AuthController@resetPasswordProses');
+
+
+
+
 //BACKEND
 Route::group(['middleware' => 'auth'], function () {
 

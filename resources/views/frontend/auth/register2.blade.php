@@ -21,6 +21,10 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" /> -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <!-- Favicons -->
+    <link href="{{ url('ilanding/logo.png') }}" rel="icon">
+    <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
+
 
     <style>
         .select2-container .select2-selection--single {
@@ -102,7 +106,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Daerah <sup class="text-danger">*</sup></label>
-                                <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax" required>
+                                <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax"
+                                    required>
                                     <option value="">Pilih Data</option>
                                 </select>
                             </div>
@@ -204,7 +209,7 @@
                     },
                     processResults: function (data) {
                         return {
-                            results: data.map(item => ({ id: item.id, text: item.name+', '+item.regensi_name+', '+item.provinsi_name }))
+                            results: data.map(item => ({ id: item.id, text: item.name + ', ' + item.regensi_name + ', ' + item.provinsi_name }))
                         };
                     }
                 },

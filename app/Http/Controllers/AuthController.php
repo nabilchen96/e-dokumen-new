@@ -259,4 +259,121 @@ class AuthController extends Controller
 
         return response()->json($data);
     }
+
+    public function resetOtp(Request $request)
+    {
+        $noWa = $request->no_wa;
+
+        // Validasi input
+        if (!$noWa) {
+            return response()->json([
+                'status' => 'error',
+                'respon' => 'Nomor WhatsApp tidak boleh kosong.'
+            ]);
+        }
+
+        // Simulasi pengiriman OTP (6 digit acak)
+        $otp = rand(100000, 999999);
+
+        // Simpan ke database
+        Otp::create([
+            'no_wa' => $noWa,
+            'otp' => $otp,
+        ]);
+
+        $data = [
+            'Authorization' => 'vFGDkexmx2SZyLsRNrnS', // Ganti dengan token Anda
+            'target' => $noWa, // Nomor tujuan
+            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun', // Isi pesan
+        ];
+
+        // Mengirim request POST menggunakan Guzzle
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'vFGDkexmx2SZyLsRNrnS',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])->asForm()->post('https://api.fonnte.com/send', $data);
+
+            // Menangani respons
+            if ($response->successful()) {
+                $result = $response->json(); // Mendapatkan respons sebagai array
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Pesan berhasil dikirim.',
+                    'data' => $result,
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal mengirim pesan.',
+                    'error' => $response->body(), // Menampilkan pesan error
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat mengirim pesan.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function resetPasswordProses(Request $request)
+    {
+        $cekOtp = DB::table('otps')
+            ->where('no_wa', $request->no_wa)
+            ->where('otp', $request->otp)
+            ->first();
+
+        if ($cekOtp) {
+            // Bandingkan waktu saat ini dengan created_at
+            $otpCreatedAt = Carbon::parse($cekOtp->created_at);
+            $currentTime = Carbon::now();
+
+            if ($otpCreatedAt->diffInMinutes($currentTime) <= 1) {
+                // Cari user berdasarkan no_wa
+                $user = DB::table('users')
+                    ->where('no_wa', $request->no_wa)
+                    ->first();
+
+                if ($user) {
+                    // Reset password
+                    $newPassword = $request->password; // Pastikan password dikirim dari request
+                    $hashedPassword = Hash::make($newPassword);
+
+                    // Update password user di database
+                    DB::table('users')
+                        ->where('id', $user->id)
+                        ->update(['password' => $hashedPassword]);
+
+                    // Login user secara otomatis
+                    Auth::loginUsingId($user->id);
+
+                    $data = [
+                        'responCode' => 1,
+                        'respon' => 'Password berhasil direset, login berhasil!',
+                    ];
+                } else {
+                    $data = [
+                        'responCode' => 0,
+                        'respon' => 'User tidak ditemukan!',
+                    ];
+                }
+            } else {
+                // Jika OTP sudah kadaluarsa
+                $data = [
+                    'responCode' => 0,
+                    'respon' => 'Kode OTP telah kadaluarsa!',
+                ];
+            }
+        } else {
+            // Jika OTP tidak ditemukan
+            $data = [
+                'responCode' => 0,
+                'respon' => 'Data OTP Tidak Ditemukan!',
+            ];
+        }
+
+        return response()->json($data);
+    }
 }

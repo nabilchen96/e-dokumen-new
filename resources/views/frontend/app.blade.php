@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - iLanding Bootstrap Template</title>
+  <title>ASNBKL</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="{{ url('ilanding/logo.png') }}" rel="icon">
+  <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -77,7 +77,7 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="{{ url('/') }}" class="active">Home</a></li>
           <!-- <li><a href="#about">About</a></li> -->
           <li><a href="{{ url('login') }}">Login</a></li>
           <li><a href="{{ url('register') }}">Register</a></li>
@@ -136,7 +136,7 @@
 
               <div class="hero-buttons">
                 <a href="{{ url('login') }}" class="btn btn-primary me-0 me-sm-2 mx-1">Login</a>
-                <a href="{{ url('register') }}" class="btn btn-link mt-2 mt-sm-0 glightbox">
+                <a href="{{ url('register') }}" class="btn btn-link mt-2 mt-sm-0">
                   <i class="bi bi-play-circle me-1"></i>
                   Registrasi
                 </a>
@@ -144,7 +144,7 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
+          <div class="col-lg-6 mb-4">
             <div class="hero-image" data-aos="zoom-out" data-aos-delay="300">
               <img src="{{ url('ilanding/assets/img/illustration-1.webp') }}" alt="Hero Image" class="img-fluid">
 
@@ -163,53 +163,45 @@
           </div>
         </div>
 
-        <div class="d-none d-sm-block">
-          <div class="row stats-row mb-5 gy-4 mt-5">
-            <div class="col-lg-3 col-6 col-md-6">
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="bi bi-trophy"></i>
-                </div>
-                <div class="stat-content">
-                  <h4>SK CPNS</h4>
-                  <p class="mb-0">17 Dokumen</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-6 col-md-6">
-              <div class="stat-item">
+        <div class="d-none d-sm-block mt-5">
+          <iframe class="contact" data-aos="fade-up" data-aos-delay="300"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.6424613861236!2d102.19920717501995!3d-3.436870196537618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e315b9e7801b9b1%3A0x300cd9e67330acf3!2sKantor%20Bupati%20Bengkulu%20Utara!5e0!3m2!1sid!2sid!4v1732679905033!5m2!1sid!2sid"
+            width="100%" height="500" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <!-- <div class="row stats-row mb-5 gy-4 mt-5"> -->
+            <!-- @php
+
+        $data = DB::table('dokumens')
+          ->join('jenis_dokumens', 'dokumens.id_dokumen', '=', 'jenis_dokumens.id')
+          ->select(
+          'jenis_dokumens.jenis_dokumen',
+          DB::raw('COUNT(dokumens.id) as total')
+          )
+          ->groupBy('jenis_dokumens.jenis_dokumen')
+          ->limit(4)
+          ->get();
+
+        @endphp
+
+            @foreach ($data as $d) -->
+
+
+            <!-- <div class="col-lg-3 col-6 col-md-6"> -->
+              <!-- <div class="stat-item">
                 <div class="stat-icon">
                   <i class="bi bi-briefcase"></i>
                 </div>
                 <div class="stat-content">
-                  <h4>SK PNS</h4>
-                  <p class="mb-0">20 Dokumen</p>
+                  <h4>{{ $d->jenis_dokumen }}</h4>
+                  <p class="mb-0">{{ $d->total }} Dokumen</p>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-6 col-md-6">
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="bi bi-graph-up"></i>
-                </div>
-                <div class="stat-content">
-                  <h4>SK P3K</h4>
-                  <p class="mb-0">30 Dokumen</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-6 col-md-6">
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="bi bi-award"></i>
-                </div>
-                <div class="stat-content">
-                  <h4>USER APP</h4>
-                  <p class="mb-0">67 User Aktif</p>
-                </div>
-              </div>
-            </div>
-          </div>
+              </div> -->
+            <!-- </div> -->
+
+            <!-- @endforeach -->
+
+
+          <!-- </div> -->
         </div>
       </div>
 

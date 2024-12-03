@@ -34,9 +34,11 @@
     <div class="col-12 mt-4">
         <div class="card w-100">
             <div class="card-body">
-                <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
-                    Tambah
-                </button>
+                @if (Auth::user()->role == 'Pegawai')
+                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
+                        Tambah
+                    </button>
+                @endif
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped" style="width: 100%;">
                         <thead class="bg-info text-white">
@@ -44,7 +46,9 @@
                                 <th width="5%">No</th>
                                 <th>Pemilik</th>
                                 <th>Jenis Dokumen</th>
+                                <th>Tanggal Dokumen</th>
                                 <th>Tanggal Upload</th>
+                                <th>Status</th>
                                 <th width="5%">PDF</th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
@@ -60,37 +64,79 @@
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            <form id="updateStatusForm">
+                @if (Auth::user()->role == 'Admin')
+                    <div class="modal-header p-3">
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="respon_error" class="text-danger mb-4"></div>
+                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
+                        <div class="form-group">
+                            <label>Status Dokumen</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">--PILIH STATUS--</option>
+                                <option>Sedang Dalam Pengecekan</option>
+                                <option>Dokumen Diterima</option>
+                                <option>Perlu Diperbaiki</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer p-3">
+                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </div>
+                @endif
+            </form>
             <form id="form">
-                <div class="modal-header p-3">
-                    <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
-                    <div class="form-group">
-                        <label>Dokumen</label>
-                        <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
-                            class="form-control form-control-sm" accept=".pdf, image/*" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Dokumen</label>
-                        <input type="text" placeholder="Dokumen" value="{{ $jenis }}"
-                            class="form-control form-control-sm" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Pemilik</label>
-                        <?php $users = DB::table('users')->get(); ?>
-                        <select name="status" id="status" class="form-control" required>
-                            @foreach ($users as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer p-3">
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                    <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
-                </div>
+                @if(Auth::user()->role == 'Pegawai')
+                                <div class="modal-header p-3">
+                                    <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="respon_error" class="text-danger mb-4"></div>
+                                    <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
+                                    <div class="form-group">
+                                        <label>Dokumen</label>
+                                        <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
+                                            class="form-control form-control-sm" accept=".pdf, image/*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Jenis Dokumen</label>
+                                        <input type="text" placeholder="Dokumen" value="{{ $jenis }}"
+                                            class="form-control form-control-sm" required readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tanggal Dokumen</label>
+                                        <input type="date" placeholder="Dokumen" id="tanggal_dokumen" name="tanggal_dokumen"
+                                            class="form-control form-control-sm" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pemilik</label>
+                                        <?php 
+                                                                                                                                                                            if (Auth::user()->role == 'Admin') {
+
+                        $users = DB::table('users')->get();
+
+                    } else {
+
+                        $users = DB::table('users')->where('id', Auth::id())->get();
+                    }
+                                                                                                                                                                        ?>
+                                        <select name="id_user" id="id_user" class="form-control" required>
+                                            @foreach ($users as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer p-3">
+                                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                    <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
+                                </div>
+                @endif
             </form>
         </div>
     </div>
@@ -130,29 +176,37 @@
                     data: "jenis_dokumen"
                 },
                 {
+                    data: "tanggal_dokumen"
+                },
+                {
                     data: "created_at"
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `<a target="_blank" href="/convert-to-pdf/${ row.dokumen }">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                        </a>`
+                        return `${row.status ?? 'Belum Diperiksa'}`
+                    }
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
+                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
+                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
+                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                                    </a>`
                     }
                 },
                 ]
@@ -175,6 +229,7 @@
             if (recipient) {
                 var modal = $(this)
                 modal.find('#id').val(cokData[0].id)
+                modal.find('#id_user').val(cokData[0].id_user)
                 modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
                 modal.find('#status').val(cokData[0].status)
                 modal.find('#role').val(cokData[0].role)
@@ -186,6 +241,8 @@
 
             let formData = new FormData(form);
 
+            document.getElementById('respon_error').innerHTML = ``
+
             e.preventDefault();
 
             document.getElementById("tombol_kirim").disabled = true;
@@ -193,6 +250,54 @@
             axios({
                 method: 'post',
                 url: formData.get('id') == '' ? '/store-file-dokumen' : '/update-file-dokumen',
+                data: formData,
+            })
+                .then(function (res) {
+                    //handle success         
+                    if (res.data.responCode == 1) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: res.data.respon,
+                            timer: 3000,
+                            showConfirmButton: false
+                        })
+
+                        location.reload('/file-dokumen')
+
+                    } else {
+                        //respon 
+                        let respon_error = ``
+                        Object.entries(res.data.respon).forEach(([field, messages]) => {
+                            messages.forEach(message => {
+                                respon_error += `<li>${message}</li>`;
+                            });
+                        });
+
+                        document.getElementById('respon_error').innerHTML = respon_error
+                    }
+
+                    document.getElementById("tombol_kirim").disabled = false;
+                })
+                .catch(function (res) {
+                    document.getElementById("tombol_kirim").disabled = false;
+                    //handle error
+                    console.log(res);
+                });
+        }
+
+        updateStatusForm.onsubmit = (e) => {
+
+            let formData = new FormData(updateStatusForm);
+
+            e.preventDefault();
+
+            document.getElementById("tombol_kirim").disabled = true;
+
+            axios({
+                method: 'post',
+                url: '/update-status-dokumen',
                 data: formData,
             })
                 .then(function (res) {

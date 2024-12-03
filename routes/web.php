@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/data-file-dokumen', 'App\Http\Controllers\DokumenController@data');
     Route::post('/store-file-dokumen', 'App\Http\Controllers\DokumenController@store');
     Route::post('/update-file-dokumen', 'App\Http\Controllers\DokumenController@update');
+    Route::post('/update-status-dokumen', 'App\Http\Controllers\DokumenController@updateStatusDokumen');
     Route::post('/delete-file-dokumen', 'App\Http\Controllers\DokumenController@delete');
 
     Route::get('/convert-to-pdf/{filename}', function ($filename) {

@@ -20,15 +20,25 @@ class DokumenController extends Controller
     {
 
         $data = DB::table('dokumens')
-                ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
-                ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                ->select(
-                    'dokumens.*',
-                    'jenis_dokumens.jenis_dokumen',
-                    'users.name'
-                )
-                ->where('jenis_dokumens.id', Request('jenis_dokumen'))
-                ->get();
+            ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+            ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+            ->select(
+                'dokumens.*',
+                'jenis_dokumens.jenis_dokumen',
+                'users.name'
+            )
+            ->where('jenis_dokumens.id', Request('jenis_dokumen'));
+
+
+        if(Auth::user()->role == 'Admin'){
+
+            $data = $data->get();
+
+        }elseif(Auth::user()->role == 'Pegawai'){
+
+            $data = $data->where('dokumens.id_user', Auth::id())->get();
+        }
+
 
         return response()->json(['data' => $data]);
     }
@@ -56,6 +66,7 @@ class DokumenController extends Controller
                 'dokumen' => $nama_dokumen,
                 'id_dokumen' => $request->id_dokumen,
                 'id_user' => $request->id_user ?? Auth::id(),
+                'tanggal_dokumen' => $request->tanggal_dokumen
             ]);
 
             $data = [
@@ -72,7 +83,6 @@ class DokumenController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required',
-            'dokumen' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -82,7 +92,7 @@ class DokumenController extends Controller
             ];
         } else {
 
-            if($request->dokumen){
+            if ($request->dokumen) {
                 $dokumen = $request->dokumen;
                 $nama_dokumen = '1' . date('YmdHis.') . $dokumen->extension();
                 $dokumen->move('dokumen', $nama_dokumen);
@@ -92,6 +102,36 @@ class DokumenController extends Controller
             $data = $user->update([
                 'dokumen' => $user->dokumen ?? $nama_dokumen,
                 'id_dokumen' => $request->id_dokumen,
+                'tanggal_dokumen' => $request->tanggal_dokumen
+            ]);
+
+            $data = [
+                'responCode' => 1,
+                'respon' => 'Data Sukses Disimpan'
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function updateStatusDokumen(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'status' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $data = [
+                'responCode' => 0,
+                'respon' => $validator->errors()
+            ];
+        } else {
+
+            $user = Dokumen::find($request->id);
+            $data = $user->update([
+                'status' => $request->status
             ]);
 
             $data = [

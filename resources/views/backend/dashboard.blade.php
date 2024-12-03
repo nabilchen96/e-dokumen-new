@@ -61,7 +61,9 @@
                                                 <tr>
                                                     <th width="5%">No</th>
                                                     <th>jenis Dokumen</th>
+                                                    <th>Tanggal Dokumen</th>
                                                     <th>Tanggal Upload</th>
+                                                    <th>Status</th>
                                                     <th width="5%"></th>
                                                 </tr>
                                             </thead>
@@ -80,7 +82,9 @@
                                                     <tr>
                                                         <td>{{ $k + 1 }}</td>
                                                         <td>{{ $item->jenis_dokumen }}</td>
+                                                        <td>{{ $item->tanggal_dokumen }}</td>
                                                         <td>{{ $item->created_at }}</td>
+                                                        <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
                                                         <td>
                                                             <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
                                                                 <i style="font-size: 1.5rem;"

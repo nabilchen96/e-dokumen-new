@@ -36,9 +36,51 @@ class DashboardController extends Controller
             // Ambil nama-nama dokumen yang belum diupload
             $dokumenBelumDiupload = $belumDiupload->pluck('jenis_dokumen')->implode(', ');
             // dd($dokumenBelumDiupload);
+
+            if (Auth::user()->role == 'Admin') {
+
+                //total pegawai
+                $total_pegawai = DB::table('users')->where('role', 'Pegawai')->count();
+
+                //jenis dokumen
+                $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+
+                //total dokumen
+                $total_dokumen = DB::table('dokumens')->count();
+
+                //sebaran pegawai
+                $total_asal_pegawai = DB::table('profils')
+                    ->distinct('district_id') // Pastikan hanya menghitung `district_id` yang unik
+                    ->count('district_id'); // Hitung jumlah `district_id` yang unik
+            }
+
             return view('backend.dashboard', [
-                'dokumenBelumDiupload' => $dokumenBelumDiupload
+                'dokumenBelumDiupload' => $dokumenBelumDiupload ?? 0,
+                'total_pegawai' => $total_pegawai ?? 0,
+                'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
+                'total_dokumen' => $total_dokumen ?? 0,
+                'total_asal_pegawai' => $total_asal_pegawai ?? 0
             ]);
         }
+    }
+
+    public function dataPeta()
+    {
+
+        $districts = DB::table('districts')
+            ->join('profils', 'districts.id', '=', 'profils.district_id')
+            ->select(
+                'districts.id',
+                'districts.name',
+                'districts.latitude',
+                'districts.longitude',
+                DB::raw('COUNT(profils.id) as total_employees')
+            )
+            ->groupBy('districts.id', 'districts.name', 'districts.latitude', 'districts.longitude')
+            ->get();
+
+
+        return response()->json($districts);
+
     }
 }

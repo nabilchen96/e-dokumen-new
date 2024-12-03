@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //DASHBOARD
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
+    Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
 
     //USER
     Route::get('/user', 'App\Http\Controllers\UserController@index');

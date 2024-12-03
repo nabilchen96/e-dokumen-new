@@ -27,7 +27,19 @@
         }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: calc(2.25rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+    </style>
 @endpush
 @section('content')
 <div class="row" style="margin-top: -200px;">
@@ -54,7 +66,7 @@
                                 <th>No. WA</th>
                                 <th>Peta</th>
                                 <th width="5%"></th>
-                                <th width="5%"></th>
+                                <!-- <th width="5%"></th> -->
                             </tr>
                         </thead>
                     </table>
@@ -72,36 +84,64 @@
                     <h5 class="modal-title m-2" id="exampleModalLabel">User Form</h5>
                 </div>
                 <div class="modal-body">
+                    <div id="respon_error" class="text-danger mb-4"></div>
                     <input type="hidden" name="id" id="id">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input name="email" id="email" type="email" placeholder="email"
-                            class="form-control form-control-sm" aria-describedby="emailHelp" required>
-                        <span class="text-danger error" style="font-size: 12px;" id="email_alert"></span>
+                    <input type="hidden" name="id_user" id="id_user">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nama <sup class="text-danger">*</sup></label>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email <sup class="text-danger">*</sup></label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Email"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tempat Lahir <sup class="text-danger">*</sup></label>
+                                <input type="text" name="tempat_lahir" class="form-control" id="tempat_lahir"
+                                    placeholder="Tempat Lahir" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Jenis Kelamin <sup class="text-danger">*</sup></label>
+                                <select name="jenis_kelamin" class="form-control" id="jenis_kelamin" required>
+                                    <option>Laki-laki</option>
+                                    <option>Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>NIP <sup class="text-danger">*</sup></label>
+                                <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" class="form-control" id="password"
+                                    placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label>Tanggal Lahir <sup class="text-danger">*</sup></label>
+                                <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir"
+                                    placeholder="Tanggal Lahir" required>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Nama Lengkap</label>
-                        <input name="name" id="name" type="text" placeholder="Nama Lengkap"
-                            class="form-control form-control-sm" aria-describedby="emailHelp" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input name="password" id="password" type="password" placeholder="Password"
-                            class="form-control form-control-sm" required>
-                        <span class="text-danger error" style="font-size: 12px;" id="password_alert"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Role</label>
-                        <select name="role" class="form-control" id="role" required>
-                            <option value="Admin">Admin</option>
-                            <option value="Reviewer">Pegawai</option>
+                        <label>Daerah <sup class="text-danger">*</sup></label>
+                        <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax" required>
+                            <option value="">Pilih Data</option>
                         </select>
+                        <span class="text-danger" style="font-size: 12px;">*Daerah yang dipilih sebelumnya adalah <i
+                                id="district"></i></span>
                     </div>
                     <div class="form-group">
-                        <label for="no_wa">No Whatsapp</label>
-                        <input name="no_wa" id="no_wa" type="text" placeholder="082777120"
-                            class="form-control form-control-sm" aria-describedby="emailHelp" required>
+                        <label>Alamat <sup class="text-danger">*</sup></label>
+                        <textarea name="alamat" class="form-control" id="alamat" cols="10" rows="10"
+                            placeholder="Alamat" required></textarea>
                     </div>
 
                 </div>
@@ -132,6 +172,7 @@
 @endsection
 @push('script')
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             getData()
@@ -154,55 +195,55 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Name</b>: ${row.name} <br> 
-                                        <b>Role</b>: ${row.role} <br>`;
+                                                            <b>Role</b>: ${row.role} <br>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>NIP</b>: ${row.nip} <br> 
-                                        <b>Email</b>: ${row.email} <br> 
-                                        <b>Whatsapp</b>: ${row.no_wa}`;
+                                                            <b>Email</b>: ${row.email} <br> 
+                                                            <b>Whatsapp</b>: ${row.no_wa}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
-                                        <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
-                                        <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
+                                                            <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
+                                                            <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Alamat</b>: ${row.alamat} <br> 
-                                        <b>Daerah</b>: ${row.district} <br>`;
+                                                            <b>Daerah</b>: ${row.district} <br>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
-                                                data-lat="${row.latitude}" 
-                                                data-lng="${row.longitude}" 
-                                                href="javascript:void(0)">
-                                                <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
-                                        </a>`;
+                                                                    data-lat="${row.latitude}" 
+                                                                    data-lng="${row.longitude}" 
+                                                                    href="javascript:void(0)">
+                                                                    <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
+                                                            </a>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                        </a>`
+                                                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                            </a>`
                     }
                 },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                            .id) + `)">
-                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                </a>`
-                    }
-                },
+                // {
+                //     render: function (data, type, row, meta) {
+                //         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                //             .id) + `)">
+                //                                         <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                //                                     </a>`
+                //     }
+                // },
                 ]
             })
         }
@@ -223,10 +264,16 @@
             if (recipient) {
                 var modal = $(this)
                 modal.find('#id').val(cokData[0].id)
+                modal.find('#id_user').val(cokData[0].id_user)
                 modal.find('#email').val(cokData[0].email)
                 modal.find('#name').val(cokData[0].name)
-                modal.find('#role').val(cokData[0].role)
-                modal.find('#no_wa').val(cokData[0].no_wa)
+                modal.find('#jenis_kelamin').val(cokData[0].jenis_kelamin)
+                modal.find('#tempat_lahir').val(cokData[0].tempat_lahir)
+                modal.find('#tanggal_lahir').val(cokData[0].tanggal_lahir)
+                modal.find('#nip').val(cokData[0].nip)
+                modal.find('#alamat').val(cokData[0].alamat)
+                // modal.find('#district').val(cokData[0].district)
+                document.getElementById('district').innerHTML = cokData[0].district
             }
         })
 
@@ -267,7 +314,7 @@
 
             axios({
                 method: 'post',
-                url: formData.get('id') == '' ? '/store-user' : '/update-user',
+                url: formData.get('id') == '' ? '/store-profil' : '/update-profil',
                 data: formData,
             })
                 .then(function (res) {
@@ -287,10 +334,15 @@
                         getData()
 
                     } else {
-                        //error validation
-                        document.getElementById('password_alert').innerHTML = res.data.respon.password ?? ''
-                        document.getElementById('email_alert').innerHTML = res.data.respon.email ?? ''
-                        document.getElementById('no_wa_alert').innerHTML = res.data.respon.no_wa ?? ''
+                        //respon 
+                        let respon_error = ``
+                        Object.entries(res.data.respon).forEach(([field, messages]) => {
+                            messages.forEach(message => {
+                                respon_error += `<li>${message}</li>`;
+                            });
+                        });
+
+                        document.getElementById('respon_error').innerHTML = respon_error
                     }
 
                     document.getElementById("tombol_kirim").disabled = false;
@@ -344,5 +396,26 @@
 
             });
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#select2-ajax').select2({
+                ajax: {
+                    url: '/search-district',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { q: params.term };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(item => ({ id: item.id, text: item.name + ', ' + item.regensi_name + ', ' + item.provinsi_name }))
+                        };
+                    }
+                },
+                placeholder: "Cari Data...",
+                minimumInputLength: 2
+            });
+        });
     </script>
 @endpush

@@ -63,6 +63,7 @@
                     <h5 class="modal-title m-2" id="exampleModalLabel">User Form</h5>
                 </div>
                 <div class="modal-body">
+                    <div id="respon_error" class="text-danger mb-4"></div>
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
@@ -86,7 +87,7 @@
                         <label for="exampleInputPassword1">Role</label>
                         <select name="role" class="form-control" id="role" required>
                             <option value="Admin">Admin</option>
-                            <option value="Reviewer">Pegawai</option>
+                            <option value="Pegawai">Pegawai</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -141,17 +142,17 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                    </a>`
+                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                    </a>`
+                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                    </a>`
                     }
                 },
                 ]
@@ -185,6 +186,8 @@
 
             let formData = new FormData(form);
 
+            document.getElementById('respon_error').innerHTML = ``
+
             e.preventDefault();
 
             document.getElementById("tombol_kirim").disabled = true;
@@ -211,10 +214,16 @@
                         getData()
 
                     } else {
-                        //error validation
-                        document.getElementById('password_alert').innerHTML = res.data.respon.password ?? ''
-                        document.getElementById('email_alert').innerHTML = res.data.respon.email ?? ''
-                        document.getElementById('no_wa_alert').innerHTML = res.data.respon.no_wa ?? ''
+                        //respon 
+                        let respon_error = ``
+                        Object.entries(res.data.respon).forEach(([field, messages]) => {
+                            messages.forEach(message => {
+                                respon_error += `<li>${message}</li>`;
+                            });
+                        });
+
+                        document.getElementById('respon_error').innerHTML = respon_error
+
                     }
 
                     document.getElementById("tombol_kirim").disabled = false;

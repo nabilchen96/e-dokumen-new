@@ -42,7 +42,7 @@
                     Welcome back to Aplikasi ASNBKL</h6>
             </div>
             @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload != null)
-                        <div class="col-lg-12 mt-3">
+                        <div class="col-lg-12 mt-1">
                             <div class="card">
                                 <div class="card-body">
                                     <i class="text-danger bi bi-exclamation-triangle"></i>
@@ -100,10 +100,10 @@
                             </div>
                         </div>
             @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
-                        <div class="col-lg-12 mt-3">
+                        <div class="col-lg-12 mt-1">
                             <div class="card">
                                 <div class="card-body">
-                                    <i class="text-danger bi bi-exclamation-triangle"></i>
+                                    <!-- <i class="text-danger bi bi-exclamation-triangle"></i> -->
                                     Anda sudah mengupload semua dokumen. Klik menu dokumen dan pilih
                                     jenis dokumen untuk menambah atau mengedit dokumen.
                                 </div>
@@ -227,7 +227,7 @@
         <div class="row">
             <!-- //peta -->
             <div class="col-lg-12 mt-4">
-                <div class="card shadow">
+                <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold mb-4"><i class="bi bi-geo-alt"></i> Data Sebaran Pegawai</h3>
                         <div id="map"></div>

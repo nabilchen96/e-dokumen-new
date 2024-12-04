@@ -16,6 +16,11 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #9e9e9e21 !important;
         }
+
+        /* td,
+        th {
+            white-space: nowrap !important;
+        } */
     </style>
 @endpush
 @section('content')
@@ -48,6 +53,7 @@
                                 <th>Jenis Dokumen</th>
                                 <th>Tanggal Dokumen</th>
                                 <th>Tanggal Upload</th>
+                                <th>SKPD</th>
                                 <th>Status</th>
                                 <th width="5%">PDF</th>
                                 <th width="5%"></th>
@@ -116,7 +122,7 @@
                                     <div class="form-group">
                                         <label>Pemilik</label>
                                         <?php 
-                                                                                                                                                                            if (Auth::user()->role == 'Admin') {
+                                                                                                                                                                                                                                            if (Auth::user()->role == 'Admin') {
 
                         $users = DB::table('users')->get();
 
@@ -124,10 +130,21 @@
 
                         $users = DB::table('users')->where('id', Auth::id())->get();
                     }
-                                                                                                                                                                        ?>
+                                                                                        ?>
                                         <select name="id_user" id="id_user" class="form-control" required>
                                             @foreach ($users as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>SKPD <sup class="text-danger">*</sup></label>
+                                        <?php 
+                                                            $skpd = DB::table('skpds')->get();
+                                                        ?>
+                                        <select name="id_skpd" id="id_skpd" class="form-control" required>
+                                            @foreach ($skpd as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nama_skpd }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -182,6 +199,9 @@
                     data: "created_at"
                 },
                 {
+                    data: "nama_skpd"
+                },
+                {
                     render: function (data, type, row, meta) {
                         return `${row.status ?? 'Belum Diperiksa'}`
                     }
@@ -189,24 +209,24 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                                                                    </a>`
+                                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                                                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                    </a>`
+                                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                                    </a>`
+                                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                                                    </a>`
                     }
                 },
                 ]
@@ -232,7 +252,9 @@
                 modal.find('#id_user').val(cokData[0].id_user)
                 modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
                 modal.find('#status').val(cokData[0].status)
-                modal.find('#role').val(cokData[0].role)
+                modal.find('#tanggal_dokumen').val(cokData[0].tanggal_dokumen)
+                modal.find('#id_user').val(cokData[0].id_user)
+                modal.find('#id_skpd').val(cokData[0].id_skpd)
                 modal.find('#no_wa').val(cokData[0].no_wa)
             }
         })

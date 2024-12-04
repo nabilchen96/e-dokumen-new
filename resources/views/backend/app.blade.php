@@ -129,7 +129,8 @@
                     <h3><b> ASNBKL </b></h3>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ url('/') }}">
-                    <h4><b>🚀</b></h4>
+                    <!-- <h4><b>🚀</b></h4> -->
+                    <img width="100%" src="{{ url('ilanding/logo.png') }}" alt="">
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

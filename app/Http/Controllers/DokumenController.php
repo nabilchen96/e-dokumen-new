@@ -22,19 +22,21 @@ class DokumenController extends Controller
         $data = DB::table('dokumens')
             ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
             ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+            ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
             ->select(
                 'dokumens.*',
                 'jenis_dokumens.jenis_dokumen',
-                'users.name'
+                'users.name',
+                'skpds.nama_skpd'
             )
             ->where('jenis_dokumens.id', Request('jenis_dokumen'));
 
 
-        if(Auth::user()->role == 'Admin'){
+        if (Auth::user()->role == 'Admin') {
 
             $data = $data->get();
 
-        }elseif(Auth::user()->role == 'Pegawai'){
+        } elseif (Auth::user()->role == 'Pegawai') {
 
             $data = $data->where('dokumens.id_user', Auth::id())->get();
         }
@@ -58,15 +60,31 @@ class DokumenController extends Controller
 
         } else {
 
+            //CEK USER
+            $pegawai = DB::table('users')
+                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+                ->where('users.id', $request->id_user ?? Auth::id())
+                ->select(
+                    'profils.nip',
+                    'users.name'
+                )
+                ->first();
+
+
+            //CEK SKPD
+            $skpd = DB::table('skpds')->where('id', $request->id_skpd)->first();
+
+
             $dokumen = $request->dokumen;
-            $nama_dokumen = '1' . date('YmdHis.') . $dokumen->extension();
+            $nama_dokumen = 'NIP_' . $pegawai->nip . '_' . $pegawai->name . '_' . $skpd->nama_skpd . '_' . date('YmdHis') . '.' . $dokumen->extension();
             $dokumen->move('dokumen', $nama_dokumen);
 
             $data = Dokumen::create([
                 'dokumen' => $nama_dokumen,
                 'id_dokumen' => $request->id_dokumen,
                 'id_user' => $request->id_user ?? Auth::id(),
-                'tanggal_dokumen' => $request->tanggal_dokumen
+                'tanggal_dokumen' => $request->tanggal_dokumen,
+                'id_skpd' => $request->id_skpd
             ]);
 
             $data = [
@@ -92,9 +110,23 @@ class DokumenController extends Controller
             ];
         } else {
 
+            //CEK USER
+            $pegawai = DB::table('users')
+                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+                ->where('users.id', $request->id_user ?? Auth::id())
+                ->select(
+                    'profils.nip',
+                    'users.name'
+                )
+                ->first();
+
+
+            //CEK SKPD
+            $skpd = DB::table('skpds')->where('id', $request->id_skpd)->first();
+
             if ($request->dokumen) {
                 $dokumen = $request->dokumen;
-                $nama_dokumen = '1' . date('YmdHis.') . $dokumen->extension();
+                $nama_dokumen = date('YmdHis.') . '_' . $pegawai->nip . '_' . $pegawai->name . '_' . $skpd->nama_skpd . $dokumen->extension();
                 $dokumen->move('dokumen', $nama_dokumen);
             }
 
@@ -102,7 +134,8 @@ class DokumenController extends Controller
             $data = $user->update([
                 'dokumen' => $user->dokumen ?? $nama_dokumen,
                 'id_dokumen' => $request->id_dokumen,
-                'tanggal_dokumen' => $request->tanggal_dokumen
+                'tanggal_dokumen' => $request->tanggal_dokumen,
+                'id_skpd' => $request->id_skpd
             ]);
 
             $data = [

@@ -75,6 +75,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-district', 'App\Http\Controllers\DistrictController@update');
     Route::post('/delete-district', 'App\Http\Controllers\DistrictController@delete');
 
+    //SKPD
+    Route::get('/skpd', 'App\Http\Controllers\SkpdController@index');
+    Route::get('/data-skpd', 'App\Http\Controllers\SkpdController@data');
+    Route::post('/store-skpd', 'App\Http\Controllers\SkpdController@store');
+    Route::post('/update-skpd', 'App\Http\Controllers\SkpdController@update');
+    Route::post('/delete-skpd', 'App\Http\Controllers\SkpdController@delete');
+
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
     Route::get('/data-file-dokumen', 'App\Http\Controllers\DokumenController@data');

@@ -25,6 +25,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('district') }}">Daerah</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
+                        </li>
                     </ul>
                 </div>
             </li>

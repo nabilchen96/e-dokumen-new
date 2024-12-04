@@ -25,6 +25,7 @@ Route::get('/', function () {
 //LOGIN
 Route::get('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 Route::post('/loginProses', 'App\Http\Controllers\AuthController@loginProses');
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 //REGISTER
 Route::get('/register', 'App\Http\Controllers\AuthController@register')->name('register');

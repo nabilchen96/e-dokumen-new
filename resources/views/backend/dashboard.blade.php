@@ -41,7 +41,7 @@
                 <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
                     Welcome back to Aplikasi ASNBKL</h6>
             </div>
-            @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload)
+            @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload != null)
                         <div class="col-lg-12 mt-3">
                             <div class="card">
                                 <div class="card-body">

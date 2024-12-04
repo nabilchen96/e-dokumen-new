@@ -31,7 +31,9 @@ class DashboardController extends Controller
         // Jika tidak ada dokumen yang belum diupload
         if ($belumDiupload->isEmpty()) {
             // return response()->json(['message' => 'Semua dokumen telah diupload.'], 200);
-            return view('backend.dashboard');
+            return view('backend.dashboard', [
+                'dokumenBelumDiupload' => null,
+            ]);
         } else {
             // Ambil nama-nama dokumen yang belum diupload
             $dokumenBelumDiupload = $belumDiupload->pluck('jenis_dokumen')->implode(', ');
@@ -55,7 +57,7 @@ class DashboardController extends Controller
             }
 
             return view('backend.dashboard', [
-                'dokumenBelumDiupload' => $dokumenBelumDiupload ?? 0,
+                'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
                 'total_pegawai' => $total_pegawai ?? 0,
                 'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
                 'total_dokumen' => $total_dokumen ?? 0,

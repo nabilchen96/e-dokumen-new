@@ -44,7 +44,8 @@ Route::get('/reset-password', function(){
 Route::post('/resetOtp', 'App\Http\Controllers\AuthController@resetOtp');
 Route::post('/reset-password-proses', 'App\Http\Controllers\AuthController@resetPasswordProses');
 
-
+//PETA SEBARAN PEGAWAI
+Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
 
 
 //BACKEND
@@ -52,7 +53,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     //DASHBOARD
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
-    Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
 
     //USER
     Route::get('/user', 'App\Http\Controllers\UserController@index');

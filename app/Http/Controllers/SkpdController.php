@@ -20,16 +20,14 @@ class SkpdController extends Controller
     {
 
         $data = DB::table('skpds')
-                ->join('districts', 'districts.id', '=', 'skpds.district_id')
-                ->join('regencies', 'regencies.id', '=', 'districts.regency_id')
-                ->join('provinces', 'provinces.id', '=', 'regencies.province_id')
+                // ->join('districts', 'districts.id', '=', 'skpds.district_id')
+                // ->join('regencies', 'regencies.id', '=', 'districts.regency_id')
+                // ->join('provinces', 'provinces.id', '=', 'regencies.province_id')
                 ->select(
                     'skpds.*',
-                    'provinces.name as province',
-                    'regencies.name as regency',
-                    'districts.name as district',
-                    'districts.latitude',
-                    'districts.longitude',
+                    // 'provinces.name as province',
+                    // 'regencies.name as regency',
+                    // 'districts.name as district',
                 )
                 ->get();
 
@@ -41,7 +39,7 @@ class SkpdController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nama_skpd' => 'required',
-            'district_id' => 'required',
+            // 'district_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -55,10 +53,12 @@ class SkpdController extends Controller
 
             $data = Skpd::create([
                 'nama_skpd' => $request->nama_skpd,
-                'district_id' => $request->district_id,
-                'alamat' => '',
+                'district_id' => 0,
+                'alamat' => $request->alamat,
                 'telepon' => $request->telepon,
                 'email' => $request->email,
+                'latitude' => $request->latitude, 
+                'longitude' => $request->longitude
             ]);
 
             $data = [
@@ -76,7 +76,7 @@ class SkpdController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'nama_skpd' => 'required',
-            'district_id' => 'required',
+            // 'district_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -89,10 +89,12 @@ class SkpdController extends Controller
             $user = Skpd::find($request->id);
             $data = $user->update([
                 'nama_skpd' => $request->nama_skpd,
-                'district_id' => $request->district_id,
-                'alamat' => '',
+                'district_id' => 0,
+                'alamat' => $request->alamat,
                 'telepon' => $request->telepon,
                 'email' => $request->email,
+                'latitude' => $request->latitude, 
+                'longitude' => $request->longitude
             ]);
 
             $data = [

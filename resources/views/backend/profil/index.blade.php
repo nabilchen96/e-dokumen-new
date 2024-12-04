@@ -195,63 +195,68 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Name</b>: ${row.name} <br> 
-                                                            <b>Role</b>: ${row.role} <br>`;
+                                                                    <b>Role</b>: ${row.role} <br>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>NIP</b>: ${row.nip} <br> 
-                                                            <b>Email</b>: ${row.email} <br> 
-                                                            <b>Whatsapp</b>: ${row.no_wa}`;
+                                                                    <b>Email</b>: ${row.email} <br> 
+                                                                    <b>Whatsapp</b>: ${row.no_wa}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
-                                                            <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
-                                                            <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
+                                                                    <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
+                                                                    <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Alamat</b>: ${row.alamat} <br> 
-                                                            <b>Daerah</b>: ${row.district} <br>`;
+                                                                    <b>Daerah</b>: ${row.district} <br>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
-                                                                    data-lat="${row.latitude}" 
-                                                                    data-lng="${row.longitude}" 
-                                                                    href="javascript:void(0)">
-                                                                    <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
-                                                            </a>`;
+                                                                            data-lat="${row.latitude}" 
+                                                                            data-lng="${row.longitude}" 
+                                                                            href="javascript:void(0)">
+                                                                            <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
+                                                                    </a>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                            </a>`
+                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                                    </a>`
                     }
                 },
-                // {
-                //     render: function (data, type, row, meta) {
-                //         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                //             .id) + `)">
-                //                                         <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                //                                     </a>`
-                //     }
-                // },
+                    // {
+                    //     render: function (data, type, row, meta) {
+                    //         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                    //             .id) + `)">
+                    //                                         <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                    //                                     </a>`
+                    //     }
+                    // },
                 ]
             })
         }
+
+        var map;
+        var marker;
 
         $('#modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var recipient = button.data('bs-id') // Extract info from data-* attributes
             var cok = $("#myTable").DataTable().rows().data().toArray()
+
+            map.invalidateSize();
 
             let cokData = cok.filter((dt) => {
                 return dt.id == recipient;
@@ -282,26 +287,25 @@
             const latitude = button.data('lat');  // Ambil latitude dari atribut data
             const longitude = button.data('lng'); // Ambil longitude dari atribut data
 
-            // Bersihkan elemen peta jika sebelumnya sudah ada
-            $('#map').html('');
 
-            // Inisialisasi peta Leaflet
-            const map = L.map('map').setView([latitude, longitude], 13);
+            if (!map) {
+                map = L.map('map').setView([latitude, longitude], 13);
 
-            // Tambahkan layer peta dasar (OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+                // Tambahkan layer peta dasar (OpenStreetMap)
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
 
-            // Tambahkan marker pada peta
-            L.marker([latitude, longitude]).addTo(map)
-                .bindPopup(`<b>Lokasi:</b><br>Lat: ${latitude}, Lng: ${longitude}`)
-                .openPopup();
-
-            // Pastikan dimensi peta diperbarui
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 100); // Tunggu sejenak agar modal selesai dibuka
+                // Tambahkan marker pada peta
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup(`<b>Lokasi:</b><br>Lat: ${latitude}, Lng: ${longitude}`)
+                    .openPopup();
+            } else {
+                // Memastikan peta diperbarui ukurannya saat modal dibuka
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 100);
+            }
         });
 
         form.onsubmit = (e) => {

@@ -51,7 +51,7 @@
                                 <th width="5%">No</th>
                                 <th>Pemilik</th>
                                 <th>Jenis Dokumen</th>
-                                <th>Tanggal Dokumen</th>
+                                <th>Tanggal Berlaku Dokumen</th>
                                 <th>Tanggal Upload</th>
                                 <th>SKPD</th>
                                 <th>Status</th>
@@ -115,8 +115,13 @@
                                             class="form-control form-control-sm" required readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label>Tanggal Dokumen</label>
-                                        <input type="date" placeholder="Dokumen" id="tanggal_dokumen" name="tanggal_dokumen"
+                                        <label>Tanggal Awal Dokumen</label>
+                                        <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen" name="tanggal_dokumen"
+                                            class="form-control form-control-sm" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tanggal Akhir Dokumen</label>
+                                        <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen" name="tanggal_akhir_dokumen"
                                             class="form-control form-control-sm" required>
                                     </div>
                                     <div class="form-group">
@@ -193,7 +198,9 @@
                     data: "jenis_dokumen"
                 },
                 {
-                    data: "tanggal_dokumen"
+                    render: function (data, type, row, meta) {
+                        return `Tanggal Awal: ${row.tanggal_dokumen} <br> Tanggal Akhir: ${row.tanggal_akhir_dokumen}`
+                    }
                 },
                 {
                     data: "created_at"
@@ -209,24 +216,24 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                                                                                    </a>`
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                                    </a>`
+                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                                                    </a>`
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                        </a>`
                     }
                 },
                 ]
@@ -253,9 +260,9 @@
                 modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
                 modal.find('#status').val(cokData[0].status)
                 modal.find('#tanggal_dokumen').val(cokData[0].tanggal_dokumen)
+                modal.find('#tanggal_akhir_dokumen').val(cokData[0].tanggal_akhir_dokumen)
                 modal.find('#id_user').val(cokData[0].id_user)
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
-                modal.find('#no_wa').val(cokData[0].no_wa)
             }
         })
 

@@ -252,7 +252,7 @@
 
         // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 10,
+            maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
@@ -263,8 +263,8 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                                <strong>${district.name}</strong><br>
-                                                Total Employees: ${district.total_employees}
+                                                <strong>${district.nama_skpd}</strong><br>
+                                                Total pegawai: ${district.total_employees}
                                             `);
                 });
             })

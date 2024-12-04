@@ -69,17 +69,25 @@ class DashboardController extends Controller
     public function dataPeta()
     {
 
-        $districts = DB::table('districts')
-            ->join('profils', 'districts.id', '=', 'profils.district_id')
+        $districts = DB::table('dokumens')
+            ->join('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
             ->select(
-                'districts.id',
-                'districts.name',
-                'districts.latitude',
-                'districts.longitude',
-                DB::raw('COUNT(profils.id) as total_employees')
+                'skpds.id as id_skpd',
+                'skpds.latitude',
+                'skpds.longitude',
+                'skpds.nama_skpd',
+                DB::raw('COUNT(DISTINCT dokumens.id_user) as total_employees')
             )
-            ->groupBy('districts.id', 'districts.name', 'districts.latitude', 'districts.longitude')
+            ->whereIn('dokumens.id', function ($query) {
+                // Select the latest dokumen per user
+                $query->selectRaw('MAX(dokumens.id)')
+                    ->from('dokumens')
+                    ->groupBy('dokumens.id_user');
+            })
+            ->groupBy('skpds.id')
             ->get();
+
+
 
 
         return response()->json($districts);

@@ -20,7 +20,20 @@
   <!-- Favicons -->
   <link href="{{ url('ilanding/logo.png') }}" rel="icon">
   <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map {
+      /* height: 600px; */
+      height: 100vh;
+      width: 100%;
+    }
 
+    @media (max-width: 768px) {
+      .bg {
+        display: none;
+      }
+    }
+  </style>
   <title>ASNBKL</title>
 </head>
 
@@ -28,9 +41,10 @@
 
 
   <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2" style="background-image: url('natural.png');"></div>
+    <div class="bg order-1 order-md-2">
+      <div id="map"></div>
+    </div>
     <div class="contents order-2 order-md-1">
-
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-7">
@@ -79,7 +93,32 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize the map
+    const map = L.map('map').setView([-2.548926, 118.014863], 5);
+    // Adjust default view coordinates
 
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Fetch district data from Laravel backend
+    fetch('/data-peta') // Adjust this endpoint as necessary
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(district => {
+          const marker = L.marker([district.latitude, district.longitude]).addTo(map);
+          marker.bindPopup(`
+                                                <strong>${district.nama_skpd}</strong><br>
+                                                Total pegawai: ${district.total_employees}
+                                            `);
+        });
+      })
+      .catch(error => console.error('Error fetching district data:', error));
+  </script>
   <script>
     formLogin.onsubmit = (e) => {
 

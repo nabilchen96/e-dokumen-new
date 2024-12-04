@@ -48,7 +48,15 @@ class DokumenController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'dokumen' => 'required|file|mimes:pdf,jpg,jpeg,png'
+            'dokumen' => 'required|file|mimes:pdf,jpg,jpeg,png|max:1024',
+            'tanggal_dokumen' => 'required',
+            'tanggal_akhir_dokumen' => 'required',
+        ],[
+            'dokumen.file' => 'Dokumen yang diunggah harus berupa file.',
+            'dokumen.mimes' => 'Dokumen harus berformat PDF, JPG, atau PNG.',
+            'dokumen.max' => 'Ukuran dokumen maksimal adalah 1MB.',
+            'tanggal_dokumen.required' => 'Tanggal Awal Dokumen Wajib Diisi',
+            'tanggal_akhir_dokumen.required' => 'Tanggal Akhir Dokumen Wajib Diisi',
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +92,7 @@ class DokumenController extends Controller
                 'id_dokumen' => $request->id_dokumen,
                 'id_user' => $request->id_user ?? Auth::id(),
                 'tanggal_dokumen' => $request->tanggal_dokumen,
+                'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
                 'id_skpd' => $request->id_skpd
             ]);
 
@@ -101,6 +110,15 @@ class DokumenController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required',
+            'dokumen' => 'file|mimes:pdf,jpg,jpeg,png|max:1024'
+        ],
+        [
+            'id.required' => 'Kolom ID wajib diisi.',
+            'dokumen.file' => 'Dokumen yang diunggah harus berupa file.',
+            'dokumen.mimes' => 'Dokumen harus berformat PDF, JPG, atau PNG.',
+            'dokumen.max' => 'Ukuran dokumen maksimal adalah 1MB.',
+            'tanggal_dokumen.required' => 'Tanggal Awal Dokumen Wajib Diisi',
+            'tanggal_akhir_dokumen.required' => 'Tanggal Akhir Dokumen Wajib Diisi',
         ]);
 
         if ($validator->fails()) {
@@ -135,6 +153,7 @@ class DokumenController extends Controller
                 'dokumen' => $user->dokumen ?? $nama_dokumen,
                 'id_dokumen' => $request->id_dokumen,
                 'tanggal_dokumen' => $request->tanggal_dokumen,
+                'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
                 'id_skpd' => $request->id_skpd
             ]);
 

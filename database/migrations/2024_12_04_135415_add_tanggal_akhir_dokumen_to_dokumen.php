@@ -14,7 +14,7 @@ class AddTanggalAkhirDokumenToDokumen extends Migration
     public function up()
     {
         Schema::table('dokumens', function (Blueprint $table) {
-            $table->date('tanggal_akhir_dokumen');
+            $table->date('tanggal_akhir_dokumen')->nullable();
         });
     }
 

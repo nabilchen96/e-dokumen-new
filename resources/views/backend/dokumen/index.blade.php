@@ -122,7 +122,7 @@
                                     <div class="form-group">
                                         <label>Tanggal Akhir Dokumen</label>
                                         <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen" name="tanggal_akhir_dokumen"
-                                            class="form-control form-control-sm" required>
+                                            class="form-control form-control-sm">
                                     </div>
                                     <div class="form-group">
                                         <label>Pemilik</label>
@@ -199,7 +199,7 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `Tanggal Awal: ${row.tanggal_dokumen} <br> Tanggal Akhir: ${row.tanggal_akhir_dokumen}`
+                        return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ?? '-'}`
                     }
                 },
                 {

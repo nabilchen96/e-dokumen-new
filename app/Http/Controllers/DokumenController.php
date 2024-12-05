@@ -50,13 +50,11 @@ class DokumenController extends Controller
         $validator = Validator::make($request->all(), [
             'dokumen' => 'required|file|mimes:pdf,jpg,jpeg,png|max:1024',
             'tanggal_dokumen' => 'required',
-            'tanggal_akhir_dokumen' => 'required',
         ],[
             'dokumen.file' => 'Dokumen yang diunggah harus berupa file.',
             'dokumen.mimes' => 'Dokumen harus berformat PDF, JPG, atau PNG.',
             'dokumen.max' => 'Ukuran dokumen maksimal adalah 1MB.',
             'tanggal_dokumen.required' => 'Tanggal Awal Dokumen Wajib Diisi',
-            'tanggal_akhir_dokumen.required' => 'Tanggal Akhir Dokumen Wajib Diisi',
         ]);
 
         if ($validator->fails()) {
@@ -110,7 +108,8 @@ class DokumenController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required',
-            'dokumen' => 'file|mimes:pdf,jpg,jpeg,png|max:1024'
+            'dokumen' => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
+            'tanggal_dokumen' => 'required',
         ],
         [
             'id.required' => 'Kolom ID wajib diisi.',
@@ -118,7 +117,6 @@ class DokumenController extends Controller
             'dokumen.mimes' => 'Dokumen harus berformat PDF, JPG, atau PNG.',
             'dokumen.max' => 'Ukuran dokumen maksimal adalah 1MB.',
             'tanggal_dokumen.required' => 'Tanggal Awal Dokumen Wajib Diisi',
-            'tanggal_akhir_dokumen.required' => 'Tanggal Akhir Dokumen Wajib Diisi',
         ]);
 
         if ($validator->fails()) {

@@ -51,9 +51,8 @@ class DashboardController extends Controller
                 $total_dokumen = DB::table('dokumens')->count();
 
                 //sebaran pegawai
-                $total_asal_pegawai = DB::table('profils')
-                    ->distinct('district_id') // Pastikan hanya menghitung `district_id` yang unik
-                    ->count('district_id'); // Hitung jumlah `district_id` yang unik
+                $total_asal_pegawai = DB::table('skpds')
+                    ->count(); // Hitung jumlah `district_id` yang unik
             }
 
             return view('backend.dashboard', [

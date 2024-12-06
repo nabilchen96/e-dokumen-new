@@ -212,7 +212,7 @@
                             <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                 class="card-img-absolute" alt="circle">
                             <h4 class="font-weight-normal mb-3">
-                                Asal Pegawai
+                                Total SKPD
                                 <i class="bi bi-person-circle float-right"></i>
                             </h4>
                             <h2>

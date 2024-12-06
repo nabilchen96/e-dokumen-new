@@ -30,6 +30,7 @@ class JenisDokumenController extends Controller
         $validator = Validator::make($request->all(), [
             'jenis_dokumen' => 'required',
             'status' => 'required',
+            'jenis_pegawai' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -44,6 +45,7 @@ class JenisDokumenController extends Controller
             $data = JenisDokumen::create([
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
+                'jenis_pegawai' => $request->jenis_pegawai
             ]);
 
             $data = [
@@ -61,7 +63,8 @@ class JenisDokumenController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'jenis_dokumen' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'jenis_pegawai' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -75,6 +78,7 @@ class JenisDokumenController extends Controller
             $data = $user->update([
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
+                'jenis_pegawai' => $request->jenis_pegawai
             ]);
 
             $data = [

@@ -41,7 +41,8 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Jenis Dokumen</th>
-                                <th width="10%">Status</th>
+                                <th>Jenis Pegawai</th>
+                                <th>Status</th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
                             </tr>
@@ -72,6 +73,17 @@
                         <select name="status" id="status" class="form-control" required>
                             <option>Aktif</option>
                             <option>Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Jenis Pegawai</label>
+                        <select name="jenis_pegawai" id="jenis_pegawai" class="form-control" required>
+                            <option>PNS</option>
+                            <option>P3K</option>
+                            <option>Honorer</option>
+                            <option>PNS dan P3K</option>
+                            <option>P3K dan Honorer</option>
+                            <option>Semua</option>
                         </select>
                     </div>
                 </div>
@@ -106,6 +118,9 @@
                 },
                 {
                     data: "jenis_dokumen"
+                },
+                {
+                    data: "jenis_pegawai"
                 },
                 {
                     data: "status"
@@ -148,8 +163,7 @@
                 modal.find('#id').val(cokData[0].id)
                 modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
                 modal.find('#status').val(cokData[0].status)
-                modal.find('#role').val(cokData[0].role)
-                modal.find('#no_wa').val(cokData[0].no_wa)
+                modal.find('#jenis_pegawai').val(cokData[0].jenis_pegawai)
             }
         })
 

@@ -63,7 +63,7 @@
                                 <th>Name</th>
                                 <th>NIP/EMAIL/WA</th>
                                 <th>Jenis Kelamin/Tempat, Tgl Lahir</th>
-                                <th>No. WA</th>
+                                <th>Alamat/Daerah</th>
                                 <th>Peta</th>
                                 <th width="5%"></th>
                                 <!-- <th width="5%"></th> -->
@@ -127,6 +127,14 @@
                                 <label>Tanggal Lahir <sup class="text-danger">*</sup></label>
                                 <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir"
                                     placeholder="Tanggal Lahir" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status Pegawai <sup class="text-danger">*</sup></label>
+                                <select name="status_pegawai" class="form-control" id="status_pegawai" required>
+                                    <option>PNS</option>
+                                    <option>P3K</option>
+                                    <option>Honorer</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -195,7 +203,8 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Name</b>: ${row.name} <br> 
-                                                                    <b>Role</b>: ${row.role} <br>`;
+                                <b>Role</b>: ${row.role} <br>
+                                <b>Status</b>: ${row.status_pegawai}`;
                     }
                 },
                 {
@@ -256,7 +265,7 @@
             var recipient = button.data('bs-id') // Extract info from data-* attributes
             var cok = $("#myTable").DataTable().rows().data().toArray()
 
-            map.invalidateSize();
+            // map.invalidateSize();
 
             let cokData = cok.filter((dt) => {
                 return dt.id == recipient;
@@ -277,6 +286,7 @@
                 modal.find('#tanggal_lahir').val(cokData[0].tanggal_lahir)
                 modal.find('#nip').val(cokData[0].nip)
                 modal.find('#alamat').val(cokData[0].alamat)
+                modal.find('#status_pegawai').val(cokData[0].status_pegawai)
                 // modal.find('#district').val(cokData[0].district)
                 document.getElementById('district').innerHTML = cokData[0].district
             }

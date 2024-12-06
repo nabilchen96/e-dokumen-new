@@ -79,6 +79,14 @@
                                             <option>Perempuan</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Status Pegawai <sup class="text-danger">*</sup></label>
+                                        <select name="status_pegawai" class="form-control" id="status_pegawai" required>
+                                            <option>PNS</option>
+                                            <option>P3K</option>
+                                            <option>Honorer</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -102,15 +110,16 @@
                                             placeholder="No Whatsapp" readonly value="{{ session('user_otp')->no_wa }}"
                                             required>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Daerah <sup class="text-danger">*</sup></label>
+                                        <select class="form-control" style="width: 100%;" name="district_id"
+                                            id="select2-ajax" required>
+                                            <option value="">Pilih Data</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Daerah <sup class="text-danger">*</sup></label>
-                                <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax"
-                                    required>
-                                    <option value="">Pilih Data</option>
-                                </select>
-                            </div>
+
                             <div class="form-group">
                                 <label>Alamat <sup class="text-danger">*</sup></label>
                                 <textarea name="alamat" class="form-control" id="alamat" cols="10" rows="10"

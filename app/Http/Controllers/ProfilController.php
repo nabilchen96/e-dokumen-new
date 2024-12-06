@@ -31,7 +31,7 @@ class ProfilController extends Controller
                 'profils.*',
                 'districts.name as district',
                 'districts.latitude',
-                'districts.longitude'
+                'districts.longitude',
             );
 
         if (Auth::user()->role == 'Admin') {
@@ -50,7 +50,8 @@ class ProfilController extends Controller
         $validator = Validator::make($request->all(), [
             'password' => 'required|min:8',
             'email' => 'unique:users',
-            'no_wa' => 'unique:users'
+            'no_wa' => 'unique:users',
+            'status_pegawai' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -65,6 +66,7 @@ class ProfilController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'no_wa' => $request->no_wa,
+                'status_pegawai' => $request->status_pegawai
             ]);
 
             $data = [
@@ -87,7 +89,8 @@ class ProfilController extends Controller
             'tanggal_lahir' => 'required',
             'jenis_kelamin' => 'required',
             'alamat' => 'required',
-            'district_id' => 'required'
+            'district_id' => 'required',
+            'status_pegawai' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -113,7 +116,8 @@ class ProfilController extends Controller
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'alamat'        => $request->alamat,
                 'id_user'       => $request->id_user,
-                'district_id'   => $request->district_id
+                'district_id'   => $request->district_id,
+                'status_pegawai' => $request->status_pegawai
             ]);
 
             $data = [

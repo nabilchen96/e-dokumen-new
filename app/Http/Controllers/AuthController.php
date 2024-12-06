@@ -240,7 +240,8 @@ class AuthController extends Controller
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'alamat' => $request->alamat,
                 'id_user' => $data->id,
-                'district_id' => $request->district_id
+                'district_id' => $request->district_id,
+                'status_pegawai' => $request->status_pegawai
             ]);
 
             $data = [

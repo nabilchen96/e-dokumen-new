@@ -41,24 +41,45 @@
             </a>
             <div class="collapse" id="tahap1">
                 <ul class="nav flex-column sub-menu">
-                    <?php    
-                            $jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->get(); 
-                        ?>
+                    @php
+                        // Ambil data profil user
+                        $profil = DB::table('users')
+                            ->join('profils', 'profils.id_user', '=', 'users.id')
+                            ->where('users.id', Auth::id())
+                            ->first();
+
+                        // Ambil jenis dokumen yang sesuai
+                        $jenis_dokumen = DB::table('jenis_dokumens')
+                            ->where('status', 'Aktif')
+                            ->where(function ($query) use ($profil) {
+                                if(Auth::user()->role == "Admin"){
+                                    $query;
+                                }
+                                elseif ($profil->status_pegawai == 'PNS') {
+                                    $query->where('jenis_pegawai', 'like', '%PNS%')
+                                        ->orWhere('jenis_pegawai', 'Semua');
+                                } elseif ($profil->status_pegawai == 'P3K') {
+                                    $query->where('jenis_pegawai', 'like', '%P3K%')
+                                        ->orWhere('jenis_pegawai', 'Semua');
+                                } elseif ($profil->status_pegawai == 'Honorer') {
+                                    $query->where('jenis_pegawai', 'like', '%Honorer%')
+                                        ->orWhere('jenis_pegawai', 'Semua');
+                                }
+                            })
+                            ->get();
+                    @endphp
+
                     @foreach ($jenis_dokumen as $i)
                         <li class="nav-item">
-                            <a class="nav-link"
-                                href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">{{ $i->jenis_dokumen }}</a>
+                            <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">
+                                {{ $i->jenis_dokumen }}
+                            </a>
                         </li>
                     @endforeach
                 </ul>
+
             </div>
         </li>
-        <!-- <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="bi bi-file-earmark menu-icon"></i>
-                <span class="menu-title">Dokumen Anda</span>
-            </a>
-        </li> -->
         <li class="nav-item">
             <a class="nav-link" href="{{ url('profil') }}">
                 <i class="bi bi-person menu-icon"></i>

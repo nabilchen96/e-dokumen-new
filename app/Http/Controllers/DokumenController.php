@@ -239,14 +239,36 @@ class DokumenController extends Controller
 
     public function delete(Request $request)
     {
+        // Mencari data Dokumen berdasarkan ID
+        $dokumen = Dokumen::find($request->id);
 
-        $data = Dokumen::find($request->id)->delete();
+        // Cek jika data Dokumen ditemukan
+        if ($dokumen) {
+            // Mendapatkan path file dokumen yang disimpan
+            $filePath = public_path('dokumen/' . $dokumen->dokumen);
 
-        $data = [
-            'responCode' => 1,
-            'respon' => 'Data Sukses Dihapus'
-        ];
+            // Menghapus file dari folder 'dokumen' jika ada
+            if (file_exists($filePath)) {
+                unlink($filePath); // Menghapus file
+            }
+
+            // Menghapus data dokumen dari database
+            $dokumen->delete();
+
+            // Response sukses setelah menghapus file dan data
+            $data = [
+                'responCode' => 1,
+                'respon' => 'Data Sukses Dihapus'
+            ];
+        } else {
+            // Response jika dokumen tidak ditemukan
+            $data = [
+                'responCode' => 0,
+                'respon' => 'Dokumen tidak ditemukan'
+            ];
+        }
 
         return response()->json($data);
     }
+
 }

@@ -105,15 +105,6 @@
                             </div>
                         </div>
             @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
-                        <div class="col-lg-12 mt-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <!-- <i class="text-danger bi bi-exclamation-triangle"></i> -->
-                                    Anda sudah mengupload semua dokumen. Klik menu dokumen dan pilih
-                                    jenis dokumen untuk menambah atau mengedit dokumen.
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 mt-3">
                             <div class="card w-100">
                                 <div class="card-body">

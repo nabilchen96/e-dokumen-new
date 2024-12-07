@@ -62,14 +62,15 @@ class DashboardController extends Controller
             }
 
 
-            return view('backend.dashboard', [
-                'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
-                'total_pegawai' => $total_pegawai ?? 0,
-                'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
-                'total_dokumen' => $total_dokumen ?? 0,
-                'total_asal_pegawai' => $total_asal_pegawai ?? 0
-            ]);
         }
+        
+        return view('backend.dashboard', [
+            'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
+            'total_pegawai' => $total_pegawai ?? 0,
+            'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
+            'total_dokumen' => $total_dokumen ?? 0,
+            'total_asal_pegawai' => $total_asal_pegawai ?? 0
+        ]);
     }
 
     public function dataPeta()

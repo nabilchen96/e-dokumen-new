@@ -44,26 +44,28 @@ class DashboardController extends Controller
                 $dokumenBelumDiupload = $belumDiupload->pluck('jenis_dokumen')->implode(', ');
                 // dd($dokumenBelumDiupload);
 
-                if (Auth::user()->role == 'Admin') {
-
-                    //total pegawai
-                    $total_pegawai = DB::table('users')->where('role', 'Pegawai')->count();
-
-                    //jenis dokumen
-                    $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
-
-                    //total dokumen
-                    $total_dokumen = DB::table('dokumens')->count();
-
-                    //sebaran pegawai
-                    $total_asal_pegawai = DB::table('skpds')
-                        ->count(); // Hitung jumlah `district_id` yang unik
-                }
             }
 
-
+            
+            
         }
         
+        if (Auth::user()->role == 'Admin') {
+
+            //total pegawai
+            $total_pegawai = DB::table('users')->where('role', 'Pegawai')->count();
+
+            //jenis dokumen
+            $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+
+            //total dokumen
+            $total_dokumen = DB::table('dokumens')->count();
+
+            //sebaran pegawai
+            $total_asal_pegawai = DB::table('skpds')
+                ->count(); // Hitung jumlah `district_id` yang unik
+        }
+
         return view('backend.dashboard', [
             'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
             'total_pegawai' => $total_pegawai ?? 0,

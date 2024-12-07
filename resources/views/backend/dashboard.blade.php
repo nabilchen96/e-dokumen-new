@@ -75,8 +75,8 @@
                                                     $data = DB::table('dokumens')
                                                         ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
                                                         ->where('dokumens.id_user', Auth::id())
-                                                        ->where('jenis_dokumens.jenis_dokumen', 'like', '%'.$profil->status_pegawai.'%')
-                                                        ->Orwhere('jenis_dokumens.jenis_dokumen', 'Semua')
+                                                        ->where('jenis_dokumens.jenis_pegawai', 'like', '%'.$profil->status_pegawai.'%')
+                                                        ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
                                                         ->select(
                                                             'dokumens.*',
                                                             'jenis_dokumens.jenis_dokumen'

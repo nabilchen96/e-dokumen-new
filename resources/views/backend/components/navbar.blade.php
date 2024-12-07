@@ -44,7 +44,7 @@
                     @php
                         // Ambil data profil user
                         $profil = DB::table('users')
-                            ->join('profils', 'profils.id_user', '=', 'users.id')
+                            ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
                             ->where('users.id', Auth::id())
                             ->first();
 
@@ -69,13 +69,15 @@
                             ->get();
                     @endphp
 
-                    @foreach ($jenis_dokumen as $i)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">
-                                {{ $i->jenis_dokumen }}
-                            </a>
-                        </li>
-                    @endforeach
+                    @if($profil->status_pegawai || Auth::user()->role == 'Admin')
+                        @foreach ($jenis_dokumen as $i)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">
+                                    {{ $i->jenis_dokumen }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @endif
                 </ul>
 
             </div>
@@ -83,7 +85,7 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('profil') }}">
                 <i class="bi bi-person menu-icon"></i>
-                <span class="menu-title">Profil</span>
+                <span class="menu-title">Profil Pegawai</span>
             </a>
 
         </li>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profil;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\User;
@@ -19,7 +20,12 @@ class UserController extends Controller
     public function data()
     {
 
-        $user = DB::table('users');
+        $user = DB::table('users')
+                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+                ->select(
+                    'users.*',
+                    'profils.status_pegawai'
+                );
 
         $data_user = Auth::user();
         $user = $user->get();
@@ -30,12 +36,11 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
-
         $validator = Validator::make($request->all(), [
             'password' => 'required|min:8',
             'email' => 'unique:users',
-            'no_wa' => 'unique:users'
+            'no_wa' => 'unique:users',
+            'status_pegawai' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -51,6 +56,14 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
                 'no_wa' => $request->no_wa,
             ]);
+
+            if($request->role == 'Pegawai'){
+                
+                Profil::create([
+                    'id_user' => $data->id,
+                    'status_pegawai' => $request->status_pegawai
+                ]);
+            }
 
             $data = [
                 'responCode' => 1,
@@ -86,6 +99,17 @@ class UserController extends Controller
                 'no_wa' => $request->no_wa,
                 'password' => $request->password ? Hash::make($request->password) : $user->password
             ]);
+
+            if($request->role == 'Pegawai'){
+                $profil = Profil::where('id_user', $request->id);
+                $data = $profil->updateOrCreate([
+                    'id_user' => $request->id
+                ],
+                [
+                    'id_user' => $request->id,
+                    'status_pegawai' => $request->status_pegawai
+                ]);
+            }
 
             $data = [
                 'responCode' => 1,

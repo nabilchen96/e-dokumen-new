@@ -126,7 +126,6 @@ class DokumenController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'dokumen' => [
-                'required',
                 'file',
                 'mimes:pdf,jpg,jpeg,png',
                 function ($attribute, $value, $fail) {

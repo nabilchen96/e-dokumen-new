@@ -43,6 +43,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Status Pegawai</th>
                                 <th>No. WA</th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
@@ -80,7 +81,7 @@
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
                         <input name="password" id="password" type="password" placeholder="Password"
-                            class="form-control form-control-sm" required>
+                            class="form-control form-control-sm">
                         <span class="text-danger error" style="font-size: 12px;" id="password_alert"></span>
                     </div>
                     <div class="form-group">
@@ -88,6 +89,14 @@
                         <select name="role" class="form-control" id="role" required>
                             <option value="Admin">Admin</option>
                             <option value="Pegawai">Pegawai</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="status_pegawai_group" style="display: none;">
+                        <label for="status_pegawai">Status Pegawai</label>
+                        <select name="status_pegawai" class="form-control" id="status_pegawai">
+                            <option>PNS</option>
+                            <option>P3K</option>
+                            <option>Honorer</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -111,6 +120,17 @@
         document.addEventListener('DOMContentLoaded', function () {
             getData()
         })
+
+        document.getElementById('role').addEventListener('change', function () {
+            const role = this.value;
+            const statusPegawaiGroup = document.getElementById('status_pegawai_group');
+
+            if (role === 'Pegawai') {
+                statusPegawaiGroup.style.display = 'block'; // Tampilkan field Status Pegawai
+            } else {
+                statusPegawaiGroup.style.display = 'none'; // Sembunyikan field Status Pegawai
+            }
+        });
 
         function getData() {
             $("#myTable").DataTable({
@@ -136,23 +156,26 @@
                     data: 'role'
                 },
                 {
+                    data: 'status_pegawai'
+                },
+                {
                     data: "no_wa"
                 },
 
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                    </a>`
+                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                                    </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                    </a>`
+                                                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                                    </a>`
                     }
                 },
                 ]
@@ -160,27 +183,42 @@
         }
 
         $('#modal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('bs-id') // Extract info from data-* attributes
-            var cok = $("#myTable").DataTable().rows().data().toArray()
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var recipient = button.data('bs-id'); // Extract info from data-* attributes
+            var cok = $("#myTable").DataTable().rows().data().toArray();
 
             let cokData = cok.filter((dt) => {
                 return dt.id == recipient;
-            })
+            });
 
+            const statusPegawaiGroup = document.getElementById('status_pegawai_group');
             document.getElementById("form").reset();
-            document.getElementById('id').value = ''
+            document.getElementById('id').value = '';
             $('.error').empty();
 
             if (recipient) {
-                var modal = $(this)
-                modal.find('#id').val(cokData[0].id)
-                modal.find('#email').val(cokData[0].email)
-                modal.find('#name').val(cokData[0].name)
-                modal.find('#role').val(cokData[0].role)
-                modal.find('#no_wa').val(cokData[0].no_wa)
+                // Edit Mode
+                var modal = $(this);
+                modal.find('#id').val(cokData[0].id);
+                modal.find('#email').val(cokData[0].email);
+                modal.find('#name').val(cokData[0].name);
+                modal.find('#role').val(cokData[0].role);
+                modal.find('#no_wa').val(cokData[0].no_wa);
+                modal.find('#status_pegawai').val(cokData[0].status_pegawai);
+
+                // Tampilkan Status Pegawai jika role adalah Pegawai
+                if (cokData[0].role === 'Pegawai') {
+                    statusPegawaiGroup.style.display = 'block';
+                } else {
+                    statusPegawaiGroup.style.display = 'none';
+                }
+            } else {
+                // Tambah Mode
+                statusPegawaiGroup.style.display = 'none'; // Sembunyikan Status Pegawai
             }
-        })
+        });
+
+
 
         form.onsubmit = (e) => {
 

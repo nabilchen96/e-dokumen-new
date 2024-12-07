@@ -31,6 +31,7 @@
 @section('content')
 @php
     @$data_user = Auth::user();
+    @$profil = DB::table('profils')->where('id_user', Auth::id())->first();
 @endphp
 
 <div class="row" style="margin-top: -200px;">
@@ -42,122 +43,147 @@
                     Welcome back to Aplikasi ASNBKL</h6>
             </div>
             @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload != null)
+                    @if (@$profil)
+                            <div class="col-lg-12 mt-1">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <i class="text-danger bi bi-exclamation-triangle"></i>
+                                        Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>. Klik menu dokumen dan pilih
+                                        jenis dokumen yang ingin diupload.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
+                                        <div class="table-responsive">
+                                            <table id="myTable" class="table table-striped" style="width: 100%;">
+                                                <thead class="bg-info text-white">
+                                                    <tr>
+                                                        <th width="5%">No</th>
+                                                        <th>jenis Dokumen</th>
+                                                        <th>Tanggal Dokumen</th>
+                                                        <th>Tanggal Upload</th>
+                                                        <th>Status</th>
+                                                        <th width="5%"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+
+                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
+
+                                                        $data = DB::table('dokumens')
+                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                                                            ->where('dokumens.id_user', Auth::id())
+                                                            ->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
+                                                            ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
+                                                            ->select(
+                                                                'dokumens.*',
+                                                                'jenis_dokumens.jenis_dokumen'
+                                                            )
+                                                            ->get();
+                                                    @endphp
+                                                    @foreach ($data as $k => $item)
+                                                        <tr>
+                                                            <td>{{ $k + 1 }}</td>
+                                                            <td>{{ $item->jenis_dokumen }}</td>
+                                                            <td>{{ $item->tanggal_dokumen }}</td>
+                                                            <td>{{ $item->created_at }}</td>
+                                                            <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
+                                                            <td>
+                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
+                                                                    <i style="font-size: 1.5rem;"
+                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    @else
                         <div class="col-lg-12 mt-1">
                             <div class="card">
                                 <div class="card-body">
                                     <i class="text-danger bi bi-exclamation-triangle"></i>
-                                    Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>. Klik menu dokumen dan pilih
-                                    jenis dokumen yang ingin diupload.
+                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat mengunggah dokumen
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 mt-3">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
-                                    <div class="table-responsive">
-                                        <table id="myTable" class="table table-striped" style="width: 100%;">
-                                            <thead class="bg-info text-white">
-                                                <tr>
-                                                    <th width="5%">No</th>
-                                                    <th>jenis Dokumen</th>
-                                                    <th>Tanggal Dokumen</th>
-                                                    <th>Tanggal Upload</th>
-                                                    <th>Status</th>
-                                                    <th width="5%"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-
-                                                    $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                                    $data = DB::table('dokumens')
-                                                        ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                        ->where('dokumens.id_user', Auth::id())
-                                                        ->where('jenis_dokumens.jenis_pegawai', 'like', '%'.$profil->status_pegawai.'%')
-                                                        ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
-                                                        ->select(
-                                                            'dokumens.*',
-                                                            'jenis_dokumens.jenis_dokumen'
-                                                        )
-                                                        ->get();
-                                                @endphp
-                                                @foreach ($data as $k => $item)
-                                                    <tr>
-                                                        <td>{{ $k + 1 }}</td>
-                                                        <td>{{ $item->jenis_dokumen }}</td>
-                                                        <td>{{ $item->tanggal_dokumen }}</td>
-                                                        <td>{{ $item->created_at }}</td>
-                                                        <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
-                                                        <td>
-                                                            <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                <i style="font-size: 1.5rem;"
-                                                                    class="text-danger bi bi-file-earmark-pdf"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    @endif
             @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
-                        <div class="col-12 mt-3">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
-                                    <div class="table-responsive">
-                                        <table id="myTable" class="table table-striped" style="width: 100%;">
-                                            <thead class="bg-info text-white">
-                                                <tr>
-                                                    <th width="5%">No</th>
-                                                    <th>jenis Dokumen</th>
-                                                    <th>Tanggal Dokumen</th>
-                                                    <th>Tanggal Upload</th>
-                                                    <th>Status</th>
-                                                    <th width="5%"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
 
-                                                    $profil = DB::table('profils')->where('id_user', Auth::id())->first();
+                    @if(@$profil)
 
-                                                    $data = DB::table('dokumens')
-                                                        ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                        ->where('dokumens.id_user', Auth::id())
-                                                        ->where('jenis_dokumens.jenis_pegawai', 'like', '%'.$profil->status_pegawai.'%')
-                                                        ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
-                                                        ->select(
-                                                            'dokumens.*',
-                                                            'jenis_dokumens.jenis_dokumen'
-                                                        )
-                                                        ->get();
-                                                @endphp
-                                                @foreach ($data as $k => $item)
+                            <div class="col-12 mt-3">
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
+                                        <div class="table-responsive">
+                                            <table id="myTable" class="table table-striped" style="width: 100%;">
+                                                <thead class="bg-info text-white">
                                                     <tr>
-                                                        <td>{{ $k + 1 }}</td>
-                                                        <td>{{ $item->jenis_dokumen }}</td>
-                                                        <td>{{ $item->tanggal_dokumen }}</td>
-                                                        <td>{{ $item->created_at }}</td>
-                                                        <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
-                                                        <td>
-                                                            <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                <i style="font-size: 1.5rem;"
-                                                                    class="text-danger bi bi-file-earmark-pdf"></i>
-                                                            </a>
-                                                        </td>
+                                                        <th width="5%">No</th>
+                                                        <th>jenis Dokumen</th>
+                                                        <th>Tanggal Dokumen</th>
+                                                        <th>Tanggal Upload</th>
+                                                        <th>Status</th>
+                                                        <th width="5%"></th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+
+                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
+
+                                                        $data = DB::table('dokumens')
+                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                                                            ->where('dokumens.id_user', Auth::id())
+                                                            ->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
+                                                            ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
+                                                            ->select(
+                                                                'dokumens.*',
+                                                                'jenis_dokumens.jenis_dokumen'
+                                                            )
+                                                            ->get();
+                                                    @endphp
+                                                    @foreach ($data as $k => $item)
+                                                        <tr>
+                                                            <td>{{ $k + 1 }}</td>
+                                                            <td>{{ $item->jenis_dokumen }}</td>
+                                                            <td>{{ $item->tanggal_dokumen }}</td>
+                                                            <td>{{ $item->created_at }}</td>
+                                                            <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
+                                                            <td>
+                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
+                                                                    <i style="font-size: 1.5rem;"
+                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                    @else
+                        <div class="col-lg-12 mt-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="text-danger bi bi-exclamation-triangle"></i>
+                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat mengunggah dokumen
+                                </div>
+                            </div>
                         </div>
+                    @endif
             @elseif(Auth::user()->role == 'Admin')
                 <div class="col-lg-3 mt-3">
                     <div class="card bg-gradient-success card-img-holder text-white">
@@ -227,7 +253,7 @@
         </div>
         <div class="row">
             <!-- //peta -->
-            <div class="col-lg-12 mt-4">
+            <div class="col-lg-12 mt-3">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold mb-4"><i class="bi bi-geo-alt"></i> Data Sebaran Pegawai</h3>
@@ -264,9 +290,9 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                                <strong>${district.nama_skpd}</strong><br>
-                                                Total pegawai: ${district.total_employees}
-                                            `);
+                                                            <strong>${district.nama_skpd}</strong><br>
+                                                            Total pegawai: ${district.total_employees}
+                                                        `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));

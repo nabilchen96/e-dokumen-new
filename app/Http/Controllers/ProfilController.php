@@ -20,9 +20,10 @@ class ProfilController extends Controller
     public function data()
     {
 
-        $profil = DB::table('profils')
-            ->Join('users', 'users.id', '=', 'profils.id_user')
-            ->Join('districts', 'districts.id', '=', 'profils.district_id')
+        $profil = DB::table('users')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftJoin('districts', 'districts.id', '=', 'profils.district_id')
+            ->whereNotIn('users.role', ['Admin'])
             ->select(
                 'users.name',
                 'users.email',
@@ -37,7 +38,7 @@ class ProfilController extends Controller
         if (Auth::user()->role == 'Admin') {
             $profil = $profil->get();
         } else {
-            $profil = $profil->where('id_user', Auth::id())->get();
+            $profil = $profil->where('users.id', Auth::id())->get();
         }
 
 

@@ -13,9 +13,13 @@ class DashboardController extends Controller
 
         $id_user = Auth::id();
 
+        $profil = DB::table('profils')->where('id_user', $id_user)->first();
+
         // Ambil daftar jenis dokumen yang aktif
         $jenisDokumenAktif = DB::table('jenis_dokumens')
             ->where('status', 'Aktif')
+            ->where('jenis_pegawai', 'like', '%'.$profil->status_pegawai.'%')
+            ->orwhere('jenis_dokumen', 'Semua')
             ->get(['id', 'jenis_dokumen']); // Ambil ID dan nama jenis dokumen yang aktif
 
         // Ambil dokumen yang sudah diupload oleh pengguna

@@ -23,7 +23,7 @@ class KenaikanGajiController extends Controller
     public function data()
     {
 
-        $data = DB::table('Kenaikan_gajis')
+        $data = DB::table('kenaikan_gajis')
             ->leftjoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
             ->leftjoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
             ->leftjoin('users', 'users.id', '=', 'profils.id_user')
@@ -146,7 +146,7 @@ class KenaikanGajiController extends Controller
         $instansi = DB::table('instansis')->where('status', 'Aktif')->first();
 
         // Data Kenaikan gaji
-        $data = DB::table('Kenaikan_gajis')
+        $data = DB::table('kenaikan_gajis')
             ->leftjoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
             ->leftjoin('users', 'users.id', '=', 'profils.id_user')
             

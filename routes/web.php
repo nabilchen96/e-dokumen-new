@@ -21,7 +21,6 @@ Route::get('/', function () {
     return view('frontend.app');
 });
 
-
 //LOGIN
 Route::get('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 Route::post('/loginProses', 'App\Http\Controllers\AuthController@loginProses');

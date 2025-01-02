@@ -178,10 +178,10 @@ class KenaikanGajiController extends Controller
             
 
         // Ganti placeholder dengan data dinamis
-        $templateProcessor->setValue('telp_fax', @$data->telp_fax);
-        $templateProcessor->setValue('kode_pos', @$data->kode_pos);
-        $templateProcessor->setValue('website', @$data->website);
-        $templateProcessor->setValue('email', @$data->email);
+        $templateProcessor->setValue('telp_fax', @$instansi->telp_fax);
+        $templateProcessor->setValue('kode_pos', @$instansi->kode_pos);
+        $templateProcessor->setValue('website', @$instansi->website);
+        $templateProcessor->setValue('email', @$instansi->email);
 
         $templateProcessor->setValue('tgl_dokumen', Carbon::createFromFormat('Y-m-d', $data->tgl_dokumen)->translatedFormat('d F Y'));
         $templateProcessor->setValue('no_dokumen', $data->no_dokumen);

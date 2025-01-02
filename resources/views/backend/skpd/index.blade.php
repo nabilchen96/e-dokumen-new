@@ -182,17 +182,17 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
-                                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                </a>`
+                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                </a>`
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                        </a>`
                     }
                 },
                 ]

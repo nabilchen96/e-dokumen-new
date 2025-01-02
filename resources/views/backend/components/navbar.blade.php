@@ -28,6 +28,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('instansi') }}">Instansi</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -52,10 +55,9 @@
                         $jenis_dokumen = DB::table('jenis_dokumens')
                             ->where('status', 'Aktif')
                             ->where(function ($query) use ($profil) {
-                                if(Auth::user()->role == "Admin"){
+                                if (Auth::user()->role == "Admin") {
                                     $query;
-                                }
-                                elseif ($profil->status_pegawai == 'PNS') {
+                                } elseif ($profil->status_pegawai == 'PNS') {
                                     $query->where('jenis_pegawai', 'like', '%PNS%')
                                         ->orWhere('jenis_pegawai', 'Semua');
                                 } elseif ($profil->status_pegawai == 'P3K') {
@@ -81,6 +83,13 @@
                 </ul>
 
             </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
+                <i class="bi bi-coin menu-icon"></i>
+                <span class="menu-title">Kenaikan Gaji</span>
+            </a>
+
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url('profil') }}">

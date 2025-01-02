@@ -38,7 +38,7 @@ Route::post('/registerProses', 'App\Http\Controllers\AuthController@registerPros
 Route::get('/search-district', 'App\Http\Controllers\DistrictController@searchDistrict');
 
 //RESET PASSWORD
-Route::get('/reset-password', function(){
+Route::get('/reset-password', function () {
     return view('frontend.auth.reset_password');
 });
 Route::post('/resetOtp', 'App\Http\Controllers\AuthController@resetOtp');
@@ -81,6 +81,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-skpd', 'App\Http\Controllers\SkpdController@store');
     Route::post('/update-skpd', 'App\Http\Controllers\SkpdController@update');
     Route::post('/delete-skpd', 'App\Http\Controllers\SkpdController@delete');
+
+    //INSTANSI
+    Route::get('/instansi', 'App\Http\Controllers\InstansiController@index');
+    Route::get('/data-instansi', 'App\Http\Controllers\InstansiController@data');
+    Route::post('/store-instansi', 'App\Http\Controllers\InstansiController@store');
+    Route::post('/update-instansi', 'App\Http\Controllers\InstansiController@update');
+    Route::post('/delete-instansi', 'App\Http\Controllers\InstansiController@delete');
 
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
@@ -145,6 +152,23 @@ Route::group(['middleware' => 'auth'], function () {
             return $pdf->stream($filename . '.pdf');
         }
     });
+
+    //KENAIKAN GAJI
+    // Route::get('/kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@index');
+    Route::get('/kenaikan-gaji-2', function () {
+        return view('backend.kenaikan_gaji_old.index');
+    });
+    // Route::get('/kenaikan-gaji2', function(){
+    //     return view('backend.kenaikan_gaji.index2');
+    // });
+
+    Route::get('/kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@index');
+    Route::get('/data-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@data');
+    Route::post('/store-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@store');
+    Route::get('/edit-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@edit')->name('edit-kenaikan-gaji');
+    Route::post('/update-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@update');
+    Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');
+    Route::get('/export-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@export');
 
     //USER
     Route::get('/profil', 'App\Http\Controllers\ProfilController@index');

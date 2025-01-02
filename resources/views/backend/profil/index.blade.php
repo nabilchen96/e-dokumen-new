@@ -111,6 +111,28 @@
                                     <option>Perempuan</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>
+                                <select name="pangkat" class="form-control" id="pangkat" required>
+                                    <option>I/a - Juru Muda</option>
+                                    <option>I/b - Juru Muda Tingkat I</option>
+                                    <option>I/c - Juru</option>
+                                    <option>I/d - Juru Tingkat I</option>
+                                    <option>II/a - Pengatur Muda</option>
+                                    <option>II/b - Pengatur Muda Tingkat I</option>
+                                    <option>II/c - Pengatur</option>
+                                    <option>II/d - Pengatur Tingkat I</option>
+                                    <option>III/a - Penata Muda</option>
+                                    <option>III/b - Penata Muda Tingkat I</option>
+                                    <option>III/c - Penata</option>
+                                    <option>III/d - Penata Tingkat I</option>
+                                    <option>IV/a - Pembina</option>
+                                    <option>IV/b - Pembina Tingkat I - Pembina Tk.I</option>
+                                    <option>IV/c - Pembina Utama Muda</option>
+                                    <option>IV/d - Pembina Utama Madya</option>
+                                    <option>IV/e - Pembina Utama</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
@@ -135,6 +157,11 @@
                                     <option>P3K</option>
                                     <option>Honorer</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Jabatan <sup class="text-danger">*</sup></label>
+                                <input type="text" name="jabatan" class="form-control" id="jabatan" placeholder="Jabatan"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -204,45 +231,47 @@
                     render: function (data, type, row, meta) {
                         return `<b>Name</b>: ${row.name} <br> 
                                 <b>Role</b>: ${row.role} <br>
-                                <b>Status</b>: ${row.status_pegawai}`;
+                                <b>Status</b>: ${row.status_pegawai} <br>
+                                ${row.pangkat ?? `IV/c - Pembina Utama Muda`}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>NIP</b>: ${row.nip} <br> 
-                                                                    <b>Email</b>: ${row.email} <br> 
-                                                                    <b>Whatsapp</b>: ${row.no_wa}`;
+                                <b>Email</b>: ${row.email} <br> 
+                                <b>Whatsapp</b>: ${row.no_wa} <br>
+                                <b>Jabatan</b>: ${row.jabatan ?? `Guru Ahli Madya`}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
-                                                                    <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
-                                                                    <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
+                                <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
+                                <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Alamat</b>: ${row.alamat} <br> 
-                                                                    <b>Daerah</b>: ${row.district} <br>`;
+                                <b>Daerah</b>: ${row.district} <br>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
-                                                                            data-lat="${row.latitude}" 
-                                                                            data-lng="${row.longitude}" 
-                                                                            href="javascript:void(0)">
-                                                                            <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
-                                                                    </a>`;
+                                data-lat="${row.latitude}" 
+                                data-lng="${row.longitude}" 
+                                href="javascript:void(0)">
+                                <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
+                        </a>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                    </a>`
+                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        </a>`
                     }
                 },
                     // {
@@ -287,6 +316,8 @@
                 modal.find('#nip').val(cokData[0].nip)
                 modal.find('#alamat').val(cokData[0].alamat)
                 modal.find('#status_pegawai').val(cokData[0].status_pegawai)
+                modal.find('#pangkat').val(cokData[0].pangkat)
+                modal.find('#jabatan').val(cokData[0].jabatan)
                 // modal.find('#district').val(cokData[0].district)
                 document.getElementById('district').innerHTML = cokData[0].district
             }
@@ -343,9 +374,7 @@
                             showConfirmButton: false
                         })
 
-                        $("#modal").modal("hide");
-                        $('#myTable').DataTable().clear().destroy();
-                        getData()
+                        location.reload('/profil')
 
                     } else {
                         //respon 

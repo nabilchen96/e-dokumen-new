@@ -118,7 +118,9 @@ class ProfilController extends Controller
                 'alamat'        => $request->alamat,
                 'id_user'       => $request->id_user,
                 'district_id'   => $request->district_id,
-                'status_pegawai' => $request->status_pegawai
+                'status_pegawai' => $request->status_pegawai,
+                'pangkat'       => $request->pangkat, 
+                'jabatan'       => $request->jabatan
             ]);
 
             $data = [

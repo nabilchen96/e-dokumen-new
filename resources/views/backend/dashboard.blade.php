@@ -57,7 +57,7 @@
                             <div class="col-12 mt-3">
                                 <div class="card w-100">
                                     <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
+                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda E</h3>
                                         <div class="table-responsive">
                                             <table id="myTable" class="table table-striped" style="width: 100%;">
                                                 <thead class="bg-info text-white">
@@ -78,8 +78,8 @@
                                                         $data = DB::table('dokumens')
                                                             ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
                                                             ->where('dokumens.id_user', Auth::id())
-                                                            ->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
-                                                            ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
+                                                            //->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
+                                                            //->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
                                                             ->select(
                                                                 'dokumens.*',
                                                                 'jenis_dokumens.jenis_dokumen'
@@ -146,8 +146,8 @@
                                                         $data = DB::table('dokumens')
                                                             ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
                                                             ->where('dokumens.id_user', Auth::id())
-                                                            ->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
-                                                            ->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
+                                                            //->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
+                                                            //->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
                                                             ->select(
                                                                 'dokumens.*',
                                                                 'jenis_dokumens.jenis_dokumen'

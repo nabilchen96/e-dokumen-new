@@ -189,31 +189,31 @@ class KenaikanGajiController extends Controller
         $templateProcessor->setValue('email', @$instansi->email);
 
         $templateProcessor->setValue('tgl_dokumen', Carbon::createFromFormat('Y-m-d', $data->tgl_dokumen)->translatedFormat('d F Y'));
-        $templateProcessor->setValue('no_dokumen', $data->no_dokumen);
-        $templateProcessor->setValue('lampiran', $data->lampiran);
-        $templateProcessor->setValue('nama', $data->nama_pegawai);
-        $templateProcessor->setValue('tgl_lahir', date('d-m-Y', strtotime($data->tanggal_lahir)));
-        $templateProcessor->setValue('nip', $data->nip_pegawai);
-        $templateProcessor->setValue('pangkat', $pangkat[1]);
-        $templateProcessor->setValue('jabatan', $data->jabatan_pegawai);
-        $templateProcessor->setValue('kantor', $data->skpd);
-        $templateProcessor->setValue('gaji_pokok_lama', 'Rp. ' . number_format($data->gaji_pokok_lama, 0, ',', '.') . ',-');
-        $templateProcessor->setValue('oleh_pejabat', $data->oleh_pejabat);
-        $templateProcessor->setValue('tgl_dok_sebelumnya', date('d-m-Y', strtotime($data->tgl_dokumen_sebelumnya)));
-        $templateProcessor->setValue('no_dok_sebelumnya', $data->no_dokumen_sebelumnya);
-        $templateProcessor->setValue('tgl_berlaku_gaji', Carbon::createFromFormat('Y-m-d', $data->tgl_berlaku_gaji)->translatedFormat('d F Y'));
-        $templateProcessor->setValue('mkts', $data->masa_kerja_tahun_sebelumnya != null ? $data->masa_kerja_tahun_sebelumnya : '0');
-        $templateProcessor->setValue('mkbs', $data->masa_kerja_bulan_sebelumnya != null ? $data->masa_kerja_bulan_sebelumnya : '0');
-        $templateProcessor->setValue('gaji_pokok_baru', 'Rp. ' . number_format($data->gaji_pokok_baru, 0, ',', '.') . ',-');
-        $templateProcessor->setValue('mktb', $data->masa_kerja_tahun_baru != null ? $data->masa_kerja_tahun_baru : '0');
-        $templateProcessor->setValue('mkbb', $data->masa_kerja_bulan_baru != null ? $data->masa_kerja_bulan_baru : '0');
-        $templateProcessor->setValue('golongan', $pangkat[0]);
-        $templateProcessor->setValue('tgl_terhitung_mulai', Carbon::createFromFormat('Y-m-d', $data->tgl_terhitung_mulai)->translatedFormat('d F Y'));
-        $templateProcessor->setValue('tgl_kenaikan_berikutnya', Carbon::createFromFormat('Y-m-d', $data->tgl_kenaikan_berikutnya)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('no_dokumen', @$data->no_dokumen);
+        $templateProcessor->setValue('lampiran', @$data->lampiran);
+        $templateProcessor->setValue('nama', @$data->nama_pegawai);
+        $templateProcessor->setValue('tgl_lahir', date('d-m-Y', strtotime(@$data->tanggal_lahir)));
+        $templateProcessor->setValue('nip', @$data->nip_pegawai);
+        $templateProcessor->setValue('pangkat', @$pangkat[1]);
+        $templateProcessor->setValue('jabatan', @$data->jabatan_pegawai);
+        $templateProcessor->setValue('kantor', @$data->skpd);
+        $templateProcessor->setValue('gaji_pokok_lama', 'Rp. ' . number_format(@$data->gaji_pokok_lama, 0, ',', '.') . ',-');
+        $templateProcessor->setValue('oleh_pejabat', @$data->oleh_pejabat);
+        $templateProcessor->setValue('tgl_dok_sebelumnya', date('d-m-Y', strtotime(@$data->tgl_dokumen_sebelumnya)));
+        $templateProcessor->setValue('no_dok_sebelumnya', @$data->no_dokumen_sebelumnya);
+        $templateProcessor->setValue('tgl_berlaku_gaji', Carbon::createFromFormat('Y-m-d', @$data->tgl_berlaku_gaji)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('mkts', @$data->masa_kerja_tahun_sebelumnya != null ? @$data->masa_kerja_tahun_sebelumnya : '0');
+        $templateProcessor->setValue('mkbs', @$data->masa_kerja_bulan_sebelumnya != null ? @$data->masa_kerja_bulan_sebelumnya : '0');
+        $templateProcessor->setValue('gaji_pokok_baru', 'Rp. ' . number_format(@$data->gaji_pokok_baru, 0, ',', '.') . ',-');
+        $templateProcessor->setValue('mktb', @$data->masa_kerja_tahun_baru != null ? @$data->masa_kerja_tahun_baru : '0');
+        $templateProcessor->setValue('mkbb', @$data->masa_kerja_bulan_baru != null ? @$data->masa_kerja_bulan_baru : '0');
+        $templateProcessor->setValue('golongan', @$pangkat[0]);
+        $templateProcessor->setValue('tgl_terhitung_mulai', Carbon::createFromFormat('Y-m-d', @$data->tgl_terhitung_mulai)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('tgl_kenaikan_berikutnya', Carbon::createFromFormat('Y-m-d', @$data->tgl_kenaikan_berikutnya)->translatedFormat('d F Y'));
 
-        $templateProcessor->setValue('nama_kepala', $data->nama_kepala);
-        $templateProcessor->setValue('pangkat_kepala', $kepala[2]);
-        $templateProcessor->setValue('nip_kepala', $data->nip_kepala);
+        $templateProcessor->setValue('nama_kepala', @$data->nama_kepala);
+        $templateProcessor->setValue('pangkat_kepala', @$kepala[2]);
+        $templateProcessor->setValue('nip_kepala', @$data->nip_kepala);
 
         // Path untuk menyimpan hasil
         $outputPath = storage_path('app/public/output.docx');

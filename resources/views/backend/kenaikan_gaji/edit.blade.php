@@ -122,9 +122,9 @@
                                         SUMBER DAYA MANUSIA</b> <br>
                                 </span>
                                 <i style="font-family: 'Times New Roman', Times, serif;">Jln. DR.M.Hatta Nomor 11
-                                    Telp/Fax {{ $instansi->telp_fax }} Arga Makmur Kode Pos {{ $instansi->kode_pos }}
+                                    Telp/Fax {{ @$instansi->telp_fax }} Arga Makmur Kode Pos {{ @$instansi->kode_pos }}
                                     <br>
-                                    Laman: {{ $instansi->website }}, Pos-el: {{ $instansi->email }}
+                                    Laman: {{ @$instansi->website }}, Pos-el: {{ @$instansi->email }}
                                 </i>
                             </td>
                             <td width="5%"></td>

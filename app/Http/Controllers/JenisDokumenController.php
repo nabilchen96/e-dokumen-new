@@ -45,7 +45,8 @@ class JenisDokumenController extends Controller
             $data = JenisDokumen::create([
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
-                'jenis_pegawai' => $request->jenis_pegawai
+                'jenis_pegawai' => $request->jenis_pegawai,
+                'punya_tgl_akhir' => $request->punya_tgl_akhir
             ]);
 
             $data = [
@@ -78,7 +79,8 @@ class JenisDokumenController extends Controller
             $data = $user->update([
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
-                'jenis_pegawai' => $request->jenis_pegawai
+                'jenis_pegawai' => $request->jenis_pegawai,
+                'punya_tgl_akhir' => $request->punya_tgl_akhir
             ]);
 
             $data = [

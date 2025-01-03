@@ -18,9 +18,9 @@
         }
 
         /* td,
-        th {
-            white-space: nowrap !important;
-        } */
+            th {
+                white-space: nowrap !important;
+            } */
     </style>
 @endpush
 @section('content')
@@ -116,18 +116,23 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Tanggal Awal Dokumen</label>
-                                        <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen" name="tanggal_dokumen"
-                                            class="form-control form-control-sm" required>
+                                        <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
+                                            name="tanggal_dokumen" class="form-control form-control-sm" required>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Tanggal Akhir Dokumen</label>
-                                        <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen" name="tanggal_akhir_dokumen"
-                                            class="form-control form-control-sm">
-                                    </div>
+                                    @php
+                                        $punya_tgl_akhir = DB::table('jenis_dokumens')->where('id', Request('jenis_dokumen'))->value('punya_tgl_akhir');
+                                    @endphp
+                                    @if ($punya_tgl_akhir == 'Ya')
+                                        <div class="form-group">
+                                            <label>Tanggal Akhir Dokumen</label>
+                                            <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
+                                                name="tanggal_akhir_dokumen" class="form-control form-control-sm">
+                                        </div>
+                                    @endif
                                     <div class="form-group">
                                         <label>Pemilik</label>
                                         <?php 
-                                                                                                                                                                                                                                            if (Auth::user()->role == 'Admin') {
+                                                                                                                                                                                                                                                            if (Auth::user()->role == 'Admin') {
 
                         $users = DB::table('users')->get();
 
@@ -135,7 +140,7 @@
 
                         $users = DB::table('users')->where('id', Auth::id())->get();
                     }
-                                                                                        ?>
+                                                                                                        ?>
                                         <select name="id_user" id="id_user" class="form-control" required>
                                             @foreach ($users as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -145,8 +150,8 @@
                                     <div class="form-group">
                                         <label>SKPD <sup class="text-danger">*</sup></label>
                                         <?php 
-                                                            $skpd = DB::table('skpds')->get();
-                                                        ?>
+                                                                            $skpd = DB::table('skpds')->get();
+                                                                        ?>
                                         <select name="id_skpd" id="id_skpd" class="form-control" required>
                                             @foreach ($skpd as $item)
                                                 <option value="{{ $item->id }}">{{ $item->nama_skpd }}</option>
@@ -216,24 +221,24 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                        </a>`
+                                <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                            </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
+                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                            </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
+                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                            </a>`
                     }
                 },
                 ]

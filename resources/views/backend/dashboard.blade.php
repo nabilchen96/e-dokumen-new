@@ -57,7 +57,7 @@
                             <div class="col-12 mt-3">
                                 <div class="card w-100">
                                     <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
+                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
                                         <div class="table-responsive">
                                             <table id="myTable" class="table table-striped" style="width: 100%;">
                                                 <thead class="bg-info text-white">
@@ -125,7 +125,7 @@
                             <div class="col-12 mt-3">
                                 <div class="card w-100">
                                     <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4"><i class="bi bi-file-earmark-text"></i> Dokumen Anda</h3>
+                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
                                         <div class="table-responsive">
                                             <table id="myTable" class="table table-striped" style="width: 100%;">
                                                 <thead class="bg-info text-white">

@@ -34,8 +34,13 @@ class KenaikanGajiController extends Controller
                 'k.nip',
                 'users.name',
                 'profils.nip',
-            )
-            ->get();
+            );
+
+        if(Auth::user()->role == 'Admin'){
+            $data = $data->get();
+        }else{
+            $data = $data->where('users.id', Auth::id())->get();
+        }
 
         return response()->json(['data' => $data]);
     }

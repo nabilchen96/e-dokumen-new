@@ -42,6 +42,7 @@
                                 <th width="5%">No</th>
                                 <th>Jenis Dokumen</th>
                                 <th>Jenis Pegawai</th>
+                                <th>Masa Berlaku?</th>
                                 <th>Status</th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
@@ -73,6 +74,13 @@
                         <select name="status" id="status" class="form-control" required>
                             <option>Aktif</option>
                             <option>Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Masa Berlaku Dokumen?</label>
+                        <select name="punya_tgl_akhir" id="punya_tgl_akhir" class="form-control" required>
+                            <option value="Ya">Aktf</option>
+                            <option value="Tidak">Tidak Aktif</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -123,22 +131,31 @@
                     data: "jenis_pegawai"
                 },
                 {
+                    render: function (data, type, row, meta) {
+                        if (row.punya_tgl_akhir == 'Ya') {
+                            return `Aktif`
+                        } else {
+                            return `Tidak Aktif`
+                        }
+                    }
+                },
+                {
                     data: "status"
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                        </a>`
+                                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                        </a>`
+                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                </a>`
                     }
                 },
                 ]

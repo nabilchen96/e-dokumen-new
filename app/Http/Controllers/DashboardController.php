@@ -19,7 +19,7 @@ class DashboardController extends Controller
             // Ambil daftar jenis dokumen yang aktif
             $jenisDokumenAktif = DB::table('jenis_dokumens')
                 ->where('status', 'Aktif')
-                ->where('jenis_pegawai', 'like', '%' .(@$profil->status_pegawai ?? ''). '%')
+                ->where('jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
                 ->orwhere('jenis_pegawai', 'Semua')
                 ->get(['id', 'jenis_dokumen']); // Ambil ID dan nama jenis dokumen yang aktif
 
@@ -45,9 +45,9 @@ class DashboardController extends Controller
                 // dd($dokumenBelumDiupload);
 
             }
-            
+
         }
-        
+
         if (Auth::user()->role == 'Admin') {
 
             //total pegawai
@@ -64,12 +64,28 @@ class DashboardController extends Controller
                 ->count(); // Hitung jumlah `district_id` yang unik
         }
 
+        $today = now()->toDateString();
+
+        $kenaikan_gaji = DB::table('kenaikan_gajis')
+            ->join('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
+            ->join('users', 'users.id', '=', 'profils.id_user')
+            ->select(
+                'tgl_kenaikan_berikutnya',
+                'users.name',
+                'profils.nip',
+                DB::raw("ABS(DATEDIFF(kenaikan_gajis.tgl_kenaikan_berikutnya, '$today')) as total_hari")
+            )
+            ->havingRaw("total_hari <= 90") // Menambahkan filter untuk total_hari maksimal 90
+            ->get();
+
+
         return view('backend.dashboard', [
             'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
             'total_pegawai' => $total_pegawai ?? 0,
             'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
             'total_dokumen' => $total_dokumen ?? 0,
-            'total_asal_pegawai' => $total_asal_pegawai ?? 0
+            'total_asal_pegawai' => $total_asal_pegawai ?? 0,
+            'kenaikan_gaji' => $kenaikan_gaji
         ]);
     }
 

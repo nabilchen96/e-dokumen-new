@@ -112,7 +112,8 @@
                             <div class="card">
                                 <div class="card-body">
                                     <i class="text-danger bi bi-exclamation-triangle"></i>
-                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat mengunggah dokumen
+                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat
+                                    mengunggah dokumen
                                 </div>
                             </div>
                         </div>
@@ -179,14 +180,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     <i class="text-danger bi bi-exclamation-triangle"></i>
-                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat mengunggah dokumen
+                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat
+                                    mengunggah dokumen
                                 </div>
                             </div>
                         </div>
                     @endif
             @elseif(Auth::user()->role == 'Admin')
                 <div class="col-lg-3 mt-3">
-                    <div class="card bg-gradient-success card-img-holder text-white">
+                    <div class="card shadow bg-gradient-success card-img-holder text-white">
                         <div class="card-body">
                             <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                 class="card-img-absolute" alt="circle">
@@ -202,7 +204,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 mt-3">
-                    <div class="card bg-gradient-primary card-img-holder text-white">
+                    <div class="card shadow bg-gradient-primary card-img-holder text-white">
                         <div class="card-body">
                             <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                 class="card-img-absolute" alt="circle">
@@ -218,7 +220,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 mt-3">
-                    <div class="card bg-gradient-info card-img-holder text-white">
+                    <div class="card shadow bg-gradient-info card-img-holder text-white">
                         <div class="card-body">
                             <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                 class="card-img-absolute" alt="circle">
@@ -234,7 +236,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 mt-3">
-                    <div class="card bg-gradient-danger card-img-holder text-white">
+                    <div class="card shadow bg-gradient-danger card-img-holder text-white">
                         <div class="card-body">
                             <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                 class="card-img-absolute" alt="circle">
@@ -249,14 +251,143 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="card shadow" style="border-radius: 8px; border: none;">
+                        <div class="card-body" style="border-radius: 8px; border: none;">
+                            <h3 class="mb-4" style="line-height: 1.7rem;">
+                                [ <i class="bi bi-building"></i> ]
+                                Profil Kepala Instansi
+                            </h3>
+                            @php
+                                $data = DB::table('instansis')
+                                        ->join('profils', 'profils.id', '=', 'instansis.id_profil')
+                                        ->join('users', 'users.id', '=', 'profils.id_user')
+                                        ->select(
+                                            'users.name',
+                                            'profils.nip',
+                                            'profils.pangkat',
+                                            'profils.tempat_lahir', 
+                                            'profils.tanggal_lahir',
+                                            'profils.jenis_kelamin'
+                                        )->first();
+                            @endphp
+                            <div class="table-responsive" style="height: 290px; overflow-y: auto;">
+                                <table class="table table-striped table-borderless"
+                                    style="border-radius: 8px !important; border: none !important;">
+                                    <tr>
+                                        <td width="1%">
+                                            <i class="bi bi-person-circle"></i>
+                                        </td>
+                                        <td>
+                                            Kepala Instansi
+                                        </td>
+
+                                        <td>: {{ $data->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%">
+                                            <i class="bi bi-postcard"></i>
+                                        </td>
+                                        <td>
+                                            NIP
+                                        </td>
+                                        <td>: {{ $data->nip }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%">
+                                            <i class="bi bi-boxes"></i>
+                                        </td>
+                                        <td>
+                                            Gol. / Pangkat
+                                        </td>
+                                        <td>: {{ $data->pangkat }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%">
+                                            <i class="bi bi-calendar3"></i>
+                                        </td>
+                                        <td>
+                                            Tempat / Tanggal Lahir
+                                        </td>
+                                        <td>: {{ $data->tempat_lahir}}, {{ $data->tanggal_lahir }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%">
+                                            <i class="bi bi-person-square"></i>
+                                        </td>
+                                        <td>
+                                            Jenis Kelamin
+                                        </td>
+                                        <td>: {{ $data->jenis_kelamin }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mt-4">
+                    <div class="card shadow" style="border-radius: 8px; border: none;">
+                        <div class="card-body" style="border-radius: 8px; border: none;">
+                            <h3 class="mb-4" style="line-height: 1.7rem;">
+                                [ <i class="bi bi-coin"></i> ]
+                                Proses Kenaikan Gaji Pegawai
+                            </h3>
+                            <div class="table-responsive" style="height: 290px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama / NIP</th>
+                                            <th width="40%">Tgl Kenaikan</th>
+                                            <th>Buat Dok.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @forelse($kenaikan_gaji as $i)
+                                            <tr>
+                                                <td>
+                                                    {{ $i->name }} <br>
+                                                    <b>{{ $i->nip }}</b>
+                                                </td>
+                                                <td>
+                                                    Tgl. {{ date('d-m-Y', strtotime($i->tgl_kenaikan_berikutnya)) }} <br>
+                                                    <i class="bi bi-exclamation-triangle"></i>
+                                                    {{ $i->total_hari }} hari lagi
+                                                </td>
+                                                <td>
+                                                    <form action="{{ url('store-kenaikan-gaji') }}" method="post">
+                                                        <input type="hidden" name="id_profil" id="id_profil" required>
+                                                        <button style="border-radius: 8px !important;"
+                                                            class="btn btn-sm btn-primary">Proses</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center">
+                                                    Belum Ada Data Untuk Ditampilkan!
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
         </div>
         <div class="row">
             <!-- //peta -->
-            <div class="col-lg-12 mt-3">
-                <div class="card">
+            <div class="col-lg-12 mt-4">
+                <div class="card shadow">
                     <div class="card-body">
-                        <h3 class="font-weight-bold mb-4"><i class="bi bi-geo-alt"></i> Data Sebaran Pegawai</h3>
+                        <h3 class="font-weight-bold mb-4">
+                            [ <i class="bi bi-geo-alt"></i> ]
+                            Data Sebaran Pegawai
+                        </h3>
                         <div id="map"></div>
                     </div>
                 </div>
@@ -290,9 +421,9 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                                            <strong>${district.nama_skpd}</strong><br>
-                                                            Total pegawai: ${district.total_employees}
-                                                        `);
+                                                                                                        <strong>${district.nama_skpd}</strong><br>
+                                                                                                        Total pegawai: ${district.total_employees}
+                                                                                                    `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));

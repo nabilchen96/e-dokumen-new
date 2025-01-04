@@ -34,7 +34,7 @@
                                 <td>
                                     Tgl. {{ date('d-m-Y', strtotime($i->tanggal_akhir_dokumen)) }} <br>
                                     <i class="bi bi-exclamation-triangle"></i>
-                                    {{ $i->total_hari }} hari lagi
+                                    {{ $i->total_hari }} Hari
                                 </td>
                                 <td>
                                     @if($i->jenis_dokumen_berkala == 'Kenaikan Gaji')

@@ -62,7 +62,7 @@
                             <div class="col-12 mt-3">
                                 <div class="card w-100">
                                     <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda E
+                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
                                         </h3>
                                         <div class="table-responsive">
                                             <table id="myTable" class="table table-striped" style="width: 100%;">
@@ -375,8 +375,8 @@
                         <input type="hidden" name="id" id="id">
                         <input type="hidden" name="id_dokumen" id="id_dokumen">
                         <div class="form-group">
-                            <label>Status Dokumen</label>
-                            <select name="status" id="status" class="form-control">
+                            <label>Status Dokumen <sup class="text-danger">*</sup></label>
+                            <select name="status" id="status" class="form-control" required>
                                 <option value="">--PILIH STATUS--</option>
                                 <option>Sedang Dalam Pengecekan</option>
                                 <option>Dokumen Diterima</option>

@@ -655,11 +655,10 @@
                                         <button id="tombol_kirim" class="btn btn-primary"
                                             style="border-radius: 8px !important;">Submit</button>
                                     @endif
-                                    <button class="btn btn-warning" style="border-radius: 8px !important;">
-                                        <a href="{{ url('kenaikan-gaji') }}">
-                                            Kembali
-                                        </a>
-                                    </button>
+                                    <a class="btn btn-warning" style="border-radius: 8px !important;"
+                                        href="{{ url('kenaikan-gaji') }}">
+                                        Kembali
+                                    </a>
                                 </td>
                             </tr>
                         </table>

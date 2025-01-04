@@ -108,9 +108,8 @@ class DashboardController extends Controller
                 'dokumens.jenis_dokumen_berkala',
                 'kenaikan_gajis.id as id_kenaikan_gaji',
                 'kenaikan_gajis.status as status_dokumen',
-                DB::raw("ABS(DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today')) as total_hari")
+                DB::raw("DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today') as total_hari")
             )
-            ->where('dokumens.tanggal_akhir_dokumen', '>=', $today)
             ->orderBy('total_hari', 'asc')
             ->where('dokumens.status', 'Dokumen Diterima')
             ->where(function ($query) {

@@ -141,27 +141,27 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `${row.no_dokumen} <br> Status: ${row.status}`
+                        return `${row.no_dokumen ?? `-`} <br> Status: ${row.status}`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `${row.gaji_pokok_lama ? `<b>Gaji Lama</b>: ${formatRupiah(row.gaji_pokok_lama)}` : ''} 
-                                        <br> ${row.tgl_berlaku_gaji ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_berlaku_gaji)}` : ''}`
+                        return `${row.gaji_pokok_lama ? `<b>Gaji Lama</b>: ${formatRupiah(row.gaji_pokok_lama)}` : '-'} 
+                                        <br> ${row.tgl_berlaku_gaji ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_berlaku_gaji)}` : '-'}`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `${row.gaji_pokok_lama ? `<b>Gaji Baru</b>: ${formatRupiah(row.gaji_pokok_lama)}` : ``} 
-                                        <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : ``}`
+                        return `${row.gaji_pokok_lama ? `<b>Gaji Baru</b>: ${formatRupiah(row.gaji_pokok_lama)}` : `-`} 
+                                        <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : `-`}`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         if (row.status != 'Draft') {
                             return `<a href="/export-kenaikan-gaji?data=${row.id}">
-                                                    <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
-                                                </a>`
+                                <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
+                            </a>`
                         } else {
                             return ``
                         }

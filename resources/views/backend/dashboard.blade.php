@@ -18,6 +18,11 @@
             .table-striped tbody tr:nth-of-type(odd) {
                 background-color: #9e9e9e21 !important;
             }
+
+            th,
+            td {
+                font-size: 13.2px !important;
+            }
         </style>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
@@ -57,7 +62,8 @@
                             <div class="col-12 mt-3">
                                 <div class="card w-100">
                                     <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda E</h3>
+                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda E
+                                        </h3>
                                         <div class="table-responsive">
                                             <table id="myTable" class="table table-striped" style="width: 100%;">
                                                 <thead class="bg-info text-white">
@@ -187,210 +193,137 @@
                         </div>
                     @endif
             @elseif(Auth::user()->role == 'Admin')
-                        <div class="col-lg-3 mt-3">
-                            <div class="card shadow bg-gradient-success card-img-holder text-white">
-                                <div class="card-body">
-                                    <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                        class="card-img-absolute" alt="circle">
-                                    <h4 class="font-weight-normal mb-3">
-                                        Total Pegawai
-                                        <i class="bi bi-person-circle float-right"></i>
-                                    </h4>
-                                    <h2>
-                                        {{ $total_pegawai ?? 0}}
-                                    </h2>
-                                    <span>Orang</span>
-                                </div>
-                            </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="card shadow bg-gradient-success card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                class="card-img-absolute" alt="circle">
+                            <h4 class="font-weight-normal mb-3">
+                                Total Pegawai
+                                <i class="bi bi-person-circle float-right"></i>
+                            </h4>
+                            <h2>
+                                {{ $total_pegawai ?? 0}}
+                            </h2>
+                            <span>Orang</span>
                         </div>
-                        <div class="col-lg-3 mt-3">
-                            <div class="card shadow bg-gradient-primary card-img-holder text-white">
-                                <div class="card-body">
-                                    <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                        class="card-img-absolute" alt="circle">
-                                    <h4 class="font-weight-normal mb-3">
-                                        Jenis Dokumen
-                                        <i class="bi bi-person-circle float-right"></i>
-                                    </h4>
-                                    <h2>
-                                        {{ $total_jenis_dokumen ?? 0}}
-                                    </h2>
-                                    <span>Jenis</span>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="card shadow bg-gradient-primary card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                class="card-img-absolute" alt="circle">
+                            <h4 class="font-weight-normal mb-3">
+                                Jenis Dokumen
+                                <i class="bi bi-person-circle float-right"></i>
+                            </h4>
+                            <h2>
+                                {{ $total_jenis_dokumen ?? 0}}
+                            </h2>
+                            <span>Jenis</span>
                         </div>
-                        <div class="col-lg-3 mt-3">
-                            <div class="card shadow bg-gradient-info card-img-holder text-white">
-                                <div class="card-body">
-                                    <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                        class="card-img-absolute" alt="circle">
-                                    <h4 class="font-weight-normal mb-3">
-                                        Total Dokumen
-                                        <i class="bi bi-person-circle float-right"></i>
-                                    </h4>
-                                    <h2>
-                                        {{ $total_dokumen ?? 0}}
-                                    </h2>
-                                    <span>Diupload</span>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="card shadow bg-gradient-info card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                class="card-img-absolute" alt="circle">
+                            <h4 class="font-weight-normal mb-3">
+                                Total Dokumen
+                                <i class="bi bi-person-circle float-right"></i>
+                            </h4>
+                            <h2>
+                                {{ $total_dokumen ?? 0}}
+                            </h2>
+                            <span>Diupload</span>
                         </div>
-                        <div class="col-lg-3 mt-3">
-                            <div class="card shadow bg-gradient-danger card-img-holder text-white">
-                                <div class="card-body">
-                                    <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                        class="card-img-absolute" alt="circle">
-                                    <h4 class="font-weight-normal mb-3">
-                                        Total SKPD
-                                        <i class="bi bi-person-circle float-right"></i>
-                                    </h4>
-                                    <h2>
-                                        {{ $total_asal_pegawai ?? 0 }}
-                                    </h2>
-                                    <span>Daerah</span>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <div class="card shadow bg-gradient-danger card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                class="card-img-absolute" alt="circle">
+                            <h4 class="font-weight-normal mb-3">
+                                Total SKPD
+                                <i class="bi bi-person-circle float-right"></i>
+                            </h4>
+                            <h2>
+                                {{ $total_asal_pegawai ?? 0 }}
+                            </h2>
+                            <span>Daerah</span>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="col-lg-6 mt-4">
-                            <div class="card shadow" style="border-radius: 8px; border: none;">
-                                <div class="card-body" style="border-radius: 8px; border: none;">
-                                    <h3 style="line-height: 1.7rem;">
-                                        [ <i class="bi bi-building"></i> ]
-                                        Profil Kepala Instansi
-                                    </h3>
-                                    <span class="text-danger">
-                                        Set Data Instansi di Menu Instansi
-                                        <a href="{{ url('instansi') }}">
-                                            <i class="bi bi-box-arrow-up-right"></i>
-                                        </a>
-                                    </span>
-                                    <div class="mb-4"></div>
-                                    @php
-                                        $data = DB::table('instansis')
-                                            ->join('profils', 'profils.id', '=', 'instansis.id_profil')
-                                            ->join('users', 'users.id', '=', 'profils.id_user')
-                                            ->select(
-                                                'users.name',
-                                                'profils.nip',
-                                                'profils.pangkat',
-                                                'profils.tempat_lahir',
-                                                'profils.tanggal_lahir',
-                                                'profils.jenis_kelamin'
-                                            )->where('instansis.status', 'Aktif')->first();
-                                    @endphp
-                                    <div class="table-responsive" style="height: 290px; overflow-y: auto;">
-                                        <table class="table table-striped table-borderless"
-                                            style="border-radius: 8px !important; border: none !important;">
-                                            <tr>
-                                                <td width="1%">
-                                                    <i class="bi bi-person-circle"></i>
-                                                </td>
-                                                <td>
-                                                    Kepala Instansi
-                                                </td>
+                <!-- @include('backend.components.profil_kepala') -->
 
-                                                <td>: {{ @$data->name }}</td>
-                                            </tr>
+                <div class="col-lg-6 mt-4">
+                    <div class="card shadow" style="border-radius: 8px; border: none;">
+                        <div class="card-body" style="border-radius: 8px; border: none;">
+                            <h3 style="line-height: 1.7rem;">
+                                [ <i class="bi bi-bell"></i> ]
+                                Dokumen Belum Diperiksa
+                            </h3>
+                            <span class="text-danger">
+                                Informasi Dokumen yang Belum Diperiksa oleh Admin
+                            </span>
+                            <div class="mb-4"></div>
+                            <div class="table-responsive" id="tabel" style="height: 290px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama / NIP</th>
+                                            <th>Status / Jenis Dokumen</th>
+                                            <th>File</th>
+                                            <th>Periksa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @forelse($dokumen_periksa as $i)
                                             <tr>
-                                                <td width="1%">
-                                                    <i class="bi bi-postcard"></i>
+                                                <td>
+                                                    {{ $i->name }} <br>
+                                                    <b>{{ $i->nip }}</b>
                                                 </td>
                                                 <td>
-                                                    NIP
-                                                </td>
-                                                <td>: {{ @$data->nip }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="1%">
-                                                    <i class="bi bi-boxes"></i>
+                                                    {{ $i->status ?? 'Belum Diperiksa' }} <br>
+                                                    Dok. {{ $i->jenis_dokumen ?? 'Lainnya' }}
                                                 </td>
                                                 <td>
-                                                    Gol. / Pangkat
-                                                </td>
-                                                <td>: {{ @$data->pangkat }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="1%">
-                                                    <i class="bi bi-calendar3"></i>
+                                                    <a target="_blank" href="{{ url('convert-to-pdf') }}/{{ $i->dokumen }}">
+                                                        <i style="font-size: 1.5rem;"
+                                                            class="text-danger bi bi-file-earmark-pdf"></i>
+                                                    </a>
                                                 </td>
                                                 <td>
-                                                    Tempat / Tanggal Lahir
+                                                    <button style="border-radius: 8px !important;"
+                                                        class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#modalExample" data-bs-id="{{ $i->id }}"
+                                                        data-bs-status="{{ $i->status }}"
+                                                        data-bs-id_dokumen="{{ $i->id_dokumen }}">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
                                                 </td>
-                                                <td>: {{ @$data->tempat_lahir}}, {{ @$data->tanggal_lahir }}</td>
                                             </tr>
+                                        @empty
                                             <tr>
-                                                <td width="1%">
-                                                    <i class="bi bi-person-square"></i>
+                                                <td colspan="4" class="text-center">
+                                                    Belum Ada Data Untuk Ditampilkan!
                                                 </td>
-                                                <td>
-                                                    Jenis Kelamin
-                                                </td>
-                                                <td>: {{ @$data->jenis_kelamin }}</td>
                                             </tr>
-                                        </table>
-                                    </div>
-                                </div>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="col-lg-6 mt-4">
-                            <div class="card shadow" style="border-radius: 8px; border: none;">
-                                <div class="card-body" style="border-radius: 8px; border: none;">
-                                    <h3 style="line-height: 1.7rem;">
-                                        [ <i class="bi bi-coin"></i> ]
-                                        Proses Kenaikan Gaji Pegawai
-                                    </h3>
-                                    <span class="text-danger">
-                                        Lihat Data Kenaikan gaji di Menu Kenaikan Gaji
-                                        <a href="{{ url('kenaikan-gaji') }}">
-                                            <i class="bi bi-box-arrow-up-right"></i>
-                                        </a>
-                                    </span>
-                                    <div class="mb-4"></div>
-                                    <div class="table-responsive" style="height: 290px;">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nama / NIP</th>
-                                                    <th width="40%">Tgl Kenaikan</th>
-                                                    <th>Buat Dok.</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                @forelse($kenaikan_gaji as $i)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $i->name }} <br>
-                                                            <b>{{ $i->nip }}</b>
-                                                        </td>
-                                                        <td>
-                                                            Tgl. {{ date('d-m-Y', strtotime($i->tgl_kenaikan_berikutnya)) }} <br>
-                                                            <i class="bi bi-exclamation-triangle"></i>
-                                                            {{ $i->total_hari }} hari lagi
-                                                        </td>
-                                                        <td>
-                                                            <form action="{{ url('store-kenaikan-gaji') }}" method="post">
-                                                                <input type="hidden" name="id_profil" id="id_profil" required>
-                                                                <button style="border-radius: 8px !important;"
-                                                                    class="btn btn-sm btn-primary">Proses</button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="3" class="text-center">
-                                                            Belum Ada Data Untuk Ditampilkan!
-                                                        </td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                @include('backend.components.proses_dokumen_berkala')
             @endif
         </div>
         <div class="row">
@@ -406,6 +339,57 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form">
+                <div class="modal-header p-3">
+                    <h5 class="modal-title m-2" id="exampleModalLabel">Informasi</h5>
+                </div>
+                <div class="modal-body">
+                    Mohon Maaf!. Saat ini dokumen berkala yang bisa diproses adalah dokumen kenaikan gaji pegawai.
+
+                </div>
+                <div class="modal-footer p-3">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalExample" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="updateStatusForm">
+                @if (Auth::user()->role == 'Admin')
+                    <div class="modal-header p-3">
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Update Dokumen Form</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="respon_error" class="text-danger"></div>
+                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id_dokumen" id="id_dokumen">
+                        <div class="form-group">
+                            <label>Status Dokumen</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">--PILIH STATUS--</option>
+                                <option>Sedang Dalam Pengecekan</option>
+                                <option>Dokumen Diterima</option>
+                                <option>Perlu Diperbaiki</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer p-3">
+                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </div>
+                @endif
+            </form>
         </div>
     </div>
 </div>
@@ -435,11 +419,67 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                                                                                                <strong>${district.nama_skpd}</strong><br>
-                                                                                                                Total pegawai: ${district.total_employees}
-                                                                                                            `);
+                                    <strong>${district.nama_skpd}</strong><br>
+                                    Total pegawai: ${district.total_employees}
+                                `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));
+    </script>
+    <script>
+        $('#modalExample').on('show.bs.modal', function (event) {
+            const button = event.relatedTarget
+            const id = button.getAttribute('data-bs-id')
+            const status = button.getAttribute('data-bs-status')
+            const id_dokumen = button.getAttribute('data-bs-id_dokumen')
+
+            console.log('test');
+
+
+            var modal = $(this)
+            modal.find('#id').val(id)
+            modal.find('#status').val(status)
+            modal.find('#id_dokumen').val(id_dokumen)
+        })
+
+        updateStatusForm.onsubmit = (e) => {
+
+            let formData = new FormData(updateStatusForm);
+
+            e.preventDefault();
+
+            document.getElementById("tombol_kirim").disabled = true;
+
+            axios({
+                method: 'post',
+                url: '/update-status-dokumen',
+                data: formData,
+            })
+                .then(function (res) {
+                    //handle success         
+                    if (res.data.responCode == 1) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: res.data.respon,
+                            timer: 3000,
+                            showConfirmButton: false
+                        })
+
+                        location.reload('/file-dokumen')
+
+                    } else {
+
+                    }
+
+                    document.getElementById("tombol_kirim").disabled = false;
+                })
+                .catch(function (res) {
+                    document.getElementById("tombol_kirim").disabled = false;
+                    //handle error
+                    console.log(res);
+                });
+        }
     </script>
 @endpush

@@ -114,6 +114,7 @@ class DokumenController extends Controller
             'tanggal_dokumen' => $request->tanggal_dokumen,
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
             'id_skpd' => $request->id_skpd,
+            'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala
         ]);
 
         return response()->json([
@@ -198,7 +199,8 @@ class DokumenController extends Controller
             'id_dokumen' => $request->id_dokumen,
             'tanggal_dokumen' => $request->tanggal_dokumen,
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
-            'id_skpd' => $request->id_skpd
+            'id_skpd' => $request->id_skpd,
+            'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala
         ]);
 
         return response()->json([

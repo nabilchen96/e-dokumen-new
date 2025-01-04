@@ -66,17 +66,75 @@ class DashboardController extends Controller
 
         $today = now()->toDateString();
 
-        $kenaikan_gaji = DB::table('kenaikan_gajis')
-            ->join('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
-            ->join('users', 'users.id', '=', 'profils.id_user')
+        $variations = [
+            'dokumen berkala',
+            'Dokumen Berkala',
+            'Dokumen berkala',
+            'dokumen Berkala',
+            'DOKUMEN BERKALA',
+            'dok. berkala',
+            'dok berkala',
+            'Dok. Berkala',
+            'Dok Berkala',
+            'DOK. BERKALA',
+            'DOK BERKALA',
+            'dokumenberkala',
+            'DokumenBerkala',
+            'DOKUMENBERKALA',
+            'Dokumenberkala',
+            'dokumenBerkala',
+            'Kenaikan Gaji',
+            'Kenaikan gaji',
+            'kenaikan Gaji',
+            'kenaikangaji',
+            'KenaikanGaji',
+            'Kenaikangaji',
+            'kenaikanGaji',
+            'KENAIKAN GAJI',
+            'KENAIKANGAJI',
+        ];
+
+        $kenaikan_gaji = DB::table('dokumens')
+            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+            ->join('users', 'users.id', '=', 'dokumens.id_user')
+            ->join('profils', 'profils.id_user', '=', 'users.id')
+            ->leftjoin('kenaikan_gajis', 'kenaikan_gajis.id_dokumen', '=', 'dokumens.id')
             ->select(
-                'tgl_kenaikan_berikutnya',
+                'dokumens.tanggal_akhir_dokumen',
                 'users.name',
                 'profils.nip',
-                DB::raw("ABS(DATEDIFF(kenaikan_gajis.tgl_kenaikan_berikutnya, '$today')) as total_hari")
+                'profils.id as id_profil',
+                'dokumens.id',
+                'dokumens.jenis_dokumen_berkala',
+                'kenaikan_gajis.id as id_kenaikan_gaji',
+                'kenaikan_gajis.status as status_dokumen',
+                DB::raw("ABS(DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today')) as total_hari")
             )
-            ->havingRaw("total_hari <= 90") // Menambahkan filter untuk total_hari maksimal 90
+            ->where('dokumens.tanggal_akhir_dokumen', '>=', $today)
+            ->orderBy('total_hari', 'asc')
+            ->where('dokumens.status', 'Dokumen Diterima')
+            ->where(function ($query) {
+                $query->where('kenaikan_gajis.status', 'Draft')
+                      ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
+            })
             ->get();
+
+
+        $dokumen_periksa = DB::table('dokumens')
+            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+            ->join('users', 'users.id', '=', 'dokumens.id_user')
+            ->join('profils', 'profils.id_user', '=', 'users.id')
+            ->select(
+                'dokumens.*',
+                'jenis_dokumens.jenis_dokumen',
+                'users.name',
+                'profils.nip',
+            )
+            ->whereNull('dokumens.status')
+            ->orwhere('dokumens.status', 'Sedang Dalam Pengecekan')
+            ->orderBy('dokumens.created_at', 'asc')
+            ->get();
+
 
 
         return view('backend.dashboard', [
@@ -85,7 +143,8 @@ class DashboardController extends Controller
             'total_jenis_dokumen' => $total_jenis_dokumen ?? 0,
             'total_dokumen' => $total_dokumen ?? 0,
             'total_asal_pegawai' => $total_asal_pegawai ?? 0,
-            'kenaikan_gaji' => $kenaikan_gaji
+            'kenaikan_gaji' => $kenaikan_gaji,
+            'dokumen_periksa' => $dokumen_periksa
         ]);
     }
 

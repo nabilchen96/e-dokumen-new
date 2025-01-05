@@ -131,6 +131,8 @@ class DashboardController extends Controller
             )
             ->whereNull('dokumens.status')
             ->orwhere('dokumens.status', 'Sedang Dalam Pengecekan')
+            ->orWhere('dokumens.status', 'Perlu Diperbaiki')
+            ->orWhere('dokumens.status', 'Belum Diperiksa')
             ->orderBy('dokumens.created_at', 'asc')
             ->get();
 

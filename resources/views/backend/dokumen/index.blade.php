@@ -56,8 +56,8 @@
                                 <th>SKPD</th>
                                 <th>Status</th>
                                 <th width="5%">PDF</th>
-                                <th width="5%"></th>
-                                <th width="5%"></th>
+                                <th width="5%">Edit</th>
+                                <th width="5%">Hapus</th>
                             </tr>
                         </thead>
                     </table>

@@ -65,7 +65,7 @@
                                 <th>Jenis Kelamin/Tempat, Tgl Lahir</th>
                                 <th>Alamat/Daerah</th>
                                 <th>Peta</th>
-                                <th width="5%"></th>
+                                <th width="5%">Edit</th>
                                 <!-- <th width="5%"></th> -->
                             </tr>
                         </thead>

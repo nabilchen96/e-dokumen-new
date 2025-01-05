@@ -48,71 +48,111 @@
                     Welcome back to Aplikasi ASNBKL</h6>
             </div>
             @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload != null)
+
                     @if (@$profil)
-                            <div class="col-lg-12 mt-1">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <i class="text-danger bi bi-exclamation-triangle"></i>
-                                        Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>. Klik menu dokumen dan pilih
-                                        jenis dokumen yang ingin diupload.
-                                    </div>
+                        <div class="col-lg-12 mt-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="text-danger bi bi-exclamation-triangle"></i>
+                                    Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>. Klik menu dokumen dan pilih
+                                    jenis dokumen yang ingin diupload.
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-12 mt-3">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
-                                        </h3>
-                                        <div class="table-responsive">
-                                            <table id="myTable" class="table table-striped" style="width: 100%;">
-                                                <thead class="bg-info text-white">
+                        <div class="col-12 mt-3">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
+                                    </h3>
+                                    <div class="table-responsive">
+                                        <table id="myTable" class="table table-striped" style="width: 100%;">
+                                            <thead class="bg-info text-white">
+                                                <tr>
+                                                    <th width="5%">No</th>
+                                                    <th>jenis Dokumen</th>
+                                                    <th>Tanggal Dokumen</th>
+                                                    <th>Tanggal Upload</th>
+                                                    <th>Status</th>
+                                                    <th width="5%">File</th>
+                                                    <th width="5%">Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+
+                                                    $profil = DB::table('profils')->where('id_user', Auth::id())->first();
+
+                                                    $data = DB::table('dokumens')
+                                                        ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                                                        ->where('dokumens.id_user', Auth::id())
+                                                        ->select(
+                                                            'dokumens.*',
+                                                            'jenis_dokumens.jenis_dokumen',
+                                                            'jenis_dokumens.punya_tgl_akhir',
+                                                            'jenis_dokumens.id as id_jenis_dokumen'
+                                                        )
+                                                        ->orderByRaw("
+                                                            CASE 
+                                                                WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
+                                                                WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
+                                                                WHEN dokumens.status = 'Belum Diperiksa' THEN 3
+                                                                WHEN dokumens.status IS NULL THEN 4
+                                                                WHEN dokumens.status = 'Dokumen Diterima' THEN 5
+                                                                ELSE 6
+                                                            END
+                                                        ")
+                                                        ->get();
+                                                @endphp
+                                                @foreach ($data as $k => $item)
                                                     <tr>
-                                                        <th width="5%">No</th>
-                                                        <th>jenis Dokumen</th>
-                                                        <th>Tanggal Dokumen</th>
-                                                        <th>Tanggal Upload</th>
-                                                        <th>Status</th>
-                                                        <th width="5%"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
+                                                        <td>{{ $k + 1 }}</td>
+                                                        <td>{{ $item->jenis_dokumen }}</td>
+                                                        <td>{{ $item->tanggal_dokumen }}</td>
+                                                        <td>{{ $item->created_at }}</td>
+                                                        <td>
+                                                            <!-- @if ($item->status == 'Dokumen Diterima')
+                                                                <span class="badge bg-success text-white">Belum Diperiksa</span>
+                                                            @elseif($item->status == 'Perlu Diperbaiki')
+                                                                <span class="badge bg-danger text-white">Perlu Diperbaiki</span>
+                                                            @elseif($item->status == 'Belum Diperiksa' || $item->status == NULL)
+                                                                <span class="badge bg-warning text-white">Belum Diperiksa</span>
+                                                            @elseif($item->status == 'Sedang Dalam Pengecekan')
+                                                                <span class="badge bg-info text-white">Sedang Dalam Pengecekan</span>
+                                                            @endif -->
 
-                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                                        $data = DB::table('dokumens')
-                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                            ->where('dokumens.id_user', Auth::id())
-                                                            //->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
-                                                            //->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
-                                                            ->select(
-                                                                'dokumens.*',
-                                                                'jenis_dokumens.jenis_dokumen'
-                                                            )
-                                                            ->get();
-                                                    @endphp
-                                                    @foreach ($data as $k => $item)
-                                                        <tr>
-                                                            <td>{{ $k + 1 }}</td>
-                                                            <td>{{ $item->jenis_dokumen }}</td>
-                                                            <td>{{ $item->tanggal_dokumen }}</td>
-                                                            <td>{{ $item->created_at }}</td>
-                                                            <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
-                                                            <td>
-                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                    <i style="font-size: 1.5rem;"
-                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
+                                                            {{ $item->status ?? 'Belum Diperiksa' }}
+                                                        </td>
+                                                        <td>
+                                                            <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
+                                                                <i style="font-size: 1.5rem;"
+                                                                    class="text-danger bi bi-file-earmark-pdf"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            @if ($item->status == 'Perlu Diperbaiki')
+                                                                <a  href="#" style="border-radius: 8px !important;" data-toggle="modal"
+                                                                    data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
+                                                                    data-bs-id_user="{{ Auth::id() }}"
+                                                                    data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
+                                                                    data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
+                                                                    data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
+                                                                    data-bs-id_skpd="{{ @$item->id_skpd }}"
+                                                                    data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
+                                                                    data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
+                                                                    data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
+                                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                                                                 </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     @else
                         <div class="col-lg-12 mt-1">
                             <div class="card">
@@ -124,63 +164,90 @@
                             </div>
                         </div>
                     @endif
-            @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
 
+            @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
                     @if(@$profil)
 
-                            <div class="col-12 mt-3">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
-                                        <div class="table-responsive">
-                                            <table id="myTable" class="table table-striped" style="width: 100%;">
-                                                <thead class="bg-info text-white">
+                        <div class="col-12 mt-3">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
+                                    <div class="table-responsive">
+                                        <table id="myTable" class="table table-striped" style="width: 100%;">
+                                            <thead class="bg-info text-white">
+                                                <tr>
+                                                    <th width="5%">No</th>
+                                                    <th>jenis Dokumen</th>
+                                                    <th>Tanggal Dokumen</th>
+                                                    <th>Tanggal Upload</th>
+                                                    <th>Status</th>
+                                                    <th width="5%"></th>
+                                                    <td width="5%"></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+
+                                                    $profil = DB::table('profils')->where('id_user', Auth::id())->first();
+
+                                                    $data = DB::table('dokumens')
+                                                        ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                                                        ->where('dokumens.id_user', Auth::id())
+                                                        ->select(
+                                                            'dokumens.*',
+                                                            'jenis_dokumens.jenis_dokumen',
+                                                            'jenis_dokumens.punya_tgl_akhir',
+                                                            'jenis_dokumens.id as id_jenis_dokumen'
+                                                        )
+                                                        ->orderByRaw("
+                                                            CASE dokumens.status
+                                                                WHEN 'Perlu Diperbaiki' THEN 1
+                                                                WHEN 'Sedang Dalam Pengecekan' THEN 2
+                                                                WHEN 'Belum Diperiksa' THEN 3
+                                                                WHEN NULL THEN 4
+                                                                WHEN 'Dokumen Diterima' THEN 5
+                                                                ELSE 6
+                                                            END
+                                                        ")
+                                                        ->get();
+                                                @endphp
+                                                @foreach ($data as $k => $item)
                                                     <tr>
-                                                        <th width="5%">No</th>
-                                                        <th>jenis Dokumen</th>
-                                                        <th>Tanggal Dokumen</th>
-                                                        <th>Tanggal Upload</th>
-                                                        <th>Status</th>
-                                                        <th width="5%"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-
-                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                                        $data = DB::table('dokumens')
-                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                            ->where('dokumens.id_user', Auth::id())
-                                                            //->where('jenis_dokumens.jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
-                                                            //->Orwhere('jenis_dokumens.jenis_pegawai', 'Semua')
-                                                            ->select(
-                                                                'dokumens.*',
-                                                                'jenis_dokumens.jenis_dokumen'
-                                                            )
-                                                            ->get();
-                                                    @endphp
-                                                    @foreach ($data as $k => $item)
-                                                        <tr>
-                                                            <td>{{ $k + 1 }}</td>
-                                                            <td>{{ $item->jenis_dokumen }}</td>
-                                                            <td>{{ $item->tanggal_dokumen }}</td>
-                                                            <td>{{ $item->created_at }}</td>
-                                                            <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
-                                                            <td>
-                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                    <i style="font-size: 1.5rem;"
-                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
+                                                        <td>{{ $k + 1 }}</td>
+                                                        <td>{{ $item->jenis_dokumen }}</td>
+                                                        <td>{{ $item->tanggal_dokumen }}</td>
+                                                        <td>{{ $item->created_at }}</td>
+                                                        <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
+                                                        <td>
+                                                            <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
+                                                                <i style="font-size: 1.5rem;"
+                                                                    class="text-danger bi bi-file-earmark-pdf"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            @if ($item->status == 'Perlu Diperbaiki')
+                                                                <a  href="#" style="border-radius: 8px !important;" data-toggle="modal"
+                                                                    data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
+                                                                    data-bs-id_user="{{ Auth::id() }}"
+                                                                    data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
+                                                                    data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
+                                                                    data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
+                                                                    data-bs-id_skpd="{{ @$item->id_skpd }}"
+                                                                    data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
+                                                                    data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
+                                                                    data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
+                                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                                                                 </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     @else
                         <div class="col-lg-12 mt-1">
                             <div class="card">
@@ -192,139 +259,8 @@
                             </div>
                         </div>
                     @endif
-            @elseif(Auth::user()->role == 'Admin')
-                <div class="col-lg-3 mt-3">
-                    <div class="card shadow bg-gradient-success card-img-holder text-white">
-                        <div class="card-body">
-                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                class="card-img-absolute" alt="circle">
-                            <h4 class="font-weight-normal mb-3">
-                                Total Pegawai
-                                <i class="bi bi-person-circle float-right"></i>
-                            </h4>
-                            <h2>
-                                {{ $total_pegawai ?? 0}}
-                            </h2>
-                            <span>Orang</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mt-3">
-                    <div class="card shadow bg-gradient-primary card-img-holder text-white">
-                        <div class="card-body">
-                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                class="card-img-absolute" alt="circle">
-                            <h4 class="font-weight-normal mb-3">
-                                Jenis Dokumen
-                                <i class="bi bi-person-circle float-right"></i>
-                            </h4>
-                            <h2>
-                                {{ $total_jenis_dokumen ?? 0}}
-                            </h2>
-                            <span>Jenis</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mt-3">
-                    <div class="card shadow bg-gradient-info card-img-holder text-white">
-                        <div class="card-body">
-                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                class="card-img-absolute" alt="circle">
-                            <h4 class="font-weight-normal mb-3">
-                                Total Dokumen
-                                <i class="bi bi-person-circle float-right"></i>
-                            </h4>
-                            <h2>
-                                {{ $total_dokumen ?? 0}}
-                            </h2>
-                            <span>Diupload</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mt-3">
-                    <div class="card shadow bg-gradient-danger card-img-holder text-white">
-                        <div class="card-body">
-                            <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
-                                class="card-img-absolute" alt="circle">
-                            <h4 class="font-weight-normal mb-3">
-                                Total SKPD
-                                <i class="bi bi-person-circle float-right"></i>
-                            </h4>
-                            <h2>
-                                {{ $total_asal_pegawai ?? 0 }}
-                            </h2>
-                            <span>Daerah</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- @include('backend.components.profil_kepala') -->
-
-                <div class="col-lg-6 mt-4">
-                    <div class="card shadow" style="border-radius: 8px; border: none;">
-                        <div class="card-body" style="border-radius: 8px; border: none;">
-                            <h3 style="line-height: 1.7rem;">
-                                [ <i class="bi bi-bell"></i> ]
-                                Dokumen Belum Diperiksa
-                            </h3>
-                            <span class="text-danger">
-                                Informasi Dokumen yang Belum Diperiksa oleh Admin
-                            </span>
-                            <div class="mb-4"></div>
-                            <div class="table-responsive" id="tabel" style="height: 290px;">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama / NIP</th>
-                                            <th>Status / Jenis Dokumen</th>
-                                            <th>File</th>
-                                            <th>Periksa</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @forelse($dokumen_periksa as $i)
-                                            <tr>
-                                                <td>
-                                                    {{ $i->name }} <br>
-                                                    <b>{{ $i->nip }}</b>
-                                                </td>
-                                                <td>
-                                                    {{ $i->status ?? 'Belum Diperiksa' }} <br>
-                                                    Dok. {{ $i->jenis_dokumen ?? 'Lainnya' }}
-                                                </td>
-                                                <td>
-                                                    <a target="_blank" href="{{ url('convert-to-pdf') }}/{{ $i->dokumen }}">
-                                                        <i style="font-size: 1.5rem;"
-                                                            class="text-danger bi bi-file-earmark-pdf"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <button style="border-radius: 8px !important;"
-                                                        class="btn btn-sm btn-primary" data-toggle="modal"
-                                                        data-target="#modalExample" data-bs-id="{{ $i->id }}"
-                                                        data-bs-status="{{ $i->status }}"
-                                                        data-bs-id_dokumen="{{ $i->id_dokumen }}">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="4" class="text-center">
-                                                    Belum Ada Data Untuk Ditampilkan!
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @include('backend.components.proses_dokumen_berkala')
             @endif
+            @include('backend.components.admin_widget')
         </div>
         <div class="row">
             <!-- //peta -->
@@ -342,57 +278,94 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="form">
-                <div class="modal-header p-3">
-                    <h5 class="modal-title m-2" id="exampleModalLabel">Informasi</h5>
-                </div>
-                <div class="modal-body">
-                    Mohon Maaf!. Saat ini dokumen berkala yang bisa diproses adalah dokumen kenaikan gaji pegawai.
 
-                </div>
-                <div class="modal-footer p-3">
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <!-- Modal -->
-<div class="modal fade" id="modalExample" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDokumen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="updateStatusForm">
-                @if (Auth::user()->role == 'Admin')
+            <form id="formDokumen">
+                @if(Auth::user()->role == 'Pegawai')
                     <div class="modal-header p-3">
-                        <h5 class="modal-title m-2" id="exampleModalLabel">Update Dokumen Form</h5>
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>
                     <div class="modal-body">
-                        <div id="respon_error" class="text-danger"></div>
+                        <div id="respon_error" class="text-danger mb-4"></div>
                         <input type="hidden" name="id" id="id">
                         <input type="hidden" name="id_dokumen" id="id_dokumen">
                         <div class="form-group">
-                            <label>Status Dokumen <sup class="text-danger">*</sup></label>
-                            <select name="status" id="status" class="form-control" required>
-                                <option value="">--PILIH STATUS--</option>
-                                <option>Sedang Dalam Pengecekan</option>
-                                <option>Dokumen Diterima</option>
-                                <option>Perlu Diperbaiki</option>
+                            <label>Dokumen <sup class="text-danger">*</sup></label>
+                            <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
+                                class="form-control form-control-sm" required accept=".pdf, image/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Dokumen <sup class="text-danger">*</sup></label>
+                            <input type="text" placeholder="Dokumen" id="jenis_dokumen" class="form-control form-control-sm"
+                                required readonly>
+                        </div>
+                        @php
+                            $variations = [
+                                'dokumen berkala',
+                                'Dokumen Berkala',
+                                'Dokumen berkala',
+                                'dokumen Berkala',
+                                'DOKUMEN BERKALA',
+                                'dok. berkala',
+                                'dok berkala',
+                                'Dok. Berkala',
+                                'Dok Berkala',
+                                'DOK. BERKALA',
+                                'DOK BERKALA',
+                                'dokumenberkala',
+                                'DokumenBerkala',
+                                'DOKUMENBERKALA',
+                                'Dokumenberkala',
+                                'dokumenBerkala',
+                                'Kenaikan Gaji',
+                                'Kenaikan gaji',
+                                'kenaikan Gaji',
+                                'kenaikangaji',
+                                'KenaikanGaji',
+                                'Kenaikangaji',
+                                'kenaikanGaji',
+                                'KENAIKAN GAJI',
+                                'KENAIKANGAJI',
+                            ];
+
+                            $kenaikan_gaji = DB::table('jenis_dokumens')
+                                ->where('id', Request('jenis_dokumen'))
+                                ->first();
+                        @endphp
+                        <!-- <div class="form-group">
+                                <label>Jenis Dokumen Berkala</label>
+                                <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"
+                                    class="form-control form-control-sm" required>
+                                    <option>Kenaikan Gaji</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div> -->
+                        <div class="form-group">
+                            <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
+                            <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
+                                name="tanggal_dokumen" class="form-control form-control-sm" required>
+                        </div>
+                        <div id="punya_tgl_akhir"></div>
+                        <div class="form-group">
+                            <label>Pemilik <sup class="text-danger">*</sup></label>
+                            <select name="id_user" id="id_user" class="form-control" required>
+                                <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
                             </select>
                         </div>
-                        <div class="modal-footer p-3">
-                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                            <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer p-3">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                        <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
                     </div>
                 @endif
             </form>
         </div>
     </div>
 </div>
+
 @endsection
 @push('script')
     <script>
@@ -419,21 +392,106 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                    <strong>${district.nama_skpd}</strong><br>
-                                    Total pegawai: ${district.total_employees}
-                                `);
+                            <strong>${district.nama_skpd}</strong><br>
+                            Total pegawai: ${district.total_employees}
+                        `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));
     </script>
     <script>
+        $('#modalDokumen').on('show.bs.modal', function (event) {
+            const button = event.relatedTarget
+
+            const id = button.getAttribute('data-bs-id')
+            const id_user = button.getAttribute('data-bs-id_user')
+            const tanggal_dokumen = button.getAttribute('data-bs-tanggal_dokumen')
+            const tanggal_akhir_dokumen = button.getAttribute('data-bs-tanggal_akhir_dokumen')
+            const id_skpd = button.getAttribute('data-bs-id_skpd')
+            const jenis_dokumen_berkala = button.getAttribute('data-bs-jenis_dokumen_berkala')
+            const jenis_dokumen = button.getAttribute('data-bs-jenis_dokumen')
+            const punya_tgl_akhir = button.getAttribute('data-bs-punya_tgl_akhir')
+            const id_jenis_dokumen = button.getAttribute('data-bs-id_jenis_dokumen')
+
+            if (punya_tgl_akhir == 'Ya') {
+                document.getElementById('punya_tgl_akhir').innerHTML = `
+                        <div class="form-group">
+                            <label>Tanggal Akhir Dokumen</label>
+                            <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
+                                name="tanggal_akhir_dokumen" class="form-control form-control-sm">
+                        </div>
+                    `
+            } else {
+                document.getElementById('punya_tgl_akhir').innerHTML = ``
+            }
+
+            var modal = $(this)
+            modal.find('#id').val(id)
+            modal.find('#id_user').val(id_user)
+            modal.find('#tanggal_dokumen').val(tanggal_dokumen)
+            modal.find('#tanggal_akhir_dokumen').val(tanggal_akhir_dokumen)
+            // modal.find('#id_skpd').val(id_skpd)
+            // modal.find('#jenis_dokumen_berkala').val(jenis_dokumen_berkala)
+            modal.find('#jenis_dokumen').val(jenis_dokumen)
+            modal.find('#id_dokumen').val(id_jenis_dokumen)
+        })
+
+        formDokumen.onsubmit = (e) => {
+
+            let formData = new FormData(formDokumen);
+
+            document.getElementById('respon_error').innerHTML = ``
+
+            e.preventDefault();
+
+            document.getElementById("tombol_kirim").disabled = true;
+
+            axios({
+                method: 'post',
+                url: '/update-file-dokumen',
+                data: formData,
+            })
+                .then(function (res) {
+                    //handle success         
+                    if (res.data.responCode == 1) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: res.data.respon,
+                            timer: 3000,
+                            showConfirmButton: false
+                        })
+
+                        location.reload('/dashboard')
+
+                    } else {
+                        //respon 
+                        let respon_error = ``
+                        Object.entries(res.data.respon).forEach(([field, messages]) => {
+                            messages.forEach(message => {
+                                respon_error += `<li>${message}</li>`;
+                            });
+                        });
+
+                        document.getElementById('respon_error').innerHTML = respon_error
+                    }
+
+                    document.getElementById("tombol_kirim").disabled = false;
+                })
+                .catch(function (res) {
+                    document.getElementById("tombol_kirim").disabled = false;
+                    //handle error
+                    console.log(res);
+                });
+        }
+
         $('#modalExample').on('show.bs.modal', function (event) {
+
             const button = event.relatedTarget
             const id = button.getAttribute('data-bs-id')
             const status = button.getAttribute('data-bs-status')
             const id_dokumen = button.getAttribute('data-bs-id_dokumen')
-
-            console.log('test');
 
 
             var modal = $(this)

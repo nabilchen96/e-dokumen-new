@@ -232,7 +232,7 @@
                         return `<b>Name</b>: ${row.name} <br> 
                                 <b>Role</b>: ${row.role} <br>
                                 <b>Status</b>: ${row.status_pegawai} <br>
-                                ${row.pangkat ?? `IV/c - Pembina Utama Muda`}`;
+                                ${row.pangkat ?? `-`}`;
                     }
                 },
                 {
@@ -240,7 +240,7 @@
                         return `<b>NIP</b>: ${row.nip} <br> 
                                 <b>Email</b>: ${row.email} <br> 
                                 <b>Whatsapp</b>: ${row.no_wa} <br>
-                                <b>Jabatan</b>: ${row.jabatan ?? `Guru Ahli Madya`}`;
+                                <b>Jabatan</b>: ${row.jabatan ?? `-`}`;
                     }
                 },
                 {

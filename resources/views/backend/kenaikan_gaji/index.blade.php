@@ -16,6 +16,23 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #9e9e9e21 !important;
         }
+
+        /* Mengatur ukuran dan margin panah sorting di DataTables */
+        table.dataTable thead .sorting::after,
+        table.dataTable thead .sorting_asc::after,
+        table.dataTable thead .sorting_desc::after {
+            margin-bottom: 5px !important;
+            content: "▲" !important;
+            top: 7px !important;
+        }
+
+        table.dataTable thead .sorting::before,
+        table.dataTable thead .sorting_asc::before,
+        table.dataTable thead .sorting_desc::before {
+            margin-top: -5px !important;
+            content: "▼" !important;
+            bottom: 7px !important;
+        }
     </style>
 @endpush
 @section('content')
@@ -47,8 +64,8 @@
                                 <th>Gaji Lama</th>
                                 <th>Gaji Baru</th>
                                 <th width="5%">File</th>
-                                <th width="5%"></th>
-                                <th width="5%"></th>
+                                <th width="5%">Edit</th>
+                                <th width="5%">Hapus</th>
                             </tr>
                         </thead>
                     </table>
@@ -122,14 +139,17 @@
 
         function getData() {
             $("#myTable").DataTable({
-                "ordering": false,
+                "ordering": true,
                 ajax: '/data-kenaikan-gaji',
                 processing: true,
                 'language': {
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
-                columns: [{
+                columnDefs: [
+                    { orderable: false, targets: [5, 6, 7] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                ],
+                    columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }
@@ -147,21 +167,21 @@
                 {
                     render: function (data, type, row, meta) {
                         return `${row.gaji_pokok_lama ? `<b>Gaji Lama</b>: ${formatRupiah(row.gaji_pokok_lama)}` : '-'} 
-                                        <br> ${row.tgl_berlaku_gaji ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_berlaku_gaji)}` : '-'}`
+                                                    <br> ${row.tgl_berlaku_gaji ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_berlaku_gaji)}` : '-'}`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `${row.gaji_pokok_lama ? `<b>Gaji Baru</b>: ${formatRupiah(row.gaji_pokok_lama)}` : `-`} 
-                                        <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : `-`}`
+                                                    <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : `-`}`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         if (row.status != 'Draft') {
                             return `<a href="/export-kenaikan-gaji?data=${row.id}">
-                                <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
-                            </a>`
+                                            <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
+                                        </a>`
                         } else {
                             return ``
                         }
@@ -170,16 +190,16 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="/edit-kenaikan-gaji?data=${row.id}">
-                                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                            </a>`
+                                                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                            </a>`
+                                                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                        </a>`
                     }
                 },
                 ]

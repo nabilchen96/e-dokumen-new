@@ -92,6 +92,7 @@ class DashboardController extends Controller
             'kenaikanGaji',
             'KENAIKAN GAJI',
             'KENAIKANGAJI',
+            'SK Gaji Berkala',
         ];
 
         $kenaikan_gaji = DB::table('dokumens')

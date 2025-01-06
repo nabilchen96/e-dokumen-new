@@ -181,6 +181,7 @@
                 modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
                 modal.find('#status').val(cokData[0].status)
                 modal.find('#jenis_pegawai').val(cokData[0].jenis_pegawai)
+                modal.find('#punya_tgl_akhir').val(cokData[0].punya_tgl_akhir)
             }
         })
 

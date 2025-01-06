@@ -41,10 +41,10 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>Email / No. WA</th>
                                 <th>Role</th>
                                 <th>Status Pegawai</th>
-                                <th>No. WA</th>
+                                <th>Tgl Dibuat</th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
                             </tr>
@@ -150,7 +150,9 @@
                     data: "name"
                 },
                 {
-                    data: "email"
+                    render: function (data, type, row, meta) {
+                        return `${row.email} <br> WA: ${row.no_wa}`
+                    }
                 },
                 {
                     data: 'role'
@@ -159,15 +161,15 @@
                     data: 'status_pegawai'
                 },
                 {
-                    data: "no_wa"
+                    data: "created_at"
                 },
 
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                                        data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                    </a>`
+                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        </a>`
                     }
                 },
                 {

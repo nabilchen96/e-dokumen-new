@@ -78,8 +78,8 @@
                 </span>
                 <div class="mb-4"></div>
                 <div class="table-responsive" id="tabel" style="height: 290px;">
-                    <table class="table table-striped">
-                        <thead>
+                    <table id="myTable2" class="table table-striped">
+                        <thead class="bg-info text-white">
                             <tr>
                                 <th>Nama / NIP</th>
                                 <th>Status / Jenis Dokumen</th>

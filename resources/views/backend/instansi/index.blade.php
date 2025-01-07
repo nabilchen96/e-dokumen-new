@@ -16,6 +16,23 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #9e9e9e21 !important;
         }
+
+        /* Mengatur ukuran dan margin panah sorting di DataTables */
+        table.dataTable thead .sorting::after,
+        table.dataTable thead .sorting_asc::after,
+        table.dataTable thead .sorting_desc::after {
+            margin-bottom: 5px !important;
+            content: "▲" !important;
+            top: 7px !important;
+        }
+
+        table.dataTable thead .sorting::before,
+        table.dataTable thead .sorting_asc::before,
+        table.dataTable thead .sorting_desc::before {
+            margin-top: -5px !important;
+            content: "▼" !important;
+            bottom: 7px !important;
+        }
     </style>
 @endpush
 @section('content')
@@ -134,13 +151,16 @@
 
         function getData() {
             $("#myTable").DataTable({
-                "ordering": false,
+                "ordering": true,
                 ajax: '/data-instansi',
                 processing: true,
                 'language': {
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
+                columnDefs: [
+                    { orderable: false, targets: [6, 7] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                ],
                 columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;

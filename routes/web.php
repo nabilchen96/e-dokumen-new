@@ -59,6 +59,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-user', 'App\Http\Controllers\UserController@store');
     Route::post('/update-user', 'App\Http\Controllers\UserController@update');
     Route::post('/delete-user', 'App\Http\Controllers\UserController@delete');
+    Route::get('/export-excel-user', 'App\Http\Controllers\UserController@exportExcel');
+    Route::post('/import-excel-user', 'App\Http\Controllers\UserController@importExcel');
 
     //JENIS DOKUMEN
     Route::get('/jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@index');
@@ -80,6 +82,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-skpd', 'App\Http\Controllers\SkpdController@store');
     Route::post('/update-skpd', 'App\Http\Controllers\SkpdController@update');
     Route::post('/delete-skpd', 'App\Http\Controllers\SkpdController@delete');
+
+    //UNIT KERJA
+    Route::get('/unit-kerja', 'App\Http\Controllers\UnitKerjaController@index');
+    Route::get('/data-unit-kerja', 'App\Http\Controllers\UnitKerjaController@data');
+    Route::get('/data-unit-kerja/{id}', 'App\Http\Controllers\UnitKerjaController@getUnitKerjaBySkpd');
+    Route::post('/store-unit-kerja', 'App\Http\Controllers\UnitKerjaController@store');
+    Route::post('/update-unit-kerja', 'App\Http\Controllers\UnitKerjaController@update');
+    Route::post('/delete-unit-kerja', 'App\Http\Controllers\UnitKerjaController@delete');
 
     //INSTANSI
     Route::get('/instansi', 'App\Http\Controllers\InstansiController@index');

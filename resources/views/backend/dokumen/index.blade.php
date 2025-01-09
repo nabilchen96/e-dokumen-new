@@ -65,7 +65,7 @@
                                 <th>Jenis Dokumen</th>
                                 <th>Tanggal Berlaku</th>
                                 <th>Tanggal Upload</th>
-                                <th>SKPD</th>
+                                <th>SKPD / Unit Kerja</th>
                                 <th>Status</th>
                                 <th width="5%">PDF</th>
                                 <th width="5%">Edit</th>
@@ -207,9 +207,16 @@
                                 $skpd = DB::table('skpds')->get();
                             @endphp
                             <select name="id_skpd" id="id_skpd" class="form-control" required>
+                                <option value="">PILIH SKPD</option>
                                 @foreach ($skpd as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_skpd }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Kerja <sup class="text-danger">*</sup></label>
+                            <select name="id_unit_kerja" id="id_unit_kerja" class="form-control" required>
+                                <option value="">PILIH UNIT KERJA</option>
                             </select>
                         </div>
                     </div>
@@ -270,36 +277,38 @@
                     data: "created_at"
                 },
                 {
-                    data: "nama_skpd"
+                    render: function (data, type, row, meta) {
+                        return `SKPD: ${row.nama_skpd} <br> UNIT KERJA: ${row.unit_kerja ?? `-`}`
+                    }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `${row.status ?? 'Belum Diperiksa'}
-                            <br> <span style="display: none;">${row.dokumen}</span>
-                        `
+                                    <br> <span style="display: none;">${row.dokumen}</span>
+                                `
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                        </a>`
+                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                                </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
+                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
+                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                </a>`
                     }
                 },
                 ]
@@ -465,4 +474,33 @@
             });
         }
     </script>
+    <script>
+        document.getElementById('id_skpd').addEventListener('change', function () {
+            const skpdId = this.value; // Ambil id_skpd yang dipilih
+            const unitKerjaSelect = document.getElementById('id_unit_kerja');
+
+            // Kosongkan daftar unit kerja sebelum memuat data baru
+            unitKerjaSelect.innerHTML = '<option value="">Memuat data...</option>';
+
+            // Panggil data unit kerja dengan Axios
+            axios.get(`/data-unit-kerja/${skpdId}`)
+                .then(response => {
+                    const data = response.data;
+                    unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
+
+                    // Tambahkan setiap unit kerja ke dalam dropdown
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.unit_kerja;
+                        unitKerjaSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching unit kerja:', error);
+                    unitKerjaSelect.innerHTML = '<option value="">GAGAL MEMUAT DATA</option>';
+                });
+        });
+    </script>
+
 @endpush

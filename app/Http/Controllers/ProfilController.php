@@ -112,6 +112,7 @@ class ProfilController extends Controller
             $profil = Profil::find($request->id);
             $profil->update([
                 'nip'           => $request->nip,
+                'nik'           => $request->nik,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tempat_lahir'  => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,

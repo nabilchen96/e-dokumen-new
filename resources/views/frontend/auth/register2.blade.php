@@ -28,7 +28,7 @@
 
     <style>
         .select2-container .select2-selection--single {
-            height: calc(2.25rem + 2px);
+            height: calc(2.25rem + 15px);
             padding: 0.375rem 0.75rem;
             font-size: 1rem;
             line-height: 1.5;
@@ -45,12 +45,12 @@
 <body>
 
 
-    <div class="d-lg-flex half">
+    <div class="d-lg-flex half" style="height: 125vh !important;">
         <div class="bg order-1 order-md-2" style="background-image: url('natural.png');"></div>
         <div class="contents order-2 order-md-1">
 
             <div class="container">
-                <div class="row align-items-center justify-content-center">
+                <div class="row align-items-center justify-content-center" style="height: 125vh !important;">
                     <div class="col-md-9">
                         <h3>Register to <br><strong>APLIKASI ASNBKL</strong></h3>
                         <br>
@@ -81,17 +81,18 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Status Pegawai <sup class="text-danger">*</sup></label>
-                                        <select name="status_pegawai" class="form-control" id="status_pegawai" required>
+                                        <select onchange="pilihStatus()" name="status_pegawai" class="form-control" id="status_pegawai" required>
+                                            <option value="">PILIH STATUS</option>
                                             <option>PNS</option>
                                             <option>P3K</option>
-                                            <option>Honorer</option>
+                                            <option value="Honorer">Non ASN</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>NIP <sup class="text-danger">*</sup></label>
-                                        <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP"
+                                        <label>NIK<sup class="text-danger">*</sup></label>
+                                        <input type="number" name="nik" class="form-control" id="nik" placeholder="NIK"
                                             required>
                                     </div>
                                     <div class="form-group">
@@ -110,14 +111,18 @@
                                             placeholder="No Whatsapp" readonly value="{{ session('user_otp')->no_wa }}"
                                             required>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Daerah <sup class="text-danger">*</sup></label>
-                                        <select class="form-control" style="width: 100%;" name="district_id"
-                                            id="select2-ajax" required>
-                                            <option value="">Pilih Data</option>
-                                        </select>
+                                    <div id="nip_form" class="form-group">
+                                        
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Daerah <sup class="text-danger">*</sup></label>
+                                <select class="form-control" style="height: 58px !important; width: 100%;" name="district_id" id="select2-ajax"
+                                    required>
+                                    <option value="">Pilih Data</option>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -156,6 +161,30 @@
 
 
     <script>
+
+        function pilihStatus(){
+
+            var dok = document.getElementById('status_pegawai').value
+
+            console.log(dok);
+            
+
+            if(dok == 'Honorer'){
+
+                document.getElementById('nip_form').innerHTML = ``
+
+            }else{
+
+                document.getElementById('nip_form').innerHTML = `
+                    <label>NIP <sup class="text-danger">*</sup></label>
+                    <input type="number" name="nip" class="form-control" id="nip"
+                        placeholder="NIP" value=""
+                        required>
+                `
+            }
+
+        }
+
         formRegister.onsubmit = (e) => {
 
             e.preventDefault();

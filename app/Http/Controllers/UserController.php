@@ -9,6 +9,12 @@ use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class UserController extends Controller
 {
@@ -21,11 +27,11 @@ class UserController extends Controller
     {
 
         $user = DB::table('users')
-                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-                ->select(
-                    'users.*',
-                    'profils.status_pegawai'
-                );
+            ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+            ->select(
+                'users.*',
+                'profils.status_pegawai'
+            );
 
         $data_user = Auth::user();
         $user = $user->get();
@@ -57,8 +63,8 @@ class UserController extends Controller
                 'no_wa' => $request->no_wa,
             ]);
 
-            if($request->role == 'Pegawai'){
-                
+            if ($request->role == 'Pegawai') {
+
                 Profil::create([
                     'id_user' => $data->id,
                     'status_pegawai' => $request->status_pegawai
@@ -100,15 +106,17 @@ class UserController extends Controller
                 'password' => $request->password ? Hash::make($request->password) : $user->password
             ]);
 
-            if($request->role == 'Pegawai'){
+            if ($request->role == 'Pegawai') {
                 $profil = Profil::where('id_user', $request->id);
-                $data = $profil->updateOrCreate([
-                    'id_user' => $request->id
-                ],
-                [
-                    'id_user' => $request->id,
-                    'status_pegawai' => $request->status_pegawai
-                ]);
+                $data = $profil->updateOrCreate(
+                    [
+                        'id_user' => $request->id
+                    ],
+                    [
+                        'id_user' => $request->id,
+                        'status_pegawai' => $request->status_pegawai
+                    ]
+                );
             }
 
             $data = [
@@ -131,5 +139,169 @@ class UserController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function exportExcel()
+    {
+        // Ambil data dari database
+        $data = DB::table('users')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->get([
+                'users.*', 
+                'profils.created_at', 
+                'profils.status_pegawai',
+                'profils.nip',
+                'profils.nik',
+                'profils.jenis_kelamin',
+                'profils.tempat_lahir',
+                'profils.status_pegawai',
+                'profils.pangkat',
+                'profils.jabatan',
+            ]);
+
+        // Buat instance baru dari Spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Tambahkan judul kolom
+        $headerColumns = [
+            'A1' => '#', 
+            'B1' => 'NAMA', 
+            'C1' => 'EMAIL', 
+            'D1' => 'NO WA', 
+            'E1' => 'ROLE', 
+            'F1' => 'STATUS', 
+            'G1' => 'NIP',
+            'H1' => 'NIK',
+            'I1' => 'JENIS KELAMIN',
+            'J1' => 'TEMPAT LAHIR',
+            'K1' => 'STATUS PEGAWAI',
+            'L1' => 'PANGKAT',
+            'M1' => 'JABATAN',
+            'N1' => 'TGL DIBUAT'
+        ];
+        foreach ($headerColumns as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+        }
+
+        // Tambahkan styling untuk header
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+            ]
+        ];
+        $sheet->getStyle('A1:N1')->applyFromArray($headerStyle);
+
+        // Tambahkan data dari database ke spreadsheet
+        $row = 2;
+        $totalRows = $data->count();
+        foreach ($data as $index => $item) {
+            $sheet->setCellValue('A' . $row, $index + 1);
+            $sheet->setCellValue('B' . $row, $item->name);
+            $sheet->setCellValue('C' . $row, $item->email);
+            $sheet->setCellValue('D' . $row, $item->no_wa);
+            $sheet->setCellValue('E' . $row, $item->role);
+            $sheet->setCellValue('F' . $row, $item->status_pegawai);
+            $sheet->setCellValue('G' . $row, "`$item->nip");
+            $sheet->setCellValue('H' . $row, "`$item->nik");
+            $sheet->setCellValue('I' . $row, $item->jenis_kelamin);
+            $sheet->setCellValue('J' . $row, $item->tempat_lahir);
+            $sheet->setCellValue('K' . $row, $item->status_pegawai);
+            $sheet->setCellValue('L' . $row, $item->pangkat);
+            $sheet->setCellValue('M' . $row, $item->jabatan);
+            $sheet->setCellValue('N' . $row, $item->created_at);
+
+            // Terapkan garis pada setiap baris kecuali baris terakhir
+            $sheet->getStyle("A$row:N$row")->applyFromArray([
+                'borders' => [
+                    'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+                ]
+            ]);
+
+            $row++;
+        }
+
+        // Otomatis menyesuaikan lebar kolom
+        foreach (range('A', 'N') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Buat writer untuk menulis file Excel
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'user.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+
+        // Tulis file ke lokasi sementara
+        $writer->save($temp_file);
+
+        // Berikan respon file kepada pengguna
+        return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function importExcel(Request $request)
+    {
+        // Validasi input file
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        // Ambil file yang diunggah
+        $file = $request->file('file');
+
+        // Baca file menggunakan PhpSpreadsheet
+        $spreadsheet = IOFactory::load($file->getPathname());
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
+
+        $successCount = 0;
+        $failCount = 0;
+
+        foreach ($rows as $index => $row) {
+            if ($index == 0)
+                continue;  // Lewati header
+
+            // Periksa duplikat berdasarkan email atau no_wa
+            $existingUser = User::where('email', $row[1])
+                ->orWhere('no_wa', $row[2])
+                ->first();
+
+            if ($existingUser) {
+                $failCount++;  // Tambahkan ke hitungan gagal
+                continue;
+            }
+
+            // Simpan data baru ke database
+            $data = User::create([
+                'name' => $row[0],
+                'email' => $row[1],
+                'no_wa' => $row[2],
+                'password' => Hash::make($row[3]),  // Hashing password
+                'role' => 'Pegawai`',
+                'id_creator' => Auth::id()
+            ]);
+
+            Profil::create([
+                'nip'           => $row[4],
+                'nik'           => $row[5],
+                'jenis_kelamin' => $row[6],
+                'tempat_lahir'  => $row[7],
+                'tanggal_lahir' => $row[8],
+                'alamat'        => $row[9],
+                'id_user'       => $data->id,
+                'status_pegawai' => $row[10] == 'Non ASN' ? 'Honorer' : $row[10],
+                'pangkat'       => $row[11] == 'Tidak Memiliki Pangkat' ? NULL : $row[11], 
+                'jabatan'       => $row[12]
+            ]);
+
+            $successCount++;
+        }
+
+        return response()->json([
+            'message' => 'Proses import selesai.',
+            'success_count' => $successCount,
+            'fail_count' => $failCount
+        ]);
     }
 }

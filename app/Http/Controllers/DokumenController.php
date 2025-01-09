@@ -24,11 +24,13 @@ class DokumenController extends Controller
             ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
             ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
             ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
             ->select(
                 'dokumens.*',
                 'jenis_dokumens.jenis_dokumen',
                 'users.name',
-                'skpds.nama_skpd'
+                'skpds.nama_skpd',
+                'unit_kerjas.unit_kerja'
             )
             ->where('jenis_dokumens.id', Request('jenis_dokumen'));
 
@@ -114,7 +116,8 @@ class DokumenController extends Controller
             'tanggal_dokumen' => $request->tanggal_dokumen,
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
             'id_skpd' => $request->id_skpd,
-            'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala
+            'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
+            'id_unit_kerja' => $request->id_unit_kerja
         ]);
 
         return response()->json([
@@ -201,7 +204,8 @@ class DokumenController extends Controller
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
             'id_skpd' => $request->id_skpd ?? $user->id_skpd,
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
-            'status' => $user->status == 'Perlu Diperbaiki' && $request->file('dokumen') ? 'Belum Diperiksa' : $user->status
+            'status' => $user->status == 'Perlu Diperbaiki' && $request->file('dokumen') ? 'Belum Diperiksa' : $user->status,
+            'id_unit_kerja' => $request->id_unit_kerja
         ]);
 
         return response()->json([

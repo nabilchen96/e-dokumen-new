@@ -241,7 +241,8 @@ class AuthController extends Controller
                 'alamat' => $request->alamat,
                 'id_user' => $data->id,
                 'district_id' => $request->district_id,
-                'status_pegawai' => $request->status_pegawai
+                'status_pegawai' => $request->status_pegawai, 
+                'nik' => $request->nik
             ]);
 
             $data = [

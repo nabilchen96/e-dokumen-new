@@ -18,6 +18,8 @@
         "laravel/framework": "^8.0",
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.0",
+        "maatwebsite/excel": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.12",
         "phpoffice/phpword": "^1.3",
         "rap2hpoutre/laravel-log-viewer": "^2.3"
     },

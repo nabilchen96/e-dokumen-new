@@ -29,6 +29,9 @@
                             <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Kerja</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url('instansi') }}">Instansi</a>
                         </li>
                     </ul>

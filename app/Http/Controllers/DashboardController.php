@@ -111,13 +111,15 @@ class DashboardController extends Controller
                 'kenaikan_gajis.status as status_dokumen',
                 DB::raw("DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today') as total_hari")
             )
-            ->orderBy('total_hari', 'asc')
             ->where('dokumens.status', 'Dokumen Diterima')
             ->where(function ($query) {
                 $query->where('kenaikan_gajis.status', 'Draft')
                       ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
+            ->orderByRaw('total_hari ASC')
             ->get();
+
+            // dd($kenaikan_gaji);
 
 
         $dokumen_periksa = DB::table('dokumens')

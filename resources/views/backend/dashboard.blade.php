@@ -391,7 +391,8 @@
             "ordering": true,
             info: false,
             paging: false,
-            searching: false
+            searching: false,
+            order: [[3, 'asc']]
         })
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

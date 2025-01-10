@@ -68,9 +68,18 @@
     <div class="col-12 mt-4">
         <div class="card w-100">
             <div class="card-body">
-                <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modalpeta">
-                    Tambah
-                </button>
+                @if (Auth::user()->role == 'Admin')                
+                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modalpeta">
+                        Tambah
+                    </button>
+                    <a class="btn btn-success btn-sm mb-4" href="{{ url('export-excel-skpd') }}" data-target="#modalexport">
+                        <i class="bi bi-file-earmark-excel"></i> Export
+                    </a>
+                    <button type="button" class="btn btn-success btn-sm mb-4" data-toggle="modal"
+                        data-target="#modalimport">
+                        <i class="bi bi-file-earmark-excel"></i> Import
+                    </button>
+                @endif
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped" style="width: 100%;">
                         <thead class="bg-info text-white">
@@ -80,9 +89,10 @@
                                 <th>Latitude</th>
                                 <th>Longitude</th>
                                 <th width="10%">Alamat</th>
-                                <!-- <th width="5%"></th> -->
-                                <th width="5%"></th>
-                                <th width="5%"></th>
+                                @if (Auth::user()->role == 'Admin')                                
+                                    <th width="5%"></th>
+                                    <th width="5%"></th>
+                                @endif
                             </tr>
                         </thead>
                     </table>
@@ -92,7 +102,6 @@
     </div>
 </div>
 <!-- Modal -->
-
 <div class="modal fade" id="modalpeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -135,7 +144,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Alamat</label>
-                                <textarea rows="5" name="alamat" id="alamat" class="form-control" required placeholder="Alamat"></textarea>
+                                <textarea rows="5" name="alamat" id="alamat" class="form-control" required
+                                    placeholder="Alamat"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -153,10 +163,71 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Import-->
+<div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="importForm" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header p-3">
+                    <h5 class="modal-title m-2">SKPD Import Form</h5>
+                </div>
+                <div id="responseMessage"></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Import Excel <sup class="text-danger">*</sup> </label>
+                        <input name="file" id="file" type="file" class="form-control form-control-sm mb-2" required>
+                        <span>*Unduh format import SKPD <a href="{{ url('template_skpd_import.xlsx') }}">Template
+                                Import SKPD</a></span>
+                    </div>
+                </div>
+                <div class="modal-footer p-3">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                    <button id="importButton" class="btn btn-primary btn-sm">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @push('script')
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        document.getElementById('importForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Mencegah reload halaman
+            let formData = new FormData(this);  // Mengambil data form
+
+            document.getElementById('responseMessage').innerText = ``
+
+            axios.post('/import-excel-skpd', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    const data = response.data;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: `Data Berhasil Diimport: ${data.success_count}, Data Gagal Diimport: ${data.fail_count}`,
+                        showConfirmButton: true
+                    })
+
+                    $("#modalimport").modal("hide");
+                    $('#myTable').DataTable().clear().destroy();
+                    getData()
+                })
+                .catch(error => {
+                    if (error.response) {
+                        document.getElementById('responseMessage').innerText =
+                            'Terjadi kesalahan saat mengimpor data.';
+                    }
+                });
+        });
+
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             getData()
@@ -174,9 +245,11 @@
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
-                columnDefs: [
-                    { orderable: false, targets: [5, 6] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
-                ],
+                @if (Auth::user()->role == 'Admin')                
+                    columnDefs: [
+                        { orderable: false, targets: [5, 6] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                    ],
+                @endif
                 columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -198,23 +271,25 @@
                         return `${row.alamat}`
                     }
                 },
+                @if (Auth::user()->role == 'Admin')
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a data-toggle="modal" data-target="#modalpeta"
+                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                </a>`
+                        }
+                    },
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                                .id) + `)">
+                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                </a>`
+                        }
+                    },
+                @endif
 
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a data-toggle="modal" data-target="#modalpeta"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                            .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
-                    }
-                },
                 ]
             })
         }

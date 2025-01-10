@@ -83,7 +83,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="updateStatusForm">
-                @if (Auth::user()->role == 'Admin')
+                @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
                     <div class="modal-header p-3">
                         <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>
@@ -185,7 +185,7 @@
                         <div class="form-group">
                             <label>Pemilik</label>
                             @php
-                                if (Auth::user()->role == 'Admin') {
+                                if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD') {
 
                                     $users = DB::table('users')->get();
 

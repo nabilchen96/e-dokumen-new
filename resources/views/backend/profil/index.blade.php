@@ -20,6 +20,7 @@
         td,
         th {
             font-size: 13.5px !important;
+            /* white-space: nowrap !important; */
         }
 
         #map {
@@ -267,6 +268,7 @@
                 "ordering": true,
                 ajax: '/data-profil',
                 processing: true,
+                scrollX: true,
                 'language': {
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'

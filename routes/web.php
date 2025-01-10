@@ -82,6 +82,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-skpd', 'App\Http\Controllers\SkpdController@store');
     Route::post('/update-skpd', 'App\Http\Controllers\SkpdController@update');
     Route::post('/delete-skpd', 'App\Http\Controllers\SkpdController@delete');
+    Route::get('/export-excel-skpd', 'App\Http\Controllers\SkpdController@exportExcel');
+    Route::post('/import-excel-skpd', 'App\Http\Controllers\SkpdController@importExcel');
 
     //UNIT KERJA
     Route::get('/unit-kerja', 'App\Http\Controllers\UnitKerjaController@index');
@@ -90,6 +92,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/store-unit-kerja', 'App\Http\Controllers\UnitKerjaController@store');
     Route::post('/update-unit-kerja', 'App\Http\Controllers\UnitKerjaController@update');
     Route::post('/delete-unit-kerja', 'App\Http\Controllers\UnitKerjaController@delete');
+    Route::get('/export-template-unit-kerja', 'App\Http\Controllers\UnitKerjaController@exportTemplate');
+    Route::get('/export-excel-unit-kerja', 'App\Http\Controllers\UnitKerjaController@exportExcel');
+    Route::post('/import-excel-unit-kerja', 'App\Http\Controllers\UnitKerjaController@importExcel');
 
     //INSTANSI
     Route::get('/instansi', 'App\Http\Controllers\InstansiController@index');

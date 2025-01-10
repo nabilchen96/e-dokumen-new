@@ -111,7 +111,11 @@
                     <div class="form-group">
                         <label for="exampleInputPassword1">Role</label>
                         <select name="role" class="form-control" id="role" required>
-                            <option value="Admin">Admin</option>
+                            <option value="">PILIH ROLE</option>
+                            @if (Auth::user()->role == 'Admin')                            
+                                <option value="Admin">Admin</option>
+                            @endif
+                            <option value="SKPD">SKPD</option>
                             <option value="Pegawai">Pegawai</option>
                         </select>
                     </div>

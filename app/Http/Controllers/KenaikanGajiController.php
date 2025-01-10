@@ -26,8 +26,8 @@ class KenaikanGajiController extends Controller
         $data = DB::table('kenaikan_gajis')
             ->leftjoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
             ->leftjoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
-            ->leftjoin('users', 'users.id', '=', 'profils.id_user')
-            ->leftjoin('users as u', 'u.id', '=', 'k.id_user')
+            ->leftjoin('users', 'users.id', '=', 'profils.id_user') //ID PROFIL SI PEGAWAI
+            ->leftjoin('users as u', 'u.id', '=', 'k.id_user') //PROFIL KEPALA
             ->select(
                 'kenaikan_gajis.*',
                 'u.name',
@@ -37,8 +37,15 @@ class KenaikanGajiController extends Controller
             );
 
         if(Auth::user()->role == 'Admin'){
+
             $data = $data->get();
+
+        }elseif (Auth::user()->role == 'SKPD'){
+
+            $data = $data->where('users.id_creator', Auth::id())->get();
+
         }else{
+            
             $data = $data->where('users.id', Auth::id())->get();
         }
 

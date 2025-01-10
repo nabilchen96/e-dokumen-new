@@ -1,11 +1,11 @@
-@if(Auth::user()->role == 'Admin')
+@if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
     <div class="col-lg-3 mt-3">
         <div class="card shadow bg-gradient-success card-img-holder text-white">
             <div class="card-body">
                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                     class="card-img-absolute" alt="circle">
                 <h4 class="font-weight-normal mb-3">
-                    Total Pegawai
+                    Pegawai BKPSDM
                     <i class="bi bi-person-circle float-right"></i>
                 </h4>
                 <h2>

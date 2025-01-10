@@ -33,8 +33,12 @@ class UserController extends Controller
                 'profils.status_pegawai'
             );
 
-        $data_user = Auth::user();
-        $user = $user->get();
+        if(Auth::user()->role == 'Admin'){
+            $user = $user->get();
+        }elseif(Auth::user()->role == 'SKPD'){
+            $user = $user->where('users.id_creator', Auth::id())
+                    ->orwhere('users.id', Auth::id())->get();
+        }
 
 
         return response()->json(['data' => $user]);
@@ -61,6 +65,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'no_wa' => $request->no_wa,
+                'id_creator' => Auth::id()
             ]);
 
             if ($request->role == 'Pegawai') {
@@ -247,7 +252,6 @@ class UserController extends Controller
         // Berikan respon file kepada pengguna
         return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
     }
-
     public function importExcel(Request $request)
     {
         // Validasi input file

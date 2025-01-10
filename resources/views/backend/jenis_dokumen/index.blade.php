@@ -48,9 +48,11 @@
     <div class="col-12 mt-4">
         <div class="card w-100">
             <div class="card-body">
-                <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
-                    Tambah
-                </button>
+                @if (Auth::user()->role == 'Admin')
+                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
+                        Tambah
+                    </button>
+                @endif
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped" style="width: 100%;">
                         <thead class="bg-info text-white">
@@ -60,8 +62,10 @@
                                 <th>Jenis Pegawai</th>
                                 <th>Masa Berlaku?</th>
                                 <th>Status</th>
-                                <th width="5%"></th>
-                                <th width="5%"></th>
+                                @if (Auth::user()->role == 'Admin')                                
+                                    <th width="5%"></th>
+                                    <th width="5%"></th>
+                                @endif
                             </tr>
                         </thead>
                     </table>
@@ -135,9 +139,11 @@
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
-                columnDefs: [
-                    { orderable: false, targets: [5, 6] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
-                ],
+                @if(Auth::user()->role == 'Admin')
+                    columnDefs: [
+                        { orderable: false, targets: [5, 6] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                    ],
+                @endif
                 columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -161,22 +167,24 @@
                 {
                     data: "status"
                 },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a data-toggle="modal" data-target="#modal"
-                                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                </a>`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                            .id) + `)">
-                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                </a>`
-                    }
-                },
+                @if (Auth::user()->role == 'Admin')
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a data-toggle="modal" data-target="#modal"
+                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                            </a>`
+                        }
+                    },
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                                .id) + `)">
+                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                            </a>`
+                        }
+                    },
+                @endif
                 ]
             })
         }

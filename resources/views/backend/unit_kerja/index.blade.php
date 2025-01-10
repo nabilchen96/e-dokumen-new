@@ -49,9 +49,20 @@
     <div class="col-12 mt-4">
         <div class="card w-100">
             <div class="card-body">
-                <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
-                    Tambah
-                </button>
+                @if (Auth::user()->role == 'Admin')
+                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
+                        Tambah
+                    </button>
+                    <a class="btn btn-success btn-sm mb-4" href="{{ url('export-excel-unit-kerja') }}"
+                        data-target="#modalexport">
+                        <i class="bi bi-file-earmark-excel"></i> Export
+                    </a>
+                    <button type="button" class="btn btn-success btn-sm mb-4" data-toggle="modal"
+                        data-target="#modalimport">
+                        <i class="bi bi-file-earmark-excel"></i> Import
+                    </button>
+                @endif
+
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped" style="width: 100%;">
                         <thead class="bg-info text-white">
@@ -59,8 +70,10 @@
                                 <th width="5%">No</th>
                                 <th>Unit Kerja</th>
                                 <th>SKPD</th>
-                                <th width="5%"></th>
-                                <th width="5%"></th>
+                                @if (Auth::user()->role == 'Admin')
+                                    <th width="5%"></th>
+                                    <th width="5%"></th>
+                                @endif
                             </tr>
                         </thead>
                     </table>
@@ -106,6 +119,45 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Import-->
+<div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="importForm" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header p-3">
+                    <h5 class="modal-title m-2">Unit Kerja Import Form</h5>
+                </div>
+                <div id="responseMessage"></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Import Excel <sup class="text-danger">*</sup> </label>
+                        <input name="file" id="file" type="file" class="form-control form-control-sm mb-2" required>
+                        <ul>
+                            <li>
+                                Unduh format import Unit Kerja
+                                <a href="{{ url('export-template-unit-kerja') }}">Template Import Unit Kerja</a>
+                            </li>
+                            <li>
+                                Daftar SKPD di dalam format import akan berubah saat ada update pada menu SKPD
+                            </li>
+                            <li>
+                                Copy kolom yang memilik daftar SKPD pada format import untuk menambah data pada baris
+                                selanjutnya
+                            </li>
+                        </ul>
+                        <img src="{{ asset('instruksi_1.png') }}" width="100%" alt="">
+                    </div>
+                </div>
+                <div class="modal-footer p-3">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                    <button id="importButton" class="btn btn-primary btn-sm">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @push('script')
     <script>
@@ -122,9 +174,12 @@
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
-                columnDefs: [
-                    { orderable: false, targets: [3, 4] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
-                ],
+                @if (Auth::user()->role == 'Admin')
+                    columnDefs: [
+                        { orderable: false, targets: [3, 4] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                    ],
+                @endif
+
                 columns: [{
                     render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
@@ -140,22 +195,25 @@
                         return `${row.nama_skpd}`
                     }
                 },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                            .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
-                    }
-                },
+                @if (Auth::user()->role == 'Admin')
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a data-toggle="modal" data-target="#modal"
+                                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                            </a>`
+                        }
+                    },
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                                .id) + `)">
+                                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                            </a>`
+                        }
+                    },
+                @endif
+
                 ]
             })
         }
@@ -272,5 +330,39 @@
 
             });
         }
+    </script>
+    <script>
+        document.getElementById('importForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Mencegah reload halaman
+            let formData = new FormData(this);  // Mengambil data form
+
+            document.getElementById('responseMessage').innerText = ``
+
+            axios.post('/import-excel-unit-kerja', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    const data = response.data;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: `Data Berhasil Diimport: ${data.success_count}, Data Gagal Diimport: ${data.fail_count}`,
+                        showConfirmButton: true
+                    })
+
+                    $("#modalimport").modal("hide");
+                    $('#myTable').DataTable().clear().destroy();
+                    getData()
+                })
+                .catch(error => {
+                    if (error.response) {
+                        document.getElementById('responseMessage').innerText =
+                            'Terjadi kesalahan saat mengimpor data.';
+                    }
+                });
+        });
+
     </script>
 @endpush

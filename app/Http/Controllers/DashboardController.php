@@ -113,7 +113,7 @@ class DashboardController extends Controller
 
         }
 
-        if (Auth::user()->role == 'Admin') {
+        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD') {
 
             //total pegawai
             $total_pegawai = DB::table('users')->where('role', 'Pegawai')->count();
@@ -181,28 +181,38 @@ class DashboardController extends Controller
                 $query->where('kenaikan_gajis.status', 'Draft')
                     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
-            ->orderByRaw('total_hari ASC')
-            ->get();
+            ->orderByRaw('total_hari ASC');
 
-        // dd($kenaikan_gaji);
+        if(Auth::user()->role == 'Admin'){
+            $kenaikan_gaji = $kenaikan_gaji->get();
+        }elseif(Auth::user()->role == 'SKPD'){
+            $kenaikan_gaji = $kenaikan_gaji->where('users.id_creator', Auth::id())->get();
+        }
 
 
         $dokumen_periksa = DB::table('dokumens')
-            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-            ->join('users', 'users.id', '=', 'dokumens.id_user')
-            ->join('profils', 'profils.id_user', '=', 'users.id')
-            ->select(
-                'dokumens.*',
-                'jenis_dokumens.jenis_dokumen',
-                'users.name',
-                'profils.nip',
-            )
-            ->whereNull('dokumens.status')
-            ->orwhere('dokumens.status', 'Sedang Dalam Pengecekan')
-            ->orWhere('dokumens.status', 'Perlu Diperbaiki')
-            ->orWhere('dokumens.status', 'Belum Diperiksa')
-            ->orderBy('dokumens.created_at', 'asc')
-            ->get();
+        ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+        ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+        ->select(
+            'dokumens.*',
+            'jenis_dokumens.jenis_dokumen',
+            'users.name',
+            'profils.nip'
+        )
+        ->where(function($query) {
+            $query->whereNull('dokumens.status')
+                ->orWhere('dokumens.status', 'Sedang Dalam Pengecekan')
+                ->orWhere('dokumens.status', 'Perlu Diperbaiki')
+                ->orWhere('dokumens.status', 'Belum Diperiksa');
+        })
+        ->orderBy('dokumens.created_at', 'asc');
+
+        if(Auth::user()->role == 'Admin'){
+            $dokumen_periksa = $dokumen_periksa->get();
+        }elseif(Auth::user()->role == 'SKPD'){
+            $dokumen_periksa = $dokumen_periksa->where('users.id_creator', Auth::id())->get();
+        }
 
 
         return view('backend.dashboard', [

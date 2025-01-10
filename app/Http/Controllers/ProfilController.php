@@ -40,8 +40,15 @@ class ProfilController extends Controller
             );
 
         if (Auth::user()->role == 'Admin') {
+
             $profil = $profil->get();
+
+        } elseif (Auth::user()->role == 'SKPD') {
+
+            $profil = $profil->where('users.id_creator', Auth::id())->get();
+
         } else {
+            
             $profil = $profil->where('users.id', Auth::id())->get();
         }
 
@@ -114,17 +121,17 @@ class ProfilController extends Controller
 
             $profil = Profil::find($request->id);
             $profil->update([
-                'nip'           => $request->nip,
-                'nik'           => $request->nik,
+                'nip' => $request->nip,
+                'nik' => $request->nik,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'tempat_lahir'  => $request->tempat_lahir,
+                'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
-                'alamat'        => $request->alamat,
-                'id_user'       => $request->id_user,
-                'district_id'   => $request->district_id ?? $profil->district_id,
+                'alamat' => $request->alamat,
+                'id_user' => $request->id_user,
+                'district_id' => $request->district_id ?? $profil->district_id,
                 'status_pegawai' => $request->status_pegawai,
-                'pangkat'       => $request->pangkat, 
-                'jabatan'       => $request->jabatan,
+                'pangkat' => $request->pangkat,
+                'jabatan' => $request->jabatan,
                 'id_unit_kerja' => $request->id_unit_kerja ?? $profil->id_unit_kerja
             ]);
 

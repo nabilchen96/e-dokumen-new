@@ -136,15 +136,15 @@
                                                     'jenis_dokumens.id as id_jenis_dokumen'
                                                 )
                                                 ->orderByRaw("
-                                                                                                                                        CASE 
-                                                                                                                                            WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
-                                                                                                                                            WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
-                                                                                                                                            WHEN dokumens.status = 'Belum Diperiksa' THEN 3
-                                                                                                                                            WHEN dokumens.status IS NULL THEN 4
-                                                                                                                                            WHEN dokumens.status = 'Dokumen Diterima' THEN 5
-                                                                                                                                            ELSE 6
-                                                                                                                                        END
-                                                                                                                                    ")
+                                                    CASE 
+                                                        WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
+                                                        WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
+                                                        WHEN dokumens.status = 'Belum Diperiksa' THEN 3
+                                                        WHEN dokumens.status IS NULL THEN 4
+                                                        WHEN dokumens.status = 'Dokumen Diterima' THEN 5
+                                                        ELSE 6
+                                                    END
+                                                ")
                                                 ->get();
                                         @endphp
                                         @foreach ($data as $k => $item)
@@ -211,82 +211,74 @@
         <div class="modal-content">
             <form id="formDokumen">
                 @if(Auth::user()->role == 'Pegawai')
-                                <div class="modal-header p-3">
-                                    <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="respon_error" class="text-danger mb-4"></div>
-                                    <input type="hidden" name="id" id="id">
-                                    <input type="hidden" name="id_dokumen" id="id_dokumen">
-                                    <div class="form-group">
-                                        <label>Dokumen <sup class="text-danger">*</sup></label>
-                                        <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
-                                            class="form-control form-control-sm" required accept=".pdf, image/*">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Jenis Dokumen <sup class="text-danger">*</sup></label>
-                                        <input type="text" placeholder="Dokumen" id="jenis_dokumen" class="form-control form-control-sm"
-                                            required readonly>
-                                    </div>
-                                    @php
-                                        $variations = [
-                                            'dokumen berkala',
-                                            'Dokumen Berkala',
-                                            'Dokumen berkala',
-                                            'dokumen Berkala',
-                                            'DOKUMEN BERKALA',
-                                            'dok. berkala',
-                                            'dok berkala',
-                                            'Dok. Berkala',
-                                            'Dok Berkala',
-                                            'DOK. BERKALA',
-                                            'DOK BERKALA',
-                                            'dokumenberkala',
-                                            'DokumenBerkala',
-                                            'DOKUMENBERKALA',
-                                            'Dokumenberkala',
-                                            'dokumenBerkala',
-                                            'Kenaikan Gaji',
-                                            'Kenaikan gaji',
-                                            'kenaikan Gaji',
-                                            'kenaikangaji',
-                                            'KenaikanGaji',
-                                            'Kenaikangaji',
-                                            'kenaikanGaji',
-                                            'KENAIKAN GAJI',
-                                            'KENAIKANGAJI',
-                                            'SK Gaji Berkala'
-                                        ];
+                    <div class="modal-header p-3">
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="respon_error" class="text-danger mb-4"></div>
+                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id_dokumen" id="id_dokumen">
+                        <div class="form-group">
+                            <label>Dokumen <sup class="text-danger">*</sup></label>
+                            <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
+                                class="form-control form-control-sm" required accept=".pdf, image/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Dokumen <sup class="text-danger">*</sup></label>
+                            <input type="text" placeholder="Dokumen" id="jenis_dokumen" class="form-control form-control-sm"
+                                required readonly>
+                        </div>
+                        @php
+                            $variations = [
+                                'dokumen berkala',
+                                'Dokumen Berkala',
+                                'Dokumen berkala',
+                                'dokumen Berkala',
+                                'DOKUMEN BERKALA',
+                                'dok. berkala',
+                                'dok berkala',
+                                'Dok. Berkala',
+                                'Dok Berkala',
+                                'DOK. BERKALA',
+                                'DOK BERKALA',
+                                'dokumenberkala',
+                                'DokumenBerkala',
+                                'DOKUMENBERKALA',
+                                'Dokumenberkala',
+                                'dokumenBerkala',
+                                'Kenaikan Gaji',
+                                'Kenaikan gaji',
+                                'kenaikan Gaji',
+                                'kenaikangaji',
+                                'KenaikanGaji',
+                                'Kenaikangaji',
+                                'kenaikanGaji',
+                                'KENAIKAN GAJI',
+                                'KENAIKANGAJI',
+                                'SK Gaji Berkala'
+                            ];
 
-                                        $kenaikan_gaji = DB::table('jenis_dokumens')
-                                            ->where('id', Request('jenis_dokumen'))
-                                            ->first();
-                                    @endphp
-                                    <!-- <div class="form-group">
-                                                                                                                                                                    <label>Jenis Dokumen Berkala</label>
-                                                                                                                                                                    <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"
-                                                                                                                                                                        class="form-control form-control-sm" required>
-                                                                                                                                                                        <option>Kenaikan Gaji</option>
-                                                                                                                                                                        <option>Lainnya</option>
-                                                                                                                                                                    </select>
-                                                                                                                                                                </div> -->
-                                    <div class="form-group">
-                                        <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
-                                        <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
-                                            name="tanggal_dokumen" class="form-control form-control-sm" required>
-                                    </div>
-                                    <div id="punya_tgl_akhir"></div>
-                                    <div class="form-group">
-                                        <label>Pemilik <sup class="text-danger">*</sup></label>
-                                        <select name="id_user" id="id_user" class="form-control" required>
-                                            <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer p-3">
-                                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                                    <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
-                                </div>
+                            $kenaikan_gaji = DB::table('jenis_dokumens')
+                                ->where('id', Request('jenis_dokumen'))
+                                ->first();
+                        @endphp
+                        <div class="form-group">
+                            <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
+                            <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
+                                name="tanggal_dokumen" class="form-control form-control-sm" required>
+                        </div>
+                        <div id="punya_tgl_akhir"></div>
+                        <div class="form-group">
+                            <label>Pemilik <sup class="text-danger">*</sup></label>
+                            <select name="id_user" id="id_user" class="form-control" required>
+                                <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer p-3">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                        <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
+                    </div>
                 @endif
             </form>
         </div>

@@ -7,7 +7,7 @@
             </a>
 
         </li>
-        @if (Auth::user()->role == 'Admin')
+        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                     <i class="icon-layout menu-icon"></i>
@@ -16,24 +16,28 @@
                 </a>
                 <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('user') }}">User</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('jenis-dokumen') }}">Jenis Dokumen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('district') }}">Daerah</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Kerja</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('instansi') }}">Instansi</a>
-                        </li>
+                        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('user') }}">User</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('jenis-dokumen') }}">Jenis Dokumen</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('district') }}">Daerah</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Kerja</a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->role == 'Admin')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('instansi') }}">Instansi</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </li>
@@ -74,7 +78,7 @@
                             ->get();
                     @endphp
 
-                    @if($profil->status_pegawai || Auth::user()->role == 'Admin')
+                    @if($profil->status_pegawai || Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
                         @foreach ($jenis_dokumen as $i)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">

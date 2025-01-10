@@ -64,218 +64,127 @@
                 <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
                     Welcome back to Aplikasi ASNBKL</h6>
             </div>
-            @if (Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload != null)
-
-                    @if (@$profil)
-                            <div class="col-lg-12 mt-1">
-                                <div class="card">
-                                    <div class="card-body">
+            @if (@$profil)
+                <div class="col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="font-weight-bold">[ <i class="bi bi-bell"></i> ] Notifikasi
+                            </h3>
+                            <span class="text-danger">
+                                Informasi dokuman dan data yang wajib dilengkapi
+                            </span>
+                            <ul class="mt-4" style="height: 275px;">
+                                <li style="font-size: 15px;">
+                                    @if ($dokumenBelumDiupload)
                                         <i class="text-danger bi bi-exclamation-triangle"></i>
-                                        Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>. Klik menu dokumen dan pilih
-                                        jenis dokumen yang ingin diupload.
-                                    </div>
-                                </div>
-                            </div>
+                                        Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>.
+                                        Klik menu dokumen dan pilih jenis dokumen yang ingin diupload.
+                                    @else
+                                        <i class="text-success bi bi-check-circle"></i>
+                                        Terimakasih!, anda sudah mengupload semua dokumen. Cek di menu dokumen untuk melihat
+                                        dokumen dan status dokumen
+                                    @endif
+                                </li>
+                                <li class="mt-2" style="font-size: 15px;">
+                                    @if (@$isiProfil != null)
+                                        <i class="text-danger bi bi-exclamation-triangle"></i>
+                                        Anda belum mengisi data <b>{{ $isiProfil }}</b>.
+                                        Klik <a href="{{ url('profil') }}">menu profil</a> untuk mengisi dan melengkapi data profil.
+                                    @else
+                                        <i class="text-success bi bi-check-circle"></i>
+                                        Terimakasih!, anda sudah mengisi semua data di menu profil. Cek di menu profil untuk
+                                        melihat data profil anda
+                                    @endif
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="card shadow w-100">
+                        <div class="card-body">
+                            <h3 class="font-weight-bold">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
+                            </h3>
+                            <span class="text-danger">
+                                Informasi dokuman dan status dokumen anda
+                            </span>
+                            <div class="mt-4 table-responsive" style="height: 290px;">
+                                <table class="table table-striped" style="width: 100%;">
+                                    <thead class="bg-info text-white">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>jenis Dokumen</th>
+                                            <!-- <th>Tanggal Dokumen</th> -->
+                                            <th>Tanggal Upload</th>
+                                            <th>Status Dokumen</th>
+                                            <th width="5%">File</th>
+                                            <th width="5%">Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
 
-                            <div class="col-12 mt-3">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
-                                        </h3>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped" style="width: 100%;">
-                                                <thead class="bg-info text-white">
-                                                    <tr>
-                                                        <th width="5%">No</th>
-                                                        <th>jenis Dokumen</th>
-                                                        <th>Tanggal Dokumen</th>
-                                                        <th>Tanggal Upload</th>
-                                                        <th>Status</th>
-                                                        <th width="5%">File</th>
-                                                        <th width="5%">Edit</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
+                                            $profil = DB::table('profils')->where('id_user', Auth::id())->first();
 
-                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                                        $data = DB::table('dokumens')
-                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                            ->where('dokumens.id_user', Auth::id())
-                                                            ->select(
-                                                                'dokumens.*',
-                                                                'jenis_dokumens.jenis_dokumen',
-                                                                'jenis_dokumens.punya_tgl_akhir',
-                                                                'jenis_dokumens.id as id_jenis_dokumen'
-                                                            )
-                                                            ->orderByRaw("
-                                                                                                                                                                                                            CASE 
-                                                                                                                                                                                                                WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
-                                                                                                                                                                                                                WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
-                                                                                                                                                                                                                WHEN dokumens.status = 'Belum Diperiksa' THEN 3
-                                                                                                                                                                                                                WHEN dokumens.status IS NULL THEN 4
-                                                                                                                                                                                                                WHEN dokumens.status = 'Dokumen Diterima' THEN 5
-                                                                                                                                                                                                                ELSE 6
-                                                                                                                                                                                                            END
-                                                                                                                                                                                                        ")
-                                                            ->get();
-                                                    @endphp
-                                                    @foreach ($data as $k => $item)
-                                                        <tr>
-                                                            <td>{{ $k + 1 }}</td>
-                                                            <td>{{ $item->jenis_dokumen }}</td>
-                                                            <td>{{ $item->tanggal_dokumen }}</td>
-                                                            <td>{{ $item->created_at }}</td>
-                                                            <td>
-                                                                <!-- @if ($item->status == 'Dokumen Diterima')
-                                                                                                                            <span class="badge bg-success text-white">Belum Diperiksa</span>
-                                                                                                                        @elseif($item->status == 'Perlu Diperbaiki')
-                                                                                                                            <span class="badge bg-danger text-white">Perlu Diperbaiki</span>
-                                                                                                                        @elseif($item->status == 'Belum Diperiksa' || $item->status == NULL)
-                                                                                                                            <span class="badge bg-warning text-white">Belum Diperiksa</span>
-                                                                                                                        @elseif($item->status == 'Sedang Dalam Pengecekan')
-                                                                                                                            <span class="badge bg-info text-white">Sedang Dalam Pengecekan</span>
-                                                                                                                        @endif -->
-
-                                                                {{ $item->status ?? 'Belum Diperiksa' }}
-                                                            </td>
-                                                            <td>
-                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                    <i style="font-size: 1.5rem;"
-                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                @if ($item->status == 'Perlu Diperbaiki')
-                                                                    <a href="#" style="border-radius: 8px !important;" data-toggle="modal"
-                                                                        data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
-                                                                        data-bs-id_user="{{ Auth::id() }}"
-                                                                        data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
-                                                                        data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
-                                                                        data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
-                                                                        data-bs-id_skpd="{{ @$item->id_skpd }}"
-                                                                        data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
-                                                                        data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
-                                                                        data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
-                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                    </a>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    @else
-                        <div class="col-lg-12 mt-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <i class="text-danger bi bi-exclamation-triangle"></i>
-                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat
-                                    mengunggah dokumen
-                                </div>
+                                            $data = DB::table('dokumens')
+                                                ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                                                ->where('dokumens.id_user', Auth::id())
+                                                ->select(
+                                                    'dokumens.*',
+                                                    'jenis_dokumens.jenis_dokumen',
+                                                    'jenis_dokumens.punya_tgl_akhir',
+                                                    'jenis_dokumens.id as id_jenis_dokumen'
+                                                )
+                                                ->orderByRaw("
+                                                                                                                                        CASE 
+                                                                                                                                            WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
+                                                                                                                                            WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
+                                                                                                                                            WHEN dokumens.status = 'Belum Diperiksa' THEN 3
+                                                                                                                                            WHEN dokumens.status IS NULL THEN 4
+                                                                                                                                            WHEN dokumens.status = 'Dokumen Diterima' THEN 5
+                                                                                                                                            ELSE 6
+                                                                                                                                        END
+                                                                                                                                    ")
+                                                ->get();
+                                        @endphp
+                                        @foreach ($data as $k => $item)
+                                            <tr>
+                                                <td>{{ $k + 1 }}</td>
+                                                <td>{{ $item->jenis_dokumen }}</td>
+                                                <td>{{ $item->created_at }}</td>
+                                                <td>
+                                                    {{ $item->status ?? 'Belum Diperiksa' }}
+                                                </td>
+                                                <td>
+                                                    <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
+                                                        <i style="font-size: 1.5rem;"
+                                                            class="text-danger bi bi-file-earmark-pdf"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if ($item->status == 'Perlu Diperbaiki')
+                                                        <a href="#" style="border-radius: 8px !important;" data-toggle="modal"
+                                                            data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
+                                                            data-bs-id_user="{{ Auth::id() }}"
+                                                            data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
+                                                            data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
+                                                            data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
+                                                            data-bs-id_skpd="{{ @$item->id_skpd }}"
+                                                            data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
+                                                            data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
+                                                            data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
+                                                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    @endif
-
-            @elseif(Auth::user()->role == 'Pegawai' && $dokumenBelumDiupload == null)
-                    @if(@$profil)
-
-                            <div class="col-12 mt-3">
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <h3 class="font-weight-bold mb-4">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda</h3>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped" style="width: 100%;">
-                                                <thead class="bg-info text-white">
-                                                    <tr>
-                                                        <th width="5%">No</th>
-                                                        <th>jenis Dokumen</th>
-                                                        <th>Tanggal Dokumen</th>
-                                                        <th>Tanggal Upload</th>
-                                                        <th>Status</th>
-                                                        <th width="5%"></th>
-                                                        <td width="5%"></td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-
-                                                        $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                                        $data = DB::table('dokumens')
-                                                            ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                            ->where('dokumens.id_user', Auth::id())
-                                                            ->select(
-                                                                'dokumens.*',
-                                                                'jenis_dokumens.jenis_dokumen',
-                                                                'jenis_dokumens.punya_tgl_akhir',
-                                                                'jenis_dokumens.id as id_jenis_dokumen'
-                                                            )
-                                                            ->orderByRaw("
-                                                                                                                                                                                                            CASE dokumens.status
-                                                                                                                                                                                                                WHEN 'Perlu Diperbaiki' THEN 1
-                                                                                                                                                                                                                WHEN 'Sedang Dalam Pengecekan' THEN 2
-                                                                                                                                                                                                                WHEN 'Belum Diperiksa' THEN 3
-                                                                                                                                                                                                                WHEN NULL THEN 4
-                                                                                                                                                                                                                WHEN 'Dokumen Diterima' THEN 5
-                                                                                                                                                                                                                ELSE 6
-                                                                                                                                                                                                            END
-                                                                                                                                                                                                        ")
-                                                            ->get();
-                                                    @endphp
-                                                    @foreach ($data as $k => $item)
-                                                        <tr>
-                                                            <td>{{ $k + 1 }}</td>
-                                                            <td>{{ $item->jenis_dokumen }}</td>
-                                                            <td>{{ $item->tanggal_dokumen }}</td>
-                                                            <td>{{ $item->created_at }}</td>
-                                                            <td>{{ $item->status ?? 'Belum Diperiksa' }}</td>
-                                                            <td>
-                                                                <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                                    <i style="font-size: 1.5rem;"
-                                                                        class="text-danger bi bi-file-earmark-pdf"></i>
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                @if ($item->status == 'Perlu Diperbaiki')
-                                                                    <a href="#" style="border-radius: 8px !important;" data-toggle="modal"
-                                                                        data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
-                                                                        data-bs-id_user="{{ Auth::id() }}"
-                                                                        data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
-                                                                        data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
-                                                                        data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
-                                                                        data-bs-id_skpd="{{ @$item->id_skpd }}"
-                                                                        data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
-                                                                        data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
-                                                                        data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
-                                                                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                    </a>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    @else
-                        <div class="col-lg-12 mt-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <i class="text-danger bi bi-exclamation-triangle"></i>
-                                    Anda belum melengkapi data profil. Masuk ke menu profil dan lengkapi data agar anda dapat
-                                    mengunggah dokumen
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
+                </div>
             @endif
             @include('backend.components.admin_widget')
         </div>
@@ -354,13 +263,13 @@
                                             ->first();
                                     @endphp
                                     <!-- <div class="form-group">
-                                                                                <label>Jenis Dokumen Berkala</label>
-                                                                                <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"
-                                                                                    class="form-control form-control-sm" required>
-                                                                                    <option>Kenaikan Gaji</option>
-                                                                                    <option>Lainnya</option>
-                                                                                </select>
-                                                                            </div> -->
+                                                                                                                                                                    <label>Jenis Dokumen Berkala</label>
+                                                                                                                                                                    <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"
+                                                                                                                                                                        class="form-control form-control-sm" required>
+                                                                                                                                                                        <option>Kenaikan Gaji</option>
+                                                                                                                                                                        <option>Lainnya</option>
+                                                                                                                                                                    </select>
+                                                                                                                                                                </div> -->
                                     <div class="form-group">
                                         <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
                                         <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
@@ -414,9 +323,9 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                        <strong>${district.nama_skpd}</strong><br>
-                                        Total pegawai: ${district.total_employees}
-                                    `);
+                                                                <strong>${district.nama_skpd}</strong><br>
+                                                                Total pegawai: ${district.total_employees}
+                                                            `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));
@@ -437,12 +346,12 @@
 
             if (punya_tgl_akhir == 'Ya') {
                 document.getElementById('punya_tgl_akhir').innerHTML = `
-                                    <div class="form-group">
-                                        <label>Tanggal Akhir Dokumen</label>
-                                        <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
-                                            name="tanggal_akhir_dokumen" class="form-control form-control-sm">
-                                    </div>
-                                `
+                                                            <div class="form-group">
+                                                                <label>Tanggal Akhir Dokumen</label>
+                                                                <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
+                                                                    name="tanggal_akhir_dokumen" class="form-control form-control-sm">
+                                                            </div>
+                                                        `
             } else {
                 document.getElementById('punya_tgl_akhir').innerHTML = ``
             }

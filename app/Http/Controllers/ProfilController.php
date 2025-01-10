@@ -23,6 +23,8 @@ class ProfilController extends Controller
         $profil = DB::table('users')
             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
             ->leftJoin('districts', 'districts.id', '=', 'profils.district_id')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'profils.id_unit_kerja')
+            ->leftJoin('skpds', 'skpds.id', '=', 'unit_kerjas.id_skpd')
             ->whereNotIn('users.role', ['Admin'])
             ->select(
                 'users.name',
@@ -33,6 +35,8 @@ class ProfilController extends Controller
                 'districts.name as district',
                 'districts.latitude',
                 'districts.longitude',
+                'unit_kerjas.unit_kerja',
+                'skpds.nama_skpd'
             );
 
         if (Auth::user()->role == 'Admin') {
@@ -90,7 +94,6 @@ class ProfilController extends Controller
             'tanggal_lahir' => 'required',
             'jenis_kelamin' => 'required',
             'alamat' => 'required',
-            'district_id' => 'required',
             'status_pegawai' => 'required'
         ]);
 
@@ -118,10 +121,11 @@ class ProfilController extends Controller
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'alamat'        => $request->alamat,
                 'id_user'       => $request->id_user,
-                'district_id'   => $request->district_id,
+                'district_id'   => $request->district_id ?? $profil->district_id,
                 'status_pegawai' => $request->status_pegawai,
                 'pangkat'       => $request->pangkat, 
-                'jabatan'       => $request->jabatan
+                'jabatan'       => $request->jabatan,
+                'id_unit_kerja' => $request->id_unit_kerja ?? $profil->id_unit_kerja
             ]);
 
             $data = [

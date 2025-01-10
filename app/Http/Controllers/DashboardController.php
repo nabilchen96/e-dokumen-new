@@ -15,13 +15,75 @@ class DashboardController extends Controller
 
         $profil = DB::table('profils')->where('id_user', $id_user)->first();
 
+        $userId = Auth::id(); // ID user yang akan dicek
+
+        // Nama tabel profil
+        $table = 'profils';
+
+        // Ambil data user berdasarkan ID
+        $userProfile = DB::table($table)->where('id_user', $userId)->first();
+
+        if (!$userProfile) {
+            // Jika profil tidak ditemukan
+            $isiProfil = "Profil tidak ditemukan.";
+        } else {
+            // Daftar kolom dan label yang ramah pengguna
+            $columnLabels = [
+                'jenis_kelamin' => 'Jenis Kelamin',
+                'tempat_lahir' => 'Tempat Lahir',
+                'tanggal_lahir' => 'Tanggal Lahir',
+                'alamat' => 'Alamat',
+                'status_pegawai' => 'Status Pegawai',
+                'nip' => 'NIP',
+                'pangkat' => 'Pangkat',
+                'jabatan' => 'Jabatan',
+                'nik' => 'NIK',
+                'id_unit_kerja' => 'Unit Kerja'
+            ];
+
+            // Kolom umum yang harus diisi
+            $requiredColumns = [
+                'jenis_kelamin',
+                'tempat_lahir',
+                'tanggal_lahir',
+                'alamat',
+                'status_pegawai',
+                'nik',
+                'id_unit_kerja'
+            ];
+
+            // Kolom tambahan jika status_pegawai bukan Honorer
+            $conditionalColumns = ['nip', 'pangkat', 'jabatan'];
+
+            if ($userProfile->status_pegawai !== 'Honorer') {
+                $requiredColumns = array_merge($requiredColumns, $conditionalColumns);
+            }
+
+            $emptyColumns = [];
+
+            // Cek setiap kolom yang perlu diisi
+            foreach ($requiredColumns as $column) {
+                if (empty($userProfile->$column)) {
+                    $emptyColumns[] = $columnLabels[$column]; // Gunakan label ramah pengguna
+                }
+            }
+
+            $isiProfil = empty($emptyColumns) ? 0 : implode(', ', $emptyColumns);
+        }
+
+        // dd(Auth::user()->role);
+
+
         if (Auth::user()->role == 'Pegawai') {
+            // dd('tes');
             // Ambil daftar jenis dokumen yang aktif
             $jenisDokumenAktif = DB::table('jenis_dokumens')
                 ->where('status', 'Aktif')
                 ->where('jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
                 ->orwhere('jenis_pegawai', 'Semua')
                 ->get(['id', 'jenis_dokumen']); // Ambil ID dan nama jenis dokumen yang aktif
+
+                // dd($jenisDokumenAktif);
 
             // Ambil dokumen yang sudah diupload oleh pengguna
             $dokumenUploaded = DB::table('dokumens')
@@ -35,9 +97,12 @@ class DashboardController extends Controller
 
             // Jika tidak ada dokumen yang belum diupload
             if ($belumDiupload->isEmpty()) {
-                // return response()->json(['message' => 'Semua dokumen telah diupload.'], 200);
+
+                // dd($isiProfil);
+
                 return view('backend.dashboard', [
                     'dokumenBelumDiupload' => null,
+                    'isiProfil' => $isiProfil
                 ]);
             } else {
                 // Ambil nama-nama dokumen yang belum diupload
@@ -114,12 +179,12 @@ class DashboardController extends Controller
             ->where('dokumens.status', 'Dokumen Diterima')
             ->where(function ($query) {
                 $query->where('kenaikan_gajis.status', 'Draft')
-                      ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
+                    ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
             ->orderByRaw('total_hari ASC')
             ->get();
 
-            // dd($kenaikan_gaji);
+        // dd($kenaikan_gaji);
 
 
         $dokumen_periksa = DB::table('dokumens')
@@ -140,7 +205,6 @@ class DashboardController extends Controller
             ->get();
 
 
-
         return view('backend.dashboard', [
             'dokumenBelumDiupload' => $dokumenBelumDiupload ?? '',
             'total_pegawai' => $total_pegawai ?? 0,
@@ -148,7 +212,8 @@ class DashboardController extends Controller
             'total_dokumen' => $total_dokumen ?? 0,
             'total_asal_pegawai' => $total_asal_pegawai ?? 0,
             'kenaikan_gaji' => $kenaikan_gaji,
-            'dokumen_periksa' => $dokumen_periksa
+            'dokumen_periksa' => $dokumen_periksa,
+            'isiProfil' => $isiProfil
         ]);
     }
 

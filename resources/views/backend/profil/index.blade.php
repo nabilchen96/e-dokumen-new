@@ -95,7 +95,7 @@
 <!-- Modal -->
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content ">
             <form id="form">
                 <div class="modal-header p-3">
                     <h5 class="modal-title m-2" id="exampleModalLabel">User Form</h5>
@@ -128,33 +128,11 @@
                                     <option>Perempuan</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>
-                                <select name="pangkat" class="form-control" id="pangkat" required>
-                                    <option>I/a - Juru Muda</option>
-                                    <option>I/b - Juru Muda Tingkat I</option>
-                                    <option>I/c - Juru</option>
-                                    <option>I/d - Juru Tingkat I</option>
-                                    <option>II/a - Pengatur Muda</option>
-                                    <option>II/b - Pengatur Muda Tingkat I</option>
-                                    <option>II/c - Pengatur</option>
-                                    <option>II/d - Pengatur Tingkat I</option>
-                                    <option>III/a - Penata Muda</option>
-                                    <option>III/b - Penata Muda Tingkat I</option>
-                                    <option>III/c - Penata</option>
-                                    <option>III/d - Penata Tingkat I</option>
-                                    <option>IV/a - Pembina</option>
-                                    <option>IV/b - Pembina Tingkat I - Pembina Tk.I</option>
-                                    <option>IV/c - Pembina Utama Muda</option>
-                                    <option>IV/d - Pembina Utama Madya</option>
-                                    <option>IV/e - Pembina Utama</option>
-                                </select>
-                            </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>NIP <sup class="text-danger">*</sup></label>
-                                <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP"
+                                <label>NIK <sup class="text-danger">*</sup></label>
+                                <input type="number" name="nik" class="form-control" id="nik" placeholder="NIK"
                                     required>
                             </div>
                             <div class="form-group">
@@ -169,26 +147,80 @@
                             </div>
                             <div class="form-group">
                                 <label>Status Pegawai <sup class="text-danger">*</sup></label>
-                                <select name="status_pegawai" class="form-control" id="status_pegawai" required>
+                                <select onchange="togglePegawaiDetails()" name="status_pegawai" class="form-control"
+                                    id="status_pegawai" required>
                                     <option>PNS</option>
                                     <option>P3K</option>
-                                    <option>Honorer</option>
+                                    <option value="Honorer">Non ASN</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Jabatan <sup class="text-danger">*</sup></label>
-                                <input type="text" name="jabatan" class="form-control" id="jabatan" placeholder="Jabatan"
-                                    required>
                             </div>
                         </div>
                     </div>
+                    <div id="pegawai-details" style="display: none;">
+                        <div class="form-group">
+                            <label>NIP <sup class="text-danger">*</sup></label>
+                            <input type="number" name="nip" class="form-control" id="nip" placeholder="NIP">
+                        </div>
+                        <div class="form-group">
+                            <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>
+                            <select name="pangkat" class="form-control" id="pangkat">
+                                <option>I/a - Juru Muda</option>
+                                <option>I/b - Juru Muda Tingkat I</option>
+                                <option>I/c - Juru</option>
+                                <option>I/d - Juru Tingkat I</option>
+                                <option>II/a - Pengatur Muda</option>
+                                <option>II/b - Pengatur Muda Tingkat I</option>
+                                <option>II/c - Pengatur</option>
+                                <option>II/d - Pengatur Tingkat I</option>
+                                <option>III/a - Penata Muda</option>
+                                <option>III/b - Penata Muda Tingkat I</option>
+                                <option>III/c - Penata</option>
+                                <option>III/d - Penata Tingkat I</option>
+                                <option>IV/a - Pembina</option>
+                                <option>IV/b - Pembina Tingkat I - Pembina Tk.I</option>
+                                <option>IV/c - Pembina Utama Muda</option>
+                                <option>IV/d - Pembina Utama Madya</option>
+                                <option>IV/e - Pembina Utama</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jabatan <sup class="text-danger">*</sup></label>
+                            <input type="text" name="jabatan" class="form-control" id="jabatan" placeholder="Jabatan">
+                        </div>
+                    </div>
                     <div class="form-group">
-                        <label>Daerah <sup class="text-danger">*</sup></label>
-                        <select class="form-control" style="width: 100%;" name="district_id" id="select2-ajax" required>
+                        <label>Unit Kerja / SKPD</label>
+                        @php
+
+                            $skpd = DB::table('skpds')
+                                ->leftjoin('unit_kerjas', 'unit_kerjas.id_skpd', '=', 'skpds.id')
+                                ->select(
+                                    'skpds.nama_skpd',
+                                    'unit_kerjas.unit_kerja',
+                                    'unit_kerjas.id'
+                                )
+                                ->get();
+                        @endphp
+                        <select id="id_unit_kerja" style="height: 58px !important; width: 100%;" name="id_unit_kerja"
+                            class="form-control">
+                            <option value="">CARI SKPD / UNIT</option>
+                            @foreach ($skpd as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_skpd }} / {{ $item->unit_kerja }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-danger" style="font-size: 12px;">*SKPD / Unit Kerja yang dipilih sebelumnya adalah 
+                            <b id="skpd_unit_kerja"></b>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Daerah</label>
+                        <select class="form-control" style="height: 58px !important; width: 100%;" name="district_id"
+                            id="select2-ajax">
                             <option value="">Pilih Data</option>
                         </select>
-                        <span class="text-danger" style="font-size: 12px;">*Daerah yang dipilih sebelumnya adalah <i
-                                id="district"></i></span>
+                        <span class="text-danger" style="font-size: 12px;">*Daerah yang dipilih sebelumnya adalah 
+                            <b id="district"></b>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>Alamat <sup class="text-danger">*</sup></label>
@@ -250,64 +282,72 @@
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Name</b>: ${row.name} <br> 
-                                <b>Role</b>: ${row.role} <br>
-                                <b>Status</b>: ${row.status_pegawai} <br>
-                                ${row.pangkat ?? `-`}`;
+                            <b>Role</b>: ${row.role} <br>
+                            <b>Status</b>: ${row.status_pegawai == `Honorer` ? `Non ASN` : row.status_pegawai} <br>
+                            ${row.status_pegawai == `Honorer` ? `-` : row.pangkat ?? `-`}
+                            `;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `<b>NIP</b>: ${row.nip} <br> 
-                                <b>Email</b>: ${row.email} <br> 
-                                <b>Whatsapp</b>: ${row.no_wa} <br>
-                                <b>Jabatan</b>: ${row.jabatan ?? `-`}`;
+                        return `<b>NIP</b>: ${row.status_pegawai == `Honorer` ? `-` : row.nip ?? `-`} <br> 
+                            <b>Email</b>: ${row.email} <br> 
+                            <b>Whatsapp</b>: ${row.no_wa} <br>
+                            <b>Jabatan</b>: ${row.status_pegawai == `Honorer` ? `-` : row.jabatan ?? `-`}
+                            `;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
-                                <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
-                                <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
+                            <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
+                            <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>Alamat</b>: ${row.alamat} <br> 
-                                <b>Daerah</b>: ${row.district} <br>`;
+                            <b>Daerah</b>: ${row.district} <br>
+                            <b>SKPD</b>: ${row.nama_skpd ?? `-`} <br>
+                            <b>Unit Kerja</b>: ${row.unit_kerja ?? `-`}`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
-                                data-lat="${row.latitude}" 
-                                data-lng="${row.longitude}" 
-                                href="javascript:void(0)">
-                                <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
-                        </a>`;
+                                    data-lat="${row.latitude}" 
+                                    data-lng="${row.longitude}" 
+                                    href="javascript:void(0)">
+                                    <i style="font-size: 1.5rem;" class="text-info bi bi-geo-alt"></i>
+                            </a>`;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
+                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                            </a>`
                     }
                 },
-                    // {
-                    //     render: function (data, type, row, meta) {
-                    //         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                    //             .id) + `)">
-                    //                                         <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                    //                                     </a>`
-                    //     }
-                    // },
                 ]
             })
         }
 
         var map;
         var marker;
+
+        const statusPegawai = document.getElementById('status_pegawai');
+        const pegawaiDetails = document.getElementById('pegawai-details');
+        const requiredFields = pegawaiDetails.querySelectorAll('[required]');
+
+        function togglePegawaiDetails() {
+            if (statusPegawai.value === 'PNS' || statusPegawai.value === 'P3K') {
+                pegawaiDetails.style.display = 'block';
+            } else {
+                pegawaiDetails.style.display = 'none';
+            }
+        }
 
         $('#modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
@@ -338,8 +378,14 @@
                 modal.find('#status_pegawai').val(cokData[0].status_pegawai)
                 modal.find('#pangkat').val(cokData[0].pangkat)
                 modal.find('#jabatan').val(cokData[0].jabatan)
+                modal.find('#nik').val(cokData[0].nik)
+                modal.find('#id_unit_kerja').val(cokData[0].id_unit_kerja)
+
                 // modal.find('#district').val(cokData[0].district)
                 document.getElementById('district').innerHTML = cokData[0].district
+                document.getElementById('skpd_unit_kerja').innerHTML = (cokData[0].nama_skpd ?? 'Belum Dipilih')+' / '+(cokData[0].unit_kerja ?? 'Belum Dipilih')
+
+                togglePegawaiDetails()
             }
         })
 
@@ -462,6 +508,10 @@
     </script>
     <script>
         $(document).ready(function () {
+            $('#id_unit_kerja').select2({
+                placeholder: 'Pilih SKPD dan Unit Kerja',
+                allowClear: true
+            })
             $('#select2-ajax').select2({
                 ajax: {
                     url: '/search-district',

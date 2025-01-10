@@ -146,6 +146,8 @@ class UserController extends Controller
         // Ambil data dari database
         $data = DB::table('users')
             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'profils.id_unit_kerja')
+            ->leftJoin('skpds', 'skpds.id', '=', 'unit_kerjas.id_skpd')
             ->get([
                 'users.*', 
                 'profils.created_at', 
@@ -157,6 +159,8 @@ class UserController extends Controller
                 'profils.status_pegawai',
                 'profils.pangkat',
                 'profils.jabatan',
+                'skpds.nama_skpd',
+                'unit_kerjas.unit_kerja'
             ]);
 
         // Buat instance baru dari Spreadsheet
@@ -178,7 +182,9 @@ class UserController extends Controller
             'K1' => 'STATUS PEGAWAI',
             'L1' => 'PANGKAT',
             'M1' => 'JABATAN',
-            'N1' => 'TGL DIBUAT'
+            'N1' => 'SKPD',
+            'O1' => 'UNIT KERJA',
+            'P1' => 'TGL DIBUAT'
         ];
         foreach ($headerColumns as $cell => $text) {
             $sheet->setCellValue($cell, $text);
@@ -192,7 +198,7 @@ class UserController extends Controller
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN]
             ]
         ];
-        $sheet->getStyle('A1:N1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:P1')->applyFromArray($headerStyle);
 
         // Tambahkan data dari database ke spreadsheet
         $row = 2;
@@ -209,12 +215,14 @@ class UserController extends Controller
             $sheet->setCellValue('I' . $row, $item->jenis_kelamin);
             $sheet->setCellValue('J' . $row, $item->tempat_lahir);
             $sheet->setCellValue('K' . $row, $item->status_pegawai);
-            $sheet->setCellValue('L' . $row, $item->pangkat);
-            $sheet->setCellValue('M' . $row, $item->jabatan);
-            $sheet->setCellValue('N' . $row, $item->created_at);
+            $sheet->setCellValue('L' . $row, $item->status_pegawai == 'Honorer' ? '' : $item->pangkat);
+            $sheet->setCellValue('M' . $row, $item->status_pegawai == 'Honorer' ? '' : $item->jabatan);
+            $sheet->setCellValue('N' . $row, $item->nama_skpd);
+            $sheet->setCellValue('O' . $row, $item->unit_kerja);
+            $sheet->setCellValue('P' . $row, $item->created_at);
 
             // Terapkan garis pada setiap baris kecuali baris terakhir
-            $sheet->getStyle("A$row:N$row")->applyFromArray([
+            $sheet->getStyle("A$row:P$row")->applyFromArray([
                 'borders' => [
                     'allBorders' => ['borderStyle' => Border::BORDER_THIN]
                 ]
@@ -224,7 +232,7 @@ class UserController extends Controller
         }
 
         // Otomatis menyesuaikan lebar kolom
-        foreach (range('A', 'N') as $col) {
+        foreach (range('A', 'P') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
@@ -278,7 +286,7 @@ class UserController extends Controller
                 'email' => $row[1],
                 'no_wa' => $row[2],
                 'password' => Hash::make($row[3]),  // Hashing password
-                'role' => 'Pegawai`',
+                'role' => 'Pegawai',
                 'id_creator' => Auth::id()
             ]);
 

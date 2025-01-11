@@ -213,26 +213,34 @@ class SkpdController extends Controller
         // Baca file menggunakan PhpSpreadsheet
         $spreadsheet = IOFactory::load($file->getPathname());
         $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray();
+        $rows = $sheet->toArray(null, true, true, true); // Membaca baris dengan kunci kolom asosiatif
 
         $successCount = 0;
         $failCount = 0;
 
         foreach ($rows as $index => $row) {
-            if ($index == 0)
+            if ($index == 1)
                 continue;  // Lewati header
 
-            // Simpan data baru ke database
-            $data = Skpd::create([
-                'nama_skpd' => $row[0],
-                'telepon' => $row[1],
-                'email' => $row[2],
-                'latitude' => $row[3],  // Hashing password
-                'longitude' => $row[4],
-                'alamat' => $row[5]
-            ]);
+            // Validasi baris kosong: periksa apakah semua kolom penting kosong
+            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C'])) && empty(trim($row['D'])) && empty(trim($row['E'])) && empty(trim($row['F']))) {
+                continue;  // Lewati baris kosong
+            }
 
-            $successCount++;
+            try {
+                // Simpan data baru ke database
+                Skpd::create([
+                    'nama_skpd' => trim($row['A']),  // Bersihkan spasi tambahan
+                    'telepon' => trim($row['B']),
+                    'email' => trim($row['C']),
+                    'latitude' => trim($row['D']),
+                    'longitude' => trim($row['E']),
+                    'alamat' => trim($row['F'])
+                ]);
+                $successCount++;
+            } catch (\Exception $e) {
+                $failCount++;
+            }
         }
 
         return response()->json([
@@ -241,4 +249,5 @@ class SkpdController extends Controller
             'fail_count' => $failCount
         ]);
     }
+
 }

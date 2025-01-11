@@ -143,8 +143,12 @@
                                 Daftar SKPD di dalam format import akan berubah saat ada update pada menu SKPD
                             </li>
                             <li>
-                                Copy kolom yang memilik daftar SKPD pada format import untuk menambah data pada baris
+                                Copy kolom yang memiliki daftar SKPD pada format import untuk menambah data pada baris
                                 selanjutnya
+                            </li>
+                            <li>
+                                Jangan membuat daftar SKPD secara manual. Karena angka di depan SKD adalah angka unik 
+                                dari database yang berfungsi untuk mengidentifikasi SKPD
                             </li>
                         </ul>
                         <img src="{{ asset('instruksi_1.png') }}" width="100%" alt="">

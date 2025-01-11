@@ -33,11 +33,11 @@ class UserController extends Controller
                 'profils.status_pegawai'
             );
 
-        if(Auth::user()->role == 'Admin'){
+        if (Auth::user()->role == 'Admin') {
             $user = $user->get();
-        }elseif(Auth::user()->role == 'SKPD'){
+        } elseif (Auth::user()->role == 'SKPD') {
             $user = $user->where('users.id_creator', Auth::id())
-                    ->orwhere('users.id', Auth::id())->get();
+                ->orwhere('users.id', Auth::id())->get();
         }
 
 
@@ -154,8 +154,8 @@ class UserController extends Controller
             ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'profils.id_unit_kerja')
             ->leftJoin('skpds', 'skpds.id', '=', 'unit_kerjas.id_skpd')
             ->get([
-                'users.*', 
-                'profils.created_at', 
+                'users.*',
+                'profils.created_at',
                 'profils.status_pegawai',
                 'profils.nip',
                 'profils.nik',
@@ -174,12 +174,12 @@ class UserController extends Controller
 
         // Tambahkan judul kolom
         $headerColumns = [
-            'A1' => '#', 
-            'B1' => 'NAMA', 
-            'C1' => 'EMAIL', 
-            'D1' => 'NO WA', 
-            'E1' => 'ROLE', 
-            'F1' => 'STATUS', 
+            'A1' => '#',
+            'B1' => 'NAMA',
+            'C1' => 'EMAIL',
+            'D1' => 'NO WA',
+            'E1' => 'ROLE',
+            'F1' => 'STATUS',
             'G1' => 'NIP',
             'H1' => 'NIK',
             'I1' => 'JENIS KELAMIN',
@@ -265,18 +265,23 @@ class UserController extends Controller
         // Baca file menggunakan PhpSpreadsheet
         $spreadsheet = IOFactory::load($file->getPathname());
         $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray();
+        $rows = $sheet->toArray(null, true, true, true); // Kunci kolom asosiatif untuk lebih aman
 
         $successCount = 0;
         $failCount = 0;
 
         foreach ($rows as $index => $row) {
-            if ($index == 0)
+            if ($index == 1)
                 continue;  // Lewati header
 
+            // Lewati baris kosong: cek kolom yang relevan
+            if (empty(trim($row['A'])) && empty(trim($row['B'])) && empty(trim($row['C'])) && empty(trim($row['D']))) {
+                continue;
+            }
+
             // Periksa duplikat berdasarkan email atau no_wa
-            $existingUser = User::where('email', $row[1])
-                ->orWhere('no_wa', $row[2])
+            $existingUser = User::where('email', $row['B'])
+                ->orWhere('no_wa', $row['C'])
                 ->first();
 
             if ($existingUser) {
@@ -284,30 +289,34 @@ class UserController extends Controller
                 continue;
             }
 
-            // Simpan data baru ke database
-            $data = User::create([
-                'name' => $row[0],
-                'email' => $row[1],
-                'no_wa' => $row[2],
-                'password' => Hash::make($row[3]),  // Hashing password
-                'role' => 'Pegawai',
-                'id_creator' => Auth::id()
-            ]);
+            try {
+                // Simpan data baru ke database
+                $data = User::create([
+                    'name' => trim($row['A']),
+                    'email' => trim($row['B']),
+                    'no_wa' => trim($row['C']),
+                    'password' => Hash::make(trim($row['D'])),  // Hashing password
+                    'role' => 'Pegawai',
+                    'id_creator' => Auth::id()
+                ]);
 
-            Profil::create([
-                'nip'           => $row[4],
-                'nik'           => $row[5],
-                'jenis_kelamin' => $row[6],
-                'tempat_lahir'  => $row[7],
-                'tanggal_lahir' => $row[8],
-                'alamat'        => $row[9],
-                'id_user'       => $data->id,
-                'status_pegawai' => $row[10] == 'Non ASN' ? 'Honorer' : $row[10],
-                'pangkat'       => $row[11] == 'Tidak Memiliki Pangkat' ? NULL : $row[11], 
-                'jabatan'       => $row[12]
-            ]);
+                Profil::create([
+                    'nip' => trim($row['E']),
+                    'nik' => trim($row['F']),
+                    'jenis_kelamin' => trim($row['G']),
+                    'tempat_lahir' => trim($row['H']),
+                    'tanggal_lahir' => trim($row['I']),
+                    'alamat' => trim($row['J']),
+                    'id_user' => $data->id,
+                    'status_pegawai' => trim($row['K']) == 'Non ASN' ? 'Honorer' : trim($row['K']),
+                    'pangkat' => trim($row['L']) == 'Tidak Memiliki Pangkat' ? NULL : trim($row['L']),
+                    'jabatan' => trim($row['M'])
+                ]);
 
-            $successCount++;
+                $successCount++;
+            } catch (\Exception $e) {
+                $failCount++;
+            }
         }
 
         return response()->json([
@@ -316,4 +325,5 @@ class UserController extends Controller
             'fail_count' => $failCount
         ]);
     }
+
 }

@@ -196,101 +196,104 @@ class UnitKerjaController extends Controller
         $request->validate([
             'file' => 'required|mimes:xls,xlsx'
         ]);
-
+    
         // Ambil file yang diunggah
         $file = $request->file('file');
-
+    
         // Baca file menggunakan PhpSpreadsheet
         $spreadsheet = IOFactory::load($file->getPathname());
         $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray();
-
+        $rows = $sheet->toArray(null, true, true, true); // Menggunakan kunci asosiatif untuk membaca berdasarkan kolom
+    
         $successCount = 0;
         $failCount = 0;
-
+    
         foreach ($rows as $index => $row) {
-            if ($index == 0)
-                continue;  // Lewati header
-
-            $id_skpd = explode("-", $row[1]);
-
-            // Simpan data baru ke database
-            $data = UnitKerja::create([
-                'unit_kerja' => $row[0],
-                'id_skpd' => $id_skpd[0],
-            ]);
-
-            $successCount++;
+            if ($index == 1) continue;  // Lewati header
+            
+            // Periksa apakah kolom unit kerja dan SKPD tidak kosong
+            if (empty(trim($row['A'])) && empty(trim($row['B']))) {
+                continue;  // Lewati baris kosong
+            }
+    
+            $id_skpd = explode("-", $row['B']);
+            
+            try {
+                // Simpan data baru ke database
+                UnitKerja::create([
+                    'unit_kerja' => trim($row['A']), // Pastikan data dibersihkan dari spasi
+                    'id_skpd' => trim($id_skpd[0]),
+                ]);
+                $successCount++;
+            } catch (\Exception $e) {
+                $failCount++;
+            }
         }
-
+    
         return response()->json([
             'message' => 'Proses import selesai.',
             'success_count' => $successCount,
             'fail_count' => $failCount
         ]);
     }
+    
 
     public function exportTemplate()
     {
-
-        // Ambil data dari tabel skpds dan gabungkan id dengan nama_skpd
-        $categories = DB::table('skpds')
-            ->select('id', 'nama_skpd')
-            ->get()
-            ->map(function ($item) {
-                return "{$item->id} - {$item->nama_skpd}"; // Format id dan nama_skpd
-            })->toArray();
-
-        $categoryList = '"' . implode(',', $categories) . '"'; // Format menjadi string untuk formula Excel
+        $skpds = DB::table('skpds')->select('id', 'nama_skpd')->get();
+        $categories = $skpds->map(fn($item) => "{$item->id} - {$item->nama_skpd}")->toArray();
+    
         // Buat Spreadsheet baru
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-
-        // Tambahkan styling untuk header
+    
+        // Tambahkan daftar ke kolom tersembunyi
+        $categoryRow = 5; // Mulai dari baris ke-5 atau sesuai kebutuhan
+        foreach ($categories as $index => $category) {
+            $sheet->setCellValue("D" . ($categoryRow + $index), $category);
+        }
+    
+        $highestRow = $categoryRow + count($categories) - 1;
+        $sheet->getParent()->addNamedRange(new \PhpOffice\PhpSpreadsheet\NamedRange('SKPDList', $sheet, "D{$categoryRow}:D{$highestRow}"));
+        $sheet->getColumnDimension('D')->setVisible(false);
+    
+        // Styling header
         $headerStyle = [
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
-            'borders' => [
-                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
-            ]
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         ];
         $sheet->getStyle('A1:B1')->applyFromArray($headerStyle);
-
-        $contoh = DB::table('skpds')->first();
-
-        // Set header kolom
+    
+        // Set header dan contoh data
         $sheet->setCellValue('A1', 'UNIT KERJA');
         $sheet->setCellValue('B1', 'SKPD');
         $sheet->setCellValue('A2', 'DINAS PERHUBUNGAN KOTA');
-        $sheet->setCellValue('B2', $contoh->id.' - '.$contoh->nama_skpd);
-
-        $sheet->getStyle("A1:B2")->applyFromArray([
-            'borders' => [
-                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
-            ]
-        ]);
-
-        // Otomatis menyesuaikan lebar kolom
-        $sheet->getColumnDimension('A')->setAutoSize(true);
-        $sheet->getColumnDimension('B')->setAutoSize(true);
-
+        $sheet->setCellValue('B2', "PILIH SKPD PADA LIST KOLOM INI");
+    
         // Tambahkan data validation list ke kolom B2
         $dataValidation = $sheet->getCell('B2')->getDataValidation();
         $dataValidation->setType(DataValidation::TYPE_LIST);
         $dataValidation->setErrorStyle(DataValidation::STYLE_INFORMATION);
         $dataValidation->setAllowBlank(false);
-        $dataValidation->setShowInputMessage(true);
-        $dataValidation->setShowErrorMessage(true);
         $dataValidation->setShowDropDown(true);
-        $dataValidation->setFormula1($categoryList); // Daftar pilihan
-
-        // Simpan file ke path tertentu
+        $dataValidation->setFormula1('=SKPDList');
+    
+        // Styling dan auto-size
+        $sheet->getStyle('A1:B2')->applyFromArray([
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+        ]);
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+    
+        // Simpan file
         $writer = new Xlsx($spreadsheet);
         $fileName = 'template_unit_kerja_import.xlsx';
         $filePath = storage_path($fileName);
         $writer->save($filePath);
-
+    
         return response()->download($filePath, $fileName)->deleteFileAfterSend(true);
     }
+    
 
 }

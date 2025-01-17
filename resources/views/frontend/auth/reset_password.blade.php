@@ -21,7 +21,7 @@
   <link href="{{ url('ilanding/logo.png') }}" rel="icon">
   <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
 
-  <title>ASNBKL</title>
+  <title>APLIKASI PENDATAAN NON ASN</title>
 </head>
 
 <body>
@@ -34,7 +34,7 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-7">
-            <h3>Reset Password <br><strong>APLIKASI ASNBKL</strong></h3>
+            <h3>Reset Password <br><strong>APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</strong></h3>
             <br>
             <form id="formRegister">
               <div class="form-group mb-3">

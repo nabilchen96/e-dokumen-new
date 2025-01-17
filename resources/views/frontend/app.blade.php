@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>ASNBKL</title>
+  <title>APLIKASI PENDATAAN NON ASN</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -71,7 +71,7 @@
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1 class="sitename">
           <img src="{{ url('ilanding/logo.png') }}" alt="">
-          ASNBKL
+          
         </h1>
       </a>
 
@@ -125,12 +125,12 @@
               </div> -->
               <h2>Aplikasi</h2>
               <h1 class="mb-4">
-                Pendataan ASN<br>
+                Pendataan Mandiri <br> Tenaga Non ASN<br>
                 <span class="accent-text">Bengkulu Utara</span>
               </h1>
 
               <p class="mb-4 mb-md-5">
-                Aplikasi pengumpulan dokumen dan kelengkapan data ASN Bengkulu Utara.
+                Aplikasi pengumpulan dokumen dan kelengkapan mandiri data non ASN Bengkulu Utara.
                 Segera Lengkapi Data Diri Anda dan Jadikan Aplikasi ini Menjadi Alat Bantu Yang Baik
               </p>
 

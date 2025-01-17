@@ -39,7 +39,7 @@
         }
     </style>
 
-    <title>ASNBKL</title>
+    <title>APLIKASI PENDATAAN NON ASN</title>
 </head>
 
 <body>
@@ -52,7 +52,7 @@
             <div class="container">
                 <div class="row align-items-center justify-content-center" style="height: 125vh !important;">
                     <div class="col-md-9">
-                        <h3>Register to <br><strong>APLIKASI ASNBKL</strong></h3>
+                        <h3>Register to <br><strong>APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</strong></h3>
                         <br>
                         <form id="formRegister">
                             <div class="row">

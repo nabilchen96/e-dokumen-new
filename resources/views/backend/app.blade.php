@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>ASNBKL</title>
+    <title>APLIKASI PENDATAAN NON ASN</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('skydash/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('skydash/vendors/ti-icons/css/themify-icons.css') }}">
@@ -126,11 +126,11 @@
                 style="box-shadow: 0px 5px 21px -5px #CDD1E1;">
                 <a class="navbar-brand brand-logo mr-5" style="font-size: 16px; margin-left: 20px;"
                     href="{{ url('/') }}">
-                    <h3><b> ASNBKL </b></h3>
+                    <h3><b> <img src="{{ url('ilanding/logo.png') }}" alt="">  </b></h3>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ url('/') }}">
                     <!-- <h4><b>🚀</b></h4> -->
-                    <img width="100%" src="{{ url('ilanding/logo.png') }}" alt="">
+                    <img src="{{ url('ilanding/logo.png') }}" alt="">
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

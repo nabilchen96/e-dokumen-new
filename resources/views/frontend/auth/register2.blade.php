@@ -48,9 +48,16 @@
     <div class="d-lg-flex half" style="height: 125vh !important;">
         <div class="bg order-1 order-md-2" style="background-image: url('natural.png');"></div>
         <div class="contents order-2 order-md-1">
-
+            @php
+            $cek = DB::table('informasis')->where('status', 'Aktif')->first();
+            @endphp
+            @if ($cek)
+                <marquee behavior="scroll" direction="left" class="bg-info text-white pt-2 pb-1">
+                <h6>📢📢 {{ $cek->informasi }}</h6>
+                </marquee>
+            @endif
             <div class="container">
-                <div class="row align-items-center justify-content-center" style="height: 125vh !important;">
+                <div class="row align-items-center justify-content-center" style="margin-top: -50px !important; height: 125vh !important;">
                     <div class="col-md-9">
                         <h3>Register to <br><strong>APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</strong></h3>
                         <br>

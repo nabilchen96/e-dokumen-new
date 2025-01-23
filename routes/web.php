@@ -103,6 +103,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-instansi', 'App\Http\Controllers\InstansiController@update');
     Route::post('/delete-instansi', 'App\Http\Controllers\InstansiController@delete');
 
+    //Informasi
+    Route::get('/informasi', 'App\Http\Controllers\InformasiController@index');
+    Route::get('/data-informasi', 'App\Http\Controllers\InformasiController@data');
+    Route::post('/store-informasi', 'App\Http\Controllers\InformasiController@store');
+    Route::post('/update-informasi', 'App\Http\Controllers\InformasiController@update');
+    Route::post('/delete-informasi', 'App\Http\Controllers\InformasiController@delete');
+
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
     Route::get('/data-file-dokumen', 'App\Http\Controllers\DokumenController@data');

@@ -37,6 +37,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('instansi') }}">Instansi</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('informasi') }}">Informasi</a>
+                            </li>
                         @endif
                     </ul>
                 </div>

@@ -45,10 +45,18 @@
       <div id="map"></div>
     </div>
     <div class="contents order-2 order-md-1">
+      @php
+      $cek = DB::table('informasis')->where('status', 'Aktif')->first();
+      @endphp
+      @if ($cek)
+        <marquee behavior="scroll" direction="left" class="bg-info text-white pt-2 pb-1">
+          <h6>📢📢 {{ $cek->informasi }}</h6>
+        </marquee>
+      @endif
       <div class="container">
-        <div class="row align-items-center justify-content-center">
+        <div class="row align-items-center justify-content-center" style="margin-top: -50px !important;">
           <div class="col-md-7">
-            <h3>Login to <br><strong>APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</strong></h3>
+            <h3>Login to <br><strong>APLIKASI PENDATAAN MANDIRI TENAGA NON ASN</strong></h3>
             <br>
             <form id="formLogin">
               <div class="form-group first">

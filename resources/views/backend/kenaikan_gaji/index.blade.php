@@ -172,7 +172,7 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `${row.gaji_pokok_lama ? `<b>Gaji Baru</b>: ${formatRupiah(row.gaji_pokok_lama)}` : `-`} 
+                        return `${row.gaji_pokok_baru ? `<b>Gaji Baru</b>: ${formatRupiah(row.gaji_pokok_lama)}` : `-`} 
                                                     <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : `-`}`
                     }
                 },

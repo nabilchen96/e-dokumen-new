@@ -20,7 +20,12 @@
         td,
         th {
             font-size: 13.5px !important;
+            /* padding: 5px !important; */
             /* white-space: nowrap !important; */
+        }
+
+        td {
+            padding: 7px !important;
         }
 
         /* Mengatur ukuran dan margin panah sorting di DataTables */
@@ -60,13 +65,44 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-12 col-xl-8 mb-xl-0">
-                    <h3 class="font-weight-bold">Statistik Pegawai ASN</h3>
+                    <h3 class="font-weight-bold">Statistik SIASN</h3>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-12 mt-4">
+        <div class="col-12 mt-2">
+            <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
+                <i class="bi bi-file-earmark-excel"></i> Import
+            </a>
+            <!-- Modal Import-->
+            <div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="importForm" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-header p-3">
+                                <h5 class="modal-title m-2" id="exampleModalLabel">SIASN Import Form</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Import Excel <sup class="text-danger">*</sup> </label>
+                                    <input name="file" id="file" type="file" class="form-control form-control-sm mb-2"
+                                        required>
+                                    <span>*Unduh format import SIASN <a
+                                            href="{{ asset('format_import_siasn.xlsx') }}">Template
+                                            Import SIASN</a></span>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer p-3">
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                <button id="importButton" class="btn btn-primary btn-sm">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-3 mt-3">
                     <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S3">
@@ -605,12 +641,53 @@
                     {
                         render: function (data, type, row) {
                             return `<a href="/detail-statistik-skpd?id_skpd=${row.id_skpd}&skpd=${row.nama_skpd}">
-                                <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
-                            </a>`;
+                                                        <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                                                    </a>`;
                         }
                     }
                 ]
             });
         });
+    </script>
+    <script>
+        document.getElementById('importForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Mencegah reload halaman
+            let formData = new FormData(this);  // Mengambil data form
+
+            // Tampilkan SweetAlert proses loading
+            Swal.fire({
+                title: 'Sedang memproses data...',
+                text: 'Mohon menunggu sesaat',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            axios.post('/import-siasn', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    const data = response.data;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: `Data Berhasil Diimport: ${data.success_count}, Data Gagal Diimport: ${data.fail_count}`,
+                        showConfirmButton: true
+                    }).then(() => {
+                        // Reload saat tombol OK ditekan
+                        location.reload();
+                    });
+                })
+                .catch(error => {
+                    if (error.response) {
+                        document.getElementById('responseMessage').innerText =
+                            'Terjadi kesalahan saat mengimpor data.';
+                    }
+                });
+        });
+
     </script>
 @endpush

@@ -217,6 +217,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/detail-statistik-jabatan', 'App\Http\Controllers\StatistikController@detailJabatan');
     Route::get('/detail-statistik-umur', 'App\Http\Controllers\StatistikController@detailUmur');
     Route::get('/detail-statistik-skpd', 'App\Http\Controllers\StatistikController@detailSkpd');
+    Route::post('/import-siasn', 'App\Http\Controllers\StatistikController@importExcel');
 });
 
 //LOGOUT

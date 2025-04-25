@@ -110,7 +110,7 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('statistik') }}">
                 <i class="bi bi-bar-chart-fill menu-icon"></i>
-                <span class="menu-title">Statistik Pegawai</span>
+                <span class="menu-title">Statistik SIASN</span>
             </a>
         </li>
     </ul>

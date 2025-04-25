@@ -78,12 +78,12 @@
                         <thead class="bg-info text-white">
                             <tr>
                                 <th width="5%">No</th>
-                                <th>Name</th>
-                                <th>NIP/EMAIL/WA</th>
-                                <th>Jenis Kelamin/Tempat, Tgl Lahir</th>
-                                <th>Alamat/Daerah</th>
+                                <th>Nama/Role/Status/Gol</th>
+                                <th>NIP/NIK/Email/Jabatan</th>
+                                <th>JK/Tempat, Tgl Lahir/WA</th>
+                                <!-- <th>Alamat/Daerah</th> -->
                                 <th>Peta</th>
-                                <th width="5%">Edit</th>
+                                <th width="5%">Detail</th>
                                 <!-- <th width="5%"></th> -->
                             </tr>
                         </thead>
@@ -274,7 +274,7 @@
                     'processing': 'Loading...'
                 },
                 columnDefs: [
-                    { orderable: false, targets: [5, 6] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                    { orderable: false, targets: [5] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
                 ],
                 columns: [{
                     render: function (data, type, row, meta) {
@@ -286,15 +286,15 @@
                         return `<b>Name</b>: ${row.name} <br> 
                             <b>Role</b>: ${row.role} <br>
                             <b>Status</b>: ${row.status_pegawai == `Honorer` ? `Non ASN` : row.status_pegawai} <br>
-                            ${row.status_pegawai == `Honorer` ? `-` : row.pangkat ?? `-`}
+                            <b>Gol</b>: ${row.status_pegawai == `Honorer` ? `-` : row.pangkat ?? `-`}
                             `;
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<b>NIP</b>: ${row.status_pegawai == `Honorer` ? `-` : row.nip ?? `-`} <br> 
+                            <b>NIK</b>: ${row.nik ?? `-` }<br> 
                             <b>Email</b>: ${row.email} <br> 
-                            <b>Whatsapp</b>: ${row.no_wa} <br>
                             <b>Jabatan</b>: ${row.status_pegawai == `Honorer` ? `-` : row.jabatan ?? `-`}
                             `;
                     }
@@ -303,17 +303,18 @@
                     render: function (data, type, row, meta) {
                         return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
                             <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
-                            <b>Tanggal Lahir</b>: ${row.tanggal_lahir}`;
+                            <b>Tanggal Lahir</b>: ${row.tanggal_lahir} <br>
+                            <b>Whatsapp</b>: ${row.no_wa} <br>`
                     }
                 },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<b>Alamat</b>: ${row.alamat} <br> 
-                            <b>Daerah</b>: ${row.district} <br>
-                            <b>SKPD</b>: ${row.nama_skpd ?? `-`} <br>
-                            <b>Unit Kerja</b>: ${row.unit_kerja ?? `-`}`;
-                    }
-                },
+                // {
+                //     render: function (data, type, row, meta) {
+                //         return `<b>Alamat</b>: ${row.alamat} <br> 
+                //             <b>Daerah</b>: ${row.district} <br>
+                //             <b>SKPD</b>: ${row.nama_skpd ?? `-`} <br>
+                //             <b>Unit Kerja</b>: ${row.unit_kerja ?? `-`}`;
+                //     }
+                // },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modalpeta"
@@ -326,8 +327,7 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `<a data-toggle="modal" data-target="#modal"
-                                data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                        return `<a href="/detail-profil?id=${row.id}">
                                 <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                             </a>`
                     }
@@ -376,7 +376,7 @@
                 modal.find('#tempat_lahir').val(cokData[0].tempat_lahir)
                 modal.find('#tanggal_lahir').val(cokData[0].tanggal_lahir)
                 modal.find('#nip').val(cokData[0].nip)
-                modal.find('#alamat').val(cokData[0].alamat)
+                // modal.find('#alamat').val(cokData[0].alamat)
                 modal.find('#status_pegawai').val(cokData[0].status_pegawai)
                 modal.find('#pangkat').val(cokData[0].pangkat)
                 modal.find('#jabatan').val(cokData[0].jabatan)
@@ -384,7 +384,7 @@
                 modal.find('#id_unit_kerja').val(cokData[0].id_unit_kerja)
 
                 // modal.find('#district').val(cokData[0].district)
-                document.getElementById('district').innerHTML = cokData[0].district
+                // document.getElementById('district').innerHTML = cokData[0].district
                 document.getElementById('skpd_unit_kerja').innerHTML = (cokData[0].nama_skpd ?? 'Belum Dipilih')+' / '+(cokData[0].unit_kerja ?? 'Belum Dipilih')
 
                 togglePegawaiDetails()

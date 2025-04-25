@@ -299,12 +299,12 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Initialize the map
-        const map = L.map('map').setView([-2.548926, 118.014863], 5);
+        const map = L.map('map').setView([-3.4020431,102.5991136], 10);
         // Adjust default view coordinates
 
         // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: 21,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
@@ -315,9 +315,9 @@
                 data.forEach(district => {
                     const marker = L.marker([district.latitude, district.longitude]).addTo(map);
                     marker.bindPopup(`
-                                                                <strong>${district.nama_skpd}</strong><br>
-                                                                Total pegawai: ${district.total_employees}
-                                                            `);
+                        <strong>${district.nama_skpd}</strong><br>
+                        Total pegawai: ${district.total_employees}
+                    `);
                 });
             })
             .catch(error => console.error('Error fetching district data:', error));

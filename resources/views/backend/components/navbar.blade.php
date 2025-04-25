@@ -106,7 +106,12 @@
                 <i class="bi bi-person menu-icon"></i>
                 <span class="menu-title">Profil Pegawai</span>
             </a>
-
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('statistik') }}">
+                <i class="bi bi-bar-chart-fill menu-icon"></i>
+                <span class="menu-title">Statistik Pegawai</span>
+            </a>
         </li>
     </ul>
 </nav>

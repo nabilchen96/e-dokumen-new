@@ -194,10 +194,29 @@ Route::group(['middleware' => 'auth'], function () {
     //USER
     Route::get('/profil', 'App\Http\Controllers\ProfilController@index');
     Route::get('/data-profil', 'App\Http\Controllers\ProfilController@data');
+    Route::get('/detail-profil', 'App\Http\Controllers\ProfilController@detail');
     Route::post('/store-profil', 'App\Http\Controllers\ProfilController@store');
-    Route::post('/update-profil', 'App\Http\Controllers\ProfilController@update');
+
+    Route::post('/update-profil', 'App\Http\Controllers\ProfilController@updateProfil');
+    Route::post('/update-profil-pegawai', 'App\Http\Controllers\ProfilController@updateProfilPegawai');
     Route::post('/delete-profil', 'App\Http\Controllers\ProfilController@delete');
 
+    //STATISTIK PEGAWAI
+    Route::get('/statistik', 'App\Http\Controllers\StatistikController@index');
+    Route::get('/data-pendidikan', 'App\Http\Controllers\StatistikController@dataPendidikan');
+    Route::get('/data-jenis-kelamin', 'App\Http\Controllers\StatistikController@dataJenisKelamin');
+    Route::get('/data-jenis-jabatan', 'App\Http\Controllers\StatistikController@dataJenisJabatan');
+    Route::get('/data-pangkat', 'App\Http\Controllers\StatistikController@dataPangkat');
+    Route::get('/data-statistik-skpd', 'App\Http\Controllers\StatistikController@dataSkpd');
+    Route::get('/data-statistik-umur', 'App\Http\Controllers\StatistikController@dataUmur');
+
+    //DETAIL STATISTIK PEGAWAI
+    Route::get('/detail-statistik-pendidikan', 'App\Http\Controllers\StatistikController@detailPendidikan');
+    Route::get('/detail-statistik-pangkat', 'App\Http\Controllers\StatistikController@detailPangkat');
+    Route::get('/detail-statistik-jenis-kelamin', 'App\Http\Controllers\StatistikController@detailJenisKelamin');
+    Route::get('/detail-statistik-jabatan', 'App\Http\Controllers\StatistikController@detailJabatan');
+    Route::get('/detail-statistik-umur', 'App\Http\Controllers\StatistikController@detailUmur');
+    Route::get('/detail-statistik-skpd', 'App\Http\Controllers\StatistikController@detailSkpd');
 });
 
 //LOGOUT

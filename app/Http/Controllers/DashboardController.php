@@ -181,6 +181,7 @@ class DashboardController extends Controller
                 $query->where('kenaikan_gajis.status', 'Draft')
                     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
+            ->limit(10)
             ->orderByRaw('total_hari ASC');
 
         if(Auth::user()->role == 'Admin'){
@@ -206,6 +207,7 @@ class DashboardController extends Controller
                 ->orWhere('dokumens.status', 'Perlu Diperbaiki')
                 ->orWhere('dokumens.status', 'Belum Diperiksa');
         })
+        ->limit(10)
         ->orderBy('dokumens.created_at', 'asc');
 
         if(Auth::user()->role == 'Admin'){

@@ -1,0 +1,616 @@
+@extends('backend.app')
+@push('style')
+    <style>
+        #myTable_filter input {
+            height: 29.67px !important;
+        }
+
+        #myTable_length select {
+            height: 29.67px !important;
+        }
+
+        .btn {
+            border-radius: 50px !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #9e9e9e21 !important;
+        }
+
+        td,
+        th {
+            font-size: 13.5px !important;
+            /* white-space: nowrap !important; */
+        }
+
+        /* Mengatur ukuran dan margin panah sorting di DataTables */
+        table.dataTable thead .sorting::after,
+        table.dataTable thead .sorting_asc::after,
+        table.dataTable thead .sorting_desc::after {
+            margin-bottom: 5px !important;
+            content: "▲" !important;
+            top: 7px !important;
+        }
+
+        table.dataTable thead .sorting::before,
+        table.dataTable thead .sorting_asc::before,
+        table.dataTable thead .sorting_desc::before {
+            margin-top: -5px !important;
+            content: "▼" !important;
+            bottom: 7px !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: calc(2.25rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+    </style>
+@endpush
+@section('content')
+    <div class="row" style="margin-top: -200px;">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-12 col-xl-8 mb-xl-0">
+                    <h3 class="font-weight-bold">Statistik Pegawai ASN</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-4">
+            <div class="row">
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S3">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S3
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s3 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S2">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S2
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s2 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;"
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S1/Diploma IV">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S1 / DIV
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s1 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;"
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma III">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DIII
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d3 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma II">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DII
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d2 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma I">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DI
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d1 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;"
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA Sederajat">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan SMA
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$sma ?? 0 }}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="jenisKelamin"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="jenisJabatan"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="pangkat"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="umur"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="mt-4">Distribusi SKPD</h3>
+                    <p class="mb-4">Total Pegawai ASN Berdasarkan SKPD</p>
+                    <table id="myTable" class="table table-striped display" style="width:100%">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th>No</th>
+                                <th>SKPD</th>
+                                <th>Laki-laki</th>
+                                <th>Perempuan</th>
+                                <th>Total</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@push('script')
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        axios.get('/data-pendidikan')
+            .then(response => {
+                const rawData = response.data;
+
+                const categories = rawData.map(item => {
+                    return item.tingkat_pendidikan == null ? 'Belum Isi' : item.tingkat_pendidikan;
+                });
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
+
+                console.log(dataLaki);
+
+
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Pendidikan'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Pendidikan'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        title: {
+                            text: 'Tingkat Pendidikan'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-jenis-kelamin')
+            .then(response => {
+                const rawData = response.data;
+
+                const dataPie = rawData.map(item => {
+                    let label = item.jenis_kelamin
+                    return {
+                        name: label,
+                        y: parseInt(item.total)
+                    };
+                });
+
+                Highcharts.chart('jenisKelamin', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribusi Jenis Kelamin'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Jenis Kelamin'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} orang)'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+                            },
+                        }
+                    },
+                    series: [{
+                        name: 'Persentase',
+                        colorByPoint: true,
+                        data: dataPie
+                    }]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal memuat data pie chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-jenis-jabatan')
+            .then(response => {
+                const rawData = response.data;
+
+                const dataPie = rawData.map(item => {
+                    let label = ''; // deklarasi di awal
+
+                    if (item.jenis_jabatan != null) {
+                        const words = item.jenis_jabatan.split(' ');
+                        label = words[1] || words[0]; // kata kedua, fallback ke pertama
+                    } else {
+                        label = 'Lainnya'; // default jika null
+                    }
+
+                    return {
+                        name: label,
+                        y: parseInt(item.total)
+                    };
+                });
+
+                Highcharts.chart('jenisJabatan', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribusi Jenis Jabatan'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Jenis Jabatan'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} orang)'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+                            },
+                        }
+                    },
+                    series: [{
+                        name: 'Persentase',
+                        colorByPoint: true,
+                        data: dataPie
+                    }]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal memuat data pie chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-pangkat')
+            .then(response => {
+                const rawData = response.data;
+
+                const categories = rawData.map(item => {
+
+
+                    let label = ''; // deklarasi di awal
+
+                    if (item.pangkat != null) {
+                        const words = item.pangkat.split(' - ');
+                        label = words[0]; // kata kedua, fallback ke pertama
+                    } else {
+                        label = 'Belum Isi'; // default jika null
+                    }
+
+                    return label;
+
+                });
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
+
+
+                Highcharts.chart('pangkat', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Pangkat'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Pangkat'
+                    },
+                    xAxis: {
+                        categories: categories,
+
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-statistik-umur')
+            .then(response => {
+                const rawData = response.data;
+
+                const categories = rawData.map(item => {
+                    return item.umur;
+                });
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
+
+                console.log(dataLaki);
+
+
+                Highcharts.chart('umur', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Umur'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Umur'
+                    },
+                    xAxis: {
+                        categories: categories,
+
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                ajax: {
+                    url: '/data-statistik-skpd',
+                    dataSrc: ''
+                },
+                pageLength: 100,
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    { data: 'nama_skpd' },
+                    { data: 'laki_laki' },
+                    { data: 'perempuan' },
+                    {
+                        render: function (data, type, row) {
+                            return Number(row.laki_laki) + Number(row.perempuan);
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return `<a href="/detail-statistik-skpd?id_skpd=${row.id_skpd}&skpd=${row.nama_skpd}">
+                                <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                            </a>`;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+@endpush

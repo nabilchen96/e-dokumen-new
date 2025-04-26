@@ -14,6 +14,7 @@ use App\Models\Profil;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use DateTime;
 
 class ImportSiasnJob implements ShouldQueue
 {
@@ -112,6 +113,21 @@ class ImportSiasnJob implements ShouldQueue
                     ]);
                 }
 
+                $tanggal_input = trim($row['I']);
+
+                if (!empty($tanggal_input)) {
+                    $tanggal = dateTime::createFromFormat('d/m/Y', $tanggal_input);
+                    if ($tanggal && $tanggal->format('d/m/Y') === $tanggal_input) {
+                        $tanggal_lahir = $tanggal->format('Y-m-d');
+                    } else {
+                        $tanggal_lahir = null; // atau isi default kalau format salah
+                    }
+                } else {
+                    $tanggal_lahir = null; // atau sesuai kebutuhan
+                }
+
+
+
                 // Update atau buat profil
                 DB::table('profils')->updateOrInsert(
                     ['id_user' => $user->id],
@@ -120,7 +136,7 @@ class ImportSiasnJob implements ShouldQueue
                         'nip' => ltrim(trim($row['B']), "'"),
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
-                        'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
+                        'tanggal_lahir' => $tanggal_lahir,
                         'alamat' => trim($row['S']),
                         'agama' => trim($row['L']),
                         'status_kawin' => trim($row['N']),
@@ -158,7 +174,9 @@ class ImportSiasnJob implements ShouldQueue
                         'instansi_induk' => trim($row['BF']),
                         'instansi_kerja' => trim($row['BH']),
                         'satuan_kerja' => trim($row['BJ']),
-                        'status_input' => 'Import'
+                        'status_input' => 'Import',
+                        'created_at' => now(),
+                        'updated_at' => now()
                     ]
                 );
 

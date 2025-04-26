@@ -192,9 +192,9 @@ class StatistikController extends Controller
             })
             ->whereNotIn('status_pegawai', ['Honorer']);
 
-        if(Request('pendidikan') == 'SMA'){
+        if (Request('pendidikan') == 'SMA') {
             $data = $data->where('profils.tingkat_pendidikan', 'SLTA Kejuruan')->orWhere('profils.tingkat_pendidikan', 'SLTA')->get();
-        }else{
+        } else {
             $data = $data->where('profils.tingkat_pendidikan', Request('pendidikan'))->get();
         }
 
@@ -262,5 +262,20 @@ class StatistikController extends Controller
         ]);
     }
 
+    public function hapusDataImport()
+    {
 
+        DB::transaction(function () {
+            // Cari semua user_id dari profils yang status 'import'
+            $userIds = Profil::where('status_input', 'Import')->pluck('user_id');
+
+            if ($userIds->isNotEmpty()) {
+                // Hapus users yang id-nya ada di daftar itu
+                User::whereIn('id', $userIds)->delete();
+
+                // Hapus profils dengan status 'import'
+                Profil::where('status', 'Import')->delete();
+            }
+        });
+    }
 }

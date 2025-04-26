@@ -75,6 +75,9 @@
             <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
                 <i class="bi bi-file-earmark-excel"></i> Import
             </a>
+            <!-- <a href="{{ url('error-imports') }}" class="btn btn-danger btn-sm">
+                <i class="bi bi-bug"></i> Error
+            </a> -->
             <!-- Modal Import-->
             <div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -89,12 +92,23 @@
                                     <label>Import Excel <sup class="text-danger">*</sup> </label>
                                     <input name="file" id="file" type="file" class="form-control form-control-sm mb-2"
                                         required>
-                                    <span>*Unduh format import SIASN <a
-                                            href="{{ asset('format_import_siasn.xlsx') }}">Template
-                                            Import SIASN</a></span>
-                                </div>
+                                    <ul>
+                                        <li>
+                                            <span>*Unduh format import SIASN <a
+                                                    href="{{ asset('format_import_siasn_terbaru.xlsx') }}">Template
+                                                    Import SIASN</a>
+                                            </span><br>
 
+                                        </li>
+                                        <!-- <li>
+                                            <span>
+                                                *Data yang wajib diisi setidaknya Nama, NIP, NIK, Email, Nomor HP
+                                            </span>
+                                        </li> -->
+                                    </ul>
+                                </div>
                             </div>
+
                             <div class="modal-footer p-3">
                                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                 <button id="importButton" class="btn btn-primary btn-sm">Submit</button>
@@ -105,7 +119,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 mt-3">
-                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-3/Doktor">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
@@ -124,7 +138,7 @@
 
                 </div>
                 <div class="col-lg-3 mt-3">
-                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S2">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-2">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
@@ -143,13 +157,13 @@
                 </div>
                 <div class="col-lg-3 mt-3">
                     <a style="text-decoration: none;"
-                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S1/Diploma IV">
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-1/Sarjana">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
                                     class="card-img-absolute" alt="circle">
                                 <h4 class="font-weight-normal mb-3">
-                                    Lulusan S1 / DIV
+                                    Lulusan S1
                                     <i class="bi bi-person-circle float-right"></i>
                                 </h4>
                                 <h2>
@@ -161,8 +175,26 @@
                     </a>
                 </div>
                 <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma IV">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DIV
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d4 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
                     <a style="text-decoration: none;"
-                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma III">
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma III/Sarjana Muda">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
@@ -219,7 +251,7 @@
                 </div>
                 <div class="col-lg-3 mt-3">
                     <a style="text-decoration: none;"
-                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA Sederajat">
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
@@ -641,8 +673,8 @@
                     {
                         render: function (data, type, row) {
                             return `<a href="/detail-statistik-skpd?id_skpd=${row.id_skpd}&skpd=${row.nama_skpd}">
-                                                        <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
-                                                    </a>`;
+                                                                                                    <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                                                                                                </a>`;
                         }
                     }
                 ]
@@ -667,14 +699,16 @@
             axios.post('/import-siasn', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
+                },
             })
                 .then(response => {
+                    Swal.close(); // tutup loading jika berhasil
                     const data = response.data;
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Sukses',
-                        text: `Data Berhasil Diimport: ${data.success_count}, Data Gagal Diimport: ${data.fail_count}`,
+                        text: `${data.message}`,
                         showConfirmButton: true
                     }).then(() => {
                         // Reload saat tombol OK ditekan
@@ -682,10 +716,24 @@
                     });
                 })
                 .catch(error => {
-                    if (error.response) {
-                        document.getElementById('responseMessage').innerText =
-                            'Terjadi kesalahan saat mengimpor data.';
+
+                    Swal.close(); // pastikan loading ditutup saat error
+
+                    // Tampilkan error berdasarkan jenisnya
+                    let errorMessage = 'Terjadi kesalahan saat mengimpor data.';
+                    if (error.code === 'ECONNABORTED') {
+                        errorMessage = 'Waktu proses melebihi batas. Silakan coba lagi atau cek ukuran data.';
+                    } else if (error.response) {
+                        errorMessage = `Server error: ${error}`;
+                    } else if (error.request) {
+                        errorMessage = 'Tidak ada respon dari server.';
                     }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: errorMessage
+                    });
                 });
         });
 

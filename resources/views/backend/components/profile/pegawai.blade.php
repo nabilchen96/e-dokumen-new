@@ -62,14 +62,22 @@
                         Madya</option>
                     <option {{ $profil->pangkat == 'IV/e - Pembina Utama' ? 'selected' : '' }}>IV/e - Pembina Utama
                     </option>
+                    <option {{ $profil->pangkat == 'VII' ? 'selected' : '' }}>VII
+                    </option>
+                    <option {{ $profil->pangkat == 'IX' ? 'selected' : '' }}>IX
+                    </option>
+                    <option {{ $profil->pangkat == 'X' ? 'selected' : '' }}>X
+                    </option>
+                    <option {{ $profil->pangkat == 'XI' ? 'selected' : '' }}>XI
+                    </option>
                 </select>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Jabatan <sup class="text-danger">*</sup></label>
-                <input readonly name="jabatan" id="jabatan" value="{{ $profil->jabatan }}" type="text" placeholder="Jabatan"
-                    class="form-control form-control-sm">
+                <input readonly name="jabatan" id="jabatan" value="{{ $profil->jabatan }}" type="text"
+                    placeholder="Jabatan" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
@@ -146,15 +154,15 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputPassword1">Tanggal SK CPNS <sup class="text-danger">*</sup></label>
-                <input readonly name="tanggal_sk_cpns" value="{{ $profil->tanggal_sk_cpns }}" id="tanggal_sk_cpns" type="date"
-                    placeholder="Tanggal SK CPNS" class="form-control form-control-sm">
+                <input readonly name="tanggal_sk_cpns" value="{{ $profil->tanggal_sk_cpns }}" id="tanggal_sk_cpns"
+                    type="date" placeholder="Tanggal SK CPNS" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputPassword1">TMT CPNS <sup class="text-danger">*</sup></label>
-                <input readonly name="tmt_cpns" id="tmt_cpns" value="{{ $profil->tmt_cpns }}" type="date" placeholder="TMT CPNS"
-                    class="form-control form-control-sm">
+                <input readonly name="tmt_cpns" id="tmt_cpns" value="{{ $profil->tmt_cpns }}" type="date"
+                    placeholder="TMT CPNS" class="form-control form-control-sm">
             </div>
         </div>
         <!-- PNS  -->
@@ -168,15 +176,15 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputPassword1">Tanggal SK PNS <sup class="text-danger">*</sup></label>
-                <input readonly name="tanggal_sk_pns" value="{{ $profil->tanggal_sk_pns }}" id="tanggal_sk_pns" type="date"
-                    placeholder="Tanggal SK PNS" class="form-control form-control-sm">
+                <input readonly name="tanggal_sk_pns" value="{{ $profil->tanggal_sk_pns }}" id="tanggal_sk_pns"
+                    type="date" placeholder="Tanggal SK PNS" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputPassword1">TMT PNS <sup class="text-danger">*</sup></label>
-                <input readonly name="tmt_pns" id="tmt_pns" value="{{ $profil->tmt_pns }}" type="date" placeholder="TMT PNS"
-                    class="form-control form-control-sm">
+                <input readonly name="tmt_pns" id="tmt_pns" value="{{ $profil->tmt_pns }}" type="date"
+                    placeholder="TMT PNS" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
@@ -217,8 +225,8 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>KPKN </label>
-                <input readonly name="kpkn" id="kpkn" value="{{ @$profil->kpkn }}" type="text"
-                    placeholder="KPKN" class="form-control form-control-sm">
+                <input readonly name="kpkn" id="kpkn" value="{{ @$profil->kpkn }}" type="text" placeholder="KPKN"
+                    class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
@@ -238,15 +246,15 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Instansi Induk </label>
-                <input readonly name="instansi_induk" id="instansi_induk" value="{{ @$profil->instansi_induk }}" type="text"
-                    placeholder="Instansi Induk" class="form-control form-control-sm">
+                <input readonly name="instansi_induk" id="instansi_induk" value="{{ @$profil->instansi_induk }}"
+                    type="text" placeholder="Instansi Induk" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Instansi Kerja </label>
-                <input readonly name="instansi_kerja" id="instansi_kerja" value="{{ @$profil->instansi_kerja }}" type="text"
-                    placeholder="Instansi Kerja" class="form-control form-control-sm">
+                <input readonly name="instansi_kerja" id="instansi_kerja" value="{{ @$profil->instansi_kerja }}"
+                    type="text" placeholder="Instansi Kerja" class="form-control form-control-sm">
             </div>
         </div>
         <div class="col-lg-6">

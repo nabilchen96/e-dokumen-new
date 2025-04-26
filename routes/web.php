@@ -218,6 +218,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/detail-statistik-umur', 'App\Http\Controllers\StatistikController@detailUmur');
     Route::get('/detail-statistik-skpd', 'App\Http\Controllers\StatistikController@detailSkpd');
     Route::post('/import-siasn', 'App\Http\Controllers\StatistikController@importExcel');
+
+    //ERROR IMPORTS
+    Route::GET('/error-imports', function(){
+        return view('backend.statistik.error');
+    });
 });
 
 //LOGOUT

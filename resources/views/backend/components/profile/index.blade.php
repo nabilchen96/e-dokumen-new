@@ -81,11 +81,10 @@
                 <select readonly name="agama" id="agama" class="form-control" required>
                     <option value="">--PILIH AGAMA--</option>
                     <option {{ @$profil->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
-                    <option {{ @$profil->agama == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                    <option {{ @$profil->agama == 'Protestan' ? 'selected' : '' }}>Protestan</option>
+                    <option {{ @$profil->agama == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                    <option {{ @$profil->agama == 'Katholik' ? 'selected' : '' }}>Katholik</option>
                     <option {{ @$profil->agama == 'Hindu' ? 'selected' : '' }}>Hindu</option>
                     <option {{ @$profil->agama == 'Budha' ? 'selected' : '' }}>Budha</option>
-                    <option {{ @$profil->agama == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                 </select>
             </div>
         </div>
@@ -94,7 +93,7 @@
                 <label>Status Kawin <sup class="text-danger">*</sup></label>
                 <select readonly name="status_kawin" id="status_kawin" class="form-control" required>
                     <option value="">--PILIH STATUS KAWIN--</option>
-                    <option {{ @$profil->status_kawin == 'Belum Menikah' ? 'selected' : '' }}>Belum Menikah</option>
+                    <option {{ @$profil->status_kawin == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
                     <option {{ @$profil->status_kawin == 'Menikah' ? 'selected' : '' }}>Menikah</option>
                     <option {{ @$profil->status_kawin == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
                     <option {{ @$profil->status_kawin == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
@@ -120,15 +119,18 @@
                 <label>Tingkat Pendidikan<sup class="text-danger">*</sup></label>
                 <select readonly name="tingkat_pendidikan" id="tingkat_pendidikan" class="form-control" required>
                     <option value="">--PILIH TINGKAT PENDIDIKAN--</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'S3' ? 'selected' : '' }}>S3</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'S1' ? 'selected' : '' }}>S2</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'S1/Diploma IV' ? 'selected' : '' }}>S1/Diploma IV</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'Diploma III' ? 'selected' : '' }}>Diploma III</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'S-3/Doktor' ? 'selected' : '' }}>S-3/Doktor</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'S-2' ? 'selected' : '' }}>S-2</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'S-1/Sarjana' ? 'selected' : '' }}>S-1/Sarjana</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'Diploma IV' ? 'selected' : '' }}>Diploma IV</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'Diploma III/Sarjana Muda' ? 'selected' : '' }}>Diploma III/Sarjana Muda</option>
                     <option {{ @$profil->tingkat_pendidikan == 'Diploma II' ? 'selected' : '' }}>Diploma II</option>
                     <option {{ @$profil->tingkat_pendidikan == 'Diploma I' ? 'selected' : '' }}>Diploma I</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'SMA Sederajat' ? 'selected' : '' }}>SMA Sederajat</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'SMP Sederajat' ? 'selected' : '' }}>SMP Sederajat</option>
-                    <option {{ @$profil->tingkat_pendidikan == 'SD Sederajat' ? 'selected' : '' }}>SD Sederajat</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'SLTA Kejuruan' ? 'selected' : '' }}>SLTA Kejuruan</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'SLTA' ? 'selected' : '' }}>SLTA</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'SLTP Kejuruan' ? 'selected' : '' }}>SLTP Kejuruan</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'SLTP' ? 'selected' : '' }}>SLTP</option>
+                    <option {{ @$profil->tingkat_pendidikan == 'Sekolah Dasar' ? 'selected' : '' }}>Sekolah Dasar</option>
                 </select>
             </div>
         </div>

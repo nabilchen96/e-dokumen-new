@@ -19,7 +19,7 @@ class CreateProfilsTable extends Migration
             $table->string('nip')->nullable();
             $table->string('jenis_kelamin')->nullable();
             $table->string('tempat_lahir')->nullable();
-            $table->string('tanggal_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
             $table->string('district_id')->nullable();
             $table->string('alamat')->nullable();
             $table->timestamps();

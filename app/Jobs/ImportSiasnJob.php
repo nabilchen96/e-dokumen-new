@@ -69,6 +69,127 @@ class ImportSiasnJob implements ShouldQueue
             'XI' => 'XI',
         ];
 
+        // foreach ($rows as $index => $row) {
+        //     if ($index == 1)
+        //         continue;
+
+        //     if (empty(trim($row['B'])) && empty(trim($row['O'])) && empty(trim($row['P'])) && empty(trim($row['Q']))) {
+        //         continue;
+        //     }
+
+        //     $user = null;
+        //     $profil = null;
+
+        //     // Cek berdasarkan NIP
+        //     $profil = Profil::where('nip', trim($row['B']))->first();
+        //     if ($profil) {
+        //         $user = User::where('id', $profil->id_user)->first(); // Ambil user manual
+        //     }
+
+        //     // Jika belum ditemukan, cek berdasarkan NIK
+        //     if (!$user && !$profil) {
+        //         $profil = Profil::where('nik', trim($row['O']))->first();
+        //         if ($profil) {
+        //             $user = User::where('id', $profil->id_user)->first(); // Ambil user manual
+        //         }
+        //     }
+
+        //     // Jika belum ditemukan, cek berdasarkan email atau no_wa
+        //     if (!$user) {
+        //         $user = User::where('email', trim($row['Q']))
+        //             ->orWhere('no_wa', trim($row['P']))
+        //             ->first();
+        //     }
+
+        //     try {
+
+        //         if (!$user) {
+        //             $user = User::create([
+        //                 'name' => trim($row['D']) ?: 'Nama Kosong',
+        //                 'email' => trim($row['Q']) ?: 'email-' . uniqid() . '@example.com',
+        //                 'no_wa' => trim($row['P']) ?: 'No Whatsapp we make email-' . uniqid() . '@example.com',
+        //                 'password' => Hash::make('password123'), // default password
+        //                 'role' => 'Pegawai'
+        //             ]);
+        //         }
+
+        //         $tanggal_input = trim($row['I']);
+
+        //         if (!empty($tanggal_input)) {
+        //             $tanggal = dateTime::createFromFormat('d/m/Y', $tanggal_input);
+        //             if ($tanggal && $tanggal->format('d/m/Y') === $tanggal_input) {
+        //                 $tanggal_lahir = $tanggal->format('Y-m-d');
+        //             } else {
+        //                 $tanggal_lahir = null; // atau isi default kalau format salah
+        //             }
+        //         } else {
+        //             $tanggal_lahir = null; // atau sesuai kebutuhan
+        //         }
+
+
+
+        //         // Update atau buat profil
+        //         DB::table('profils')->updateOrInsert(
+        //             ['id_user' => $user->id],
+        //             [
+        //                 'nik' => ltrim(trim($row['O']), "'"),
+        //                 'nip' => ltrim(trim($row['B']), "'"),
+        //                 'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
+        //                 'tempat_lahir' => trim($row['H']),
+        //                 'tanggal_lahir' => $tanggal_lahir,
+        //                 'alamat' => trim($row['S']),
+        //                 'agama' => trim($row['L']),
+        //                 'status_kawin' => trim($row['N']),
+        //                 'gelar_depan' => trim($row['E']),
+        //                 'gelar_belakang' => trim($row['F']),
+        //                 'tingkat_pendidikan' => trim($row['AU']),
+        //                 'tahun_lulus' => trim($row['AX']),
+        //                 'jurusan_pendidikan' => trim($row['AW']),
+        //                 'npwp' => trim($row['T']),
+        //                 'bpjs' => trim($row['U']),
+
+        //                 // 'pangkat' => trim($row['AK']),
+        //                 'pangkat' => $pangkatMapping[trim($row['AK'])] ?? trim($row['AK']),
+
+        //                 'jabatan' => trim($row['AR']),
+        //                 'email_gov' => trim($row['R']),
+        //                 'jenis_pegawai' => trim($row['W']),
+        //                 'kedudukan_hukum' => trim($row['Y']),
+        //                 'status_cpns' => trim($row['Z']),
+        //                 'kartu_asn_virtual' => trim($row['AA']),
+        //                 'nomor_sk_cpns' => trim($row['AB']),
+        //                 'tanggal_sk_cpns' => date('Y-m-d', strtotime(trim($row['AC']))),
+        //                 'tmt_cpns' => date('Y-m-d', strtotime(trim($row['AD']))),
+        //                 'nomor_sk_pns' => trim($row['AE']),
+        //                 'tanggal_sk_pns' => date('Y-m-d', strtotime(trim($row['AF']))),
+        //                 'tmt_pns' => date('Y-m-d', strtotime(trim($row['AG']))),
+        //                 'tmt_golongan' => date('Y-m-d', strtotime(trim($row['AL']))),
+
+        //                 'mk_tahun' => trim($row['AM']),
+        //                 'mk_bulan' => trim($row['AN']),
+        //                 'jenis_jabatan' => trim($row['AP']),
+        //                 'kpkn' => trim($row['AZ']),
+        //                 'lokasi_kerja' => trim($row['BB']),
+        //                 'unor' => trim($row['BD']),
+        //                 'instansi_induk' => trim($row['BF']),
+        //                 'instansi_kerja' => trim($row['BH']),
+        //                 'satuan_kerja' => trim($row['BJ']),
+        //                 'status_input' => 'Import',
+        //                 'created_at' => now(),
+        //                 'updated_at' => now()
+        //             ]
+        //         );
+
+        //     } catch (\Exception $e) {
+
+        //         \Log::error('Gagal import baris ke ' . $index . ': ' . $e->getMessage());
+
+        //         ErrorImport::create([
+        //             'keterangan' => 'Data gagal input. Perbaiki data ' . $row
+        //         ]);
+        //     }
+        // }
+
         foreach ($rows as $index => $row) {
             if ($index == 1)
                 continue;
@@ -83,52 +204,54 @@ class ImportSiasnJob implements ShouldQueue
             // Cek berdasarkan NIP
             $profil = Profil::where('nip', trim($row['B']))->first();
             if ($profil) {
-                $user = User::where('id', $profil->user_id)->first(); // Ambil user manual
+                $user = User::where('id', $profil->id_user)->first();
             }
 
             // Jika belum ditemukan, cek berdasarkan NIK
             if (!$user && !$profil) {
                 $profil = Profil::where('nik', trim($row['O']))->first();
                 if ($profil) {
-                    $user = User::where('id', $profil->user_id)->first(); // Ambil user manual
+                    $user = User::where('id', $profil->id_user)->first();
                 }
             }
 
-            // Jika belum ditemukan, cek berdasarkan email atau no_wa
-            if (!$user) {
-                $user = User::where('email', trim($row['Q']))
-                    ->orWhere('no_wa', trim($row['P']))
-                    ->first();
-            }
-
             try {
+                // $tanggal_input = trim($row['I']); // Mendapatkan data tanggal dari Excel
+                // $tanggal_lahir = null;
+
+                // $parts = explode('/', $tanggal_input);
+
+                // // Tambahkan angka 0 di depan jika kurang dari 2 digit
+                // $tanggal = str_pad($parts[0], 2, '0', STR_PAD_LEFT); // Tanggal
+                // $bulan = str_pad($parts[1], 2, '0', STR_PAD_LEFT);   // Bulan
+                // $tahun = $parts[2]; // Tahun tetap
+
+                // // Susun ke format YYYY-MM-DD
+                // $tanggal_lahir = $tahun . '-' . $bulan . '-' . $tanggal;
+
+
+                // Di sini kita generate email dan no_wa baru supaya tidak duplicate
+                $email = trim($row['Q']);
+                $no_wa = trim($row['P']);
+
+                if (empty($email) || User::where('email', $email)->exists()) {
+                    $email = 'generated-' . uniqid() . '@example.com';
+                }
+
+                if (empty($no_wa) || User::where('no_wa', $no_wa)->exists()) {
+                    $no_wa = '62' . rand(1000000000, 9999999999); // nomor WA random
+                }
 
                 if (!$user) {
                     $user = User::create([
                         'name' => trim($row['D']) ?: 'Nama Kosong',
-                        'email' => trim($row['Q']) ?: 'email-' . uniqid() . '@example.com',
-                        'no_wa' => trim($row['P']) ?: 'No Whatsapp we make email-' . uniqid() . '@example.com',
-                        'password' => Hash::make('password123'), // default password
+                        'email' => $email,
+                        'no_wa' => $no_wa,
+                        'password' => Hash::make('password123'),
                         'role' => 'Pegawai'
                     ]);
                 }
 
-                $tanggal_input = trim($row['I']);
-
-                if (!empty($tanggal_input)) {
-                    $tanggal = dateTime::createFromFormat('d/m/Y', $tanggal_input);
-                    if ($tanggal && $tanggal->format('d/m/Y') === $tanggal_input) {
-                        $tanggal_lahir = $tanggal->format('Y-m-d');
-                    } else {
-                        $tanggal_lahir = null; // atau isi default kalau format salah
-                    }
-                } else {
-                    $tanggal_lahir = null; // atau sesuai kebutuhan
-                }
-
-
-
-                // Update atau buat profil
                 DB::table('profils')->updateOrInsert(
                     ['id_user' => $user->id],
                     [
@@ -136,7 +259,7 @@ class ImportSiasnJob implements ShouldQueue
                         'nip' => ltrim(trim($row['B']), "'"),
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
-                        'tanggal_lahir' => $tanggal_lahir,
+                        'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
                         'alamat' => trim($row['S']),
                         'agama' => trim($row['L']),
                         'status_kawin' => trim($row['N']),
@@ -147,10 +270,7 @@ class ImportSiasnJob implements ShouldQueue
                         'jurusan_pendidikan' => trim($row['AW']),
                         'npwp' => trim($row['T']),
                         'bpjs' => trim($row['U']),
-
-                        // 'pangkat' => trim($row['AK']),
                         'pangkat' => $pangkatMapping[trim($row['AK'])] ?? trim($row['AK']),
-
                         'jabatan' => trim($row['AR']),
                         'email_gov' => trim($row['R']),
                         'jenis_pegawai' => trim($row['W']),
@@ -164,7 +284,6 @@ class ImportSiasnJob implements ShouldQueue
                         'tanggal_sk_pns' => date('Y-m-d', strtotime(trim($row['AF']))),
                         'tmt_pns' => date('Y-m-d', strtotime(trim($row['AG']))),
                         'tmt_golongan' => date('Y-m-d', strtotime(trim($row['AL']))),
-
                         'mk_tahun' => trim($row['AM']),
                         'mk_bulan' => trim($row['AN']),
                         'jenis_jabatan' => trim($row['AP']),
@@ -181,13 +300,13 @@ class ImportSiasnJob implements ShouldQueue
                 );
 
             } catch (\Exception $e) {
-
                 \Log::error('Gagal import baris ke ' . $index . ': ' . $e->getMessage());
 
                 ErrorImport::create([
-                    'keterangan' => 'Data gagal input. Perbaiki data ' . $row
+                    'keterangan' => 'Data gagal input. Perbaiki data ' . json_encode($row)
                 ]);
             }
         }
+
     }
 }

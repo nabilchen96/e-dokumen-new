@@ -55,31 +55,35 @@
                             <thead class="bg-info text-white">
                                 <tr>
                                     <th width="5%">No</th>
-                                    <th>Nama / NIP</th>
-                                    <th>Pendidikan / Jenis Kelamin</th>
-                                    <th width="25%">Jabatan / Pangkat</th>
-                                    <th>Umur / SKPD</th>
+                                    <th width="25%">Nama / NIP / No. Telp</th>
+                                    <th>Jenis Kelamin / Tempat & Tanggal Lahir</th>
+                                    <th width="25%">Pendidikan / Jabatan / Pangkat</th>
+                                    <th width="25%">Umur / SKPD</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $k => $item)
                                     <tr>
-                                        <td>{{ $k+1 }}</td>
+                                        <td>{{ $k + 1 }}</td>
                                         <td>
                                             <b>Nama:</b> {{ $item->name }} <br>
-                                            <b>NIP:</b> {{ $item->nip }}
+                                            <b>NIP:</b> {{ $item->nip }} <br>
+                                            <b>No Telp:</b> {{ $item->no_wa }} <br>
+                                        </td>
+                                        <td>
+                                            <b>Jenis Kelamin:</b> {{ $item->jenis_kelamin }} <br>
+                                            <b>Tempat Lahir:</b> {{ $item->tempat_lahir }} <br>
+                                            <b>Tanggal Lahir:</b> {{ $item->tanggal_lahir }} <br>
+
                                         </td>
                                         <td>
                                             <b>Pendidikan:</b> {{ $item->tingkat_pendidikan }} <br>
-                                            <b>Jenis Kelamin:</b> {{ $item->jenis_kelamin }}
-                                        </td>
-                                        <td>
                                             <b>Jabatan:</b> {{ $item->jenis_jabatan }} <br>
                                             <b>Pangkat:</b> {{ $item->pangkat }}
                                         </td>
                                         <td>
                                             <b>Umur:</b> {{ $item->umur }} Tahun<br>
-                                            <b>SKPD:</b> {{ $item->nama_skpd }}
+                                            <b>SKPD:</b> {{ $item->unor }} <br>
                                         </td>
                                     </tr>
                                 @endforeach

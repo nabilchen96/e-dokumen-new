@@ -75,9 +75,9 @@
             <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
                 <i class="bi bi-file-earmark-excel"></i> Import
             </a>
-            <!-- <a href="{{ url('error-imports') }}" class="btn btn-danger btn-sm">
-                <i class="bi bi-bug"></i> Error
-            </a> -->
+            <a href="#" class="btn btn-danger btn-sm" id="deleteButton">
+                <i class="bi bi-bug"></i> Hapus Data Import
+            </a>
             <!-- Modal Import-->
             <div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -101,10 +101,10 @@
 
                                         </li>
                                         <!-- <li>
-                                            <span>
-                                                *Data yang wajib diisi setidaknya Nama, NIP, NIK, Email, Nomor HP
-                                            </span>
-                                        </li> -->
+                                                        <span>
+                                                            *Data yang wajib diisi setidaknya Nama, NIP, NIK, Email, Nomor HP
+                                                        </span>
+                                                    </li> -->
                                     </ul>
                                 </div>
                             </div>
@@ -250,8 +250,7 @@
 
                 </div>
                 <div class="col-lg-3 mt-3">
-                    <a style="text-decoration: none;"
-                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA">
                         <div class="card shadow bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
@@ -629,6 +628,15 @@
                     plotOptions: {
                         column: {
                             stacking: 'normal',
+                            point: {
+                                events: {
+                                    click: function () {
+                                        // Gantilah URL sesuai kebutuhan Anda
+                                        const umur = this.category; // Kategori umur
+                                        window.location.href = `/detail-statistik-umur?umur=${umur}`; // URL berdasarkan umur yang diklik
+                                    }
+                                }
+                            }
                         }
                     },
                     series: [
@@ -672,9 +680,9 @@
                     },
                     {
                         render: function (data, type, row) {
-                            return `<a href="/detail-statistik-skpd?id_skpd=${row.id_skpd}&skpd=${row.nama_skpd}">
-                                                                                                    <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
-                                                                                                </a>`;
+                            return `<a href="/detail-statistik-skpd?nama_skpd=${row.nama_skpd}">
+                                    <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                                </a>`;
                         }
                     }
                 ]
@@ -737,5 +745,26 @@
                 });
         });
 
+    </script>
+    <script>
+        document.getElementById('deleteButton').addEventListener('click', function (e) {
+            e.preventDefault(); // Mencegah redirect langsung
+
+            // Menampilkan SweetAlert konfirmasi
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data ini akan dihapus secara permanen.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, maka arahkan ke URL untuk menghapus data
+                    window.location.href = '{{ url('hapus-data-import') }}';
+                }
+            });
+        });
     </script>
 @endpush

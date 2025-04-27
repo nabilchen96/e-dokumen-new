@@ -119,7 +119,7 @@ class DashboardController extends Controller
             $total_pegawai = DB::table('users')
                             ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
                             ->where('role', 'Pegawai')
-                            // ->whereNotIn('profils.status_input', ['Import'])
+                            ->whereNotIn('profils.status_input', ['Import'])
                             ->count();
 
             //jenis dokumen

@@ -116,7 +116,11 @@ class DashboardController extends Controller
         if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD') {
 
             //total pegawai
-            $total_pegawai = DB::table('users')->where('role', 'Pegawai')->count();
+            $total_pegawai = DB::table('users')
+                            ->join('profils', 'profils.id_user', '=', 'users.id')
+                            ->whereNotIn('profils.status_input', ['Import'])
+                            ->where('role', 'Pegawai')
+                            ->count();
 
             //jenis dokumen
             $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();

@@ -113,7 +113,14 @@ class DashboardController extends Controller
 
         }
 
-        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD') {
+        if (Auth::user()->role == 'Admin' || 
+            Auth::user()->role == 'SKPD' || 
+            Auth::user()->role == 'OPD' || 
+            Auth::user()->role == 'Staff BKPSDM' ||
+            Auth::user()->role == 'Kabid BKPSDM' ||
+            Auth::user()->role == 'Sekretaris BKPSDM' ||
+            Auth::user()->role == 'Kepala BKPSDM' ||
+            Auth::user()->role == 'Inspektorat') {
 
             //total pegawai
             $total_pegawai = DB::table('profils')
@@ -186,9 +193,10 @@ class DashboardController extends Controller
                     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
             ->limit(10)
+            ->where('jenis_dokumen_berkala', 'Kenaikan Gaji')
             ->orderByRaw('total_hari ASC');
 
-        if(Auth::user()->role == 'Admin'){
+        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD'){
             $kenaikan_gaji = $kenaikan_gaji->get();
         }elseif(Auth::user()->role == 'SKPD'){
             $kenaikan_gaji = $kenaikan_gaji->where('users.id_creator', Auth::id())->get();
@@ -214,7 +222,7 @@ class DashboardController extends Controller
         ->limit(10)
         ->orderBy('dokumens.created_at', 'asc');
 
-        if(Auth::user()->role == 'Admin'){
+        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD'){
             $dokumen_periksa = $dokumen_periksa->get();
         }elseif(Auth::user()->role == 'SKPD'){
             $dokumen_periksa = $dokumen_periksa->where('users.id_creator', Auth::id())->get();

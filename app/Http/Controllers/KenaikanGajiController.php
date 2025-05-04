@@ -36,11 +36,11 @@ class KenaikanGajiController extends Controller
                 'profils.nip',
             );
 
-        if(Auth::user()->role == 'Admin'){
+        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD'){
 
             $data = $data->get();
 
-        }elseif (Auth::user()->role == 'SKPD'){
+        }elseif (Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD'){
 
             $data = $data->where('users.id_creator', Auth::id())->get();
 
@@ -148,7 +148,7 @@ class KenaikanGajiController extends Controller
         return response()->json($data);
     }
 
-    public function export()
+    public function export($action = 'stream')
     {
         $templatePath = public_path('templates/template_kenaikan_gaji.docx');
 
@@ -222,13 +222,14 @@ class KenaikanGajiController extends Controller
         $templateProcessor->setValue('pangkat_kepala', @$kepala[2]);
         $templateProcessor->setValue('nip_kepala', @$data->nip_kepala);
 
-        // Path untuk menyimpan hasil
-        $outputPath = storage_path('app/public/output.docx');
 
-        // Simpan file hasil
-        $templateProcessor->saveAs($outputPath);
+        $pdf = PDF::loadview('backend.kenaikan_gaji.export_pdf', [
+            'data' => @$data, 
+            'kepala' => @$kepala, 
+            'instansi' => @$instansi,
+        ]);
 
-        // Kembalikan file sebagai respons download
-        return response()->download($outputPath)->deleteFileAfterSend(true);
+        $pdf->setPaper('legal', 'portrait');
+        return $pdf->stream('document.pdf');
     }
 }

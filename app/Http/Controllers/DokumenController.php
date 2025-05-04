@@ -35,7 +35,7 @@ class DokumenController extends Controller
             ->where('jenis_dokumens.id', Request('jenis_dokumen'));
 
 
-        if (Auth::user()->role == 'Admin') {
+        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD' || Auth::user()->role == 'Kepala BKPSDM') {
 
             $data = $data->get();
 

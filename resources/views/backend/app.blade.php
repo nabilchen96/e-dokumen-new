@@ -24,8 +24,8 @@
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
 
     <!-- Favicons -->
-    <link href="{{ url('ilanding/logo.png') }}" rel="icon">
-    <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
+    <link href="{{ url('pandu.jpeg') }}" rel="icon">
+    <link href="{{ url('pandu.jpeg') }}" rel="apple-touch-icon">
     @stack('style')
     <style>
         .btn {
@@ -126,11 +126,11 @@
                 style="box-shadow: 0px 5px 21px -5px #CDD1E1;">
                 <a class="navbar-brand brand-logo mr-5" style="font-size: 16px; margin-left: 20px;"
                     href="{{ url('/') }}">
-                    <h3><b> <img src="{{ url('ilanding/logo.png') }}" alt="">  </b></h3>
+                    <h3><b> <img style="height: 65px;" src="{{ url('pandu.jpeg') }}" alt="">  </b></h3>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ url('/') }}">
                     <!-- <h4><b>🚀</b></h4> -->
-                    <img src="{{ url('ilanding/logo.png') }}" alt="">
+                    <img src="{{ url('pandu.jpeg') }}" alt="">
                 </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

@@ -117,6 +117,13 @@
                             @endif
                             <option value="SKPD">SKPD</option>
                             <option value="Pegawai">Pegawai</option>
+                            <option>OPD</option>
+                            <option>Staff BKPSDM</option>
+                            <option>Kabid BKPSDM</option>
+                            <option>Sekretaris BKPSDM</option>
+                            <option>Kepala BKPSDM</option>
+                            <option>Bendahara Gaji DPKAD</option>
+                            <option>Inspektorat</option>
                         </select>
                     </div>
                     <div class="form-group" id="status_pegawai_group" style="display: none;">

@@ -57,6 +57,10 @@
         margin-bottom: 10px;
       }
     }
+
+    .header .logo img {
+      max-height: 60px !important;
+    }
   </style>
 </head>
 
@@ -70,8 +74,8 @@
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1 class="sitename">
-          <img src="{{ url('ilanding/logo.png') }}" alt="">
-          
+          <img src="{{ url('pandu.jpeg') }}" alt="">
+
         </h1>
       </a>
 
@@ -169,7 +173,7 @@
             width="100%" height="500" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"></iframe>
           <!-- <div class="row stats-row mb-5 gy-4 mt-5"> -->
-            <!-- @php
+          <!-- @php
 
         $data = DB::table('dokumens')
           ->join('jenis_dokumens', 'dokumens.id_dokumen', '=', 'jenis_dokumens.id')
@@ -186,8 +190,8 @@
             @foreach ($data as $d) -->
 
 
-            <!-- <div class="col-lg-3 col-6 col-md-6"> -->
-              <!-- <div class="stat-item">
+          <!-- <div class="col-lg-3 col-6 col-md-6"> -->
+          <!-- <div class="stat-item">
                 <div class="stat-icon">
                   <i class="bi bi-briefcase"></i>
                 </div>
@@ -196,9 +200,9 @@
                   <p class="mb-0">{{ $d->total }} Dokumen</p>
                 </div>
               </div> -->
-            <!-- </div> -->
+          <!-- </div> -->
 
-            <!-- @endforeach -->
+          <!-- @endforeach -->
 
 
           <!-- </div> -->

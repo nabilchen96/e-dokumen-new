@@ -83,7 +83,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="updateStatusForm">
-                @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
+                @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
                     <div class="modal-header p-3">
                         <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>

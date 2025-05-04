@@ -102,7 +102,7 @@
                                     <h5 style="line-height: 1.2em;">Beberapa data sudah terisi berdasarkan data kenaikan
                                         gaji sebelumnya (jika
                                         sebelumnya sudah membuat data kenaikan gaji). <br> Silahkan edit
-                                        dan pastikan data sudah sesuai sebelum disubmit. Hanya admin yang dapat mengedit
+                                        dan pastikan data sudah sesuai sebelum disubmit. Hanya admin dan user yang memiliki otoritas yang dapat mengedit
                                     </h5>
                                 </div>
                                 <br>
@@ -139,9 +139,9 @@
                         </tr>
                     </table>
                     <form id="form">
-                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="hidden" name="id"
+                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="hidden" name="id"
                             id="id" value="{{ Request('data') }}">
-                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="hidden"
+                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="hidden"
                             name="id_profil" id="id_profil" value="{{ @$pegawai->id }}">
                         <table width="100%">
                             <tr>
@@ -152,7 +152,7 @@
                                 <td width="5%"></td>
                                 <td width="11%">Arga Makmur, </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         id="tgl_dokumen" name="tgl_dokumen" class="form-control border-danger"
                                         value="{{ $kenaikan_gaji->tgl_dokumen ?? date('Y-m-d') }}">
                                 </td>
@@ -163,7 +163,7 @@
                                 <td width="10%">Nomor</td>
                                 <td>:</td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         placeholder="Nomor" id="no_dokumen" name="no_dokumen"
                                         value="{{ @$kenaikan_gaji->no_dokumen }}" class="form-control border-danger">
                                 </td>
@@ -176,7 +176,7 @@
                                 <td width="10%">Lampiran</td>
                                 <td>:</td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         id="lampiran" name="lampiran" value="{{ @$kenaikan_gaji->lampiran ?? '-' }}"
                                         class="form-control border-danger">
                                 </td>
@@ -259,11 +259,11 @@
                                     :
                                 </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         class="form-control border-danger" value="{{ @$pegawai->name }}">
                                 </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         class="form-control border-danger" value="{{ @$pegawai->tanggal_lahir }}">
                                 </td>
                                 <td></td>
@@ -279,7 +279,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         class="form-control border-danger" value="{{ @$pegawai->nip }}">
                                 </td>
                                 <td></td>
@@ -300,12 +300,12 @@
                                             $pangkat = explode(" - ", @$pegawai->pangkat);
                                         }
                                     @endphp
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         name="pangkat" id="pangkat" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->pangkat ?? @$pangkat[1] }}" placeholder="Pangkat">
                                 </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         name="jabatan" id="jabatan" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->jabatan ?? @$pegawai->jabatan }}"
                                         placeholder="Jabatan">
@@ -322,7 +322,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         name="skpd" id="skpd" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->skpd ?? @$kantor->nama_skpd }}"
                                         placeholder="Kantor/Tempat Bekerja">
@@ -339,7 +339,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="number"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="number"
                                         name="gaji_pokok_lama" id="gaji_pokok_lama" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->gaji_pokok_lama ?? @$gaji_lama->gaji_pokok_baru }}"
                                         placeholder="Gaji Pokok Lama">
@@ -364,7 +364,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         name="oleh_pejabat" id="oleh_pejabat" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->oleh_pejabat ?? @$gaji_lama->oleh_pejabat }}"
                                         placeholder="Oleh Pejabat">
@@ -381,13 +381,13 @@
                                     :
                                 </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         name="tgl_dokumen_sebelumnya" id="tgl_dokumen_sebelumnya"
                                         value="{{ @$kenaikan_gaji->tgl_dokumen_sebelumnya ?? @$gaji_lama->tgl_dokumen_sebelumnya }}"
                                         class="form-control border-danger">
                                 </td>
                                 <td>
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         name="no_dokumen_sebelumnya" id="no_dokumen_sebelumnya"
                                         class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->no_dokumen_sebelumnya ?? @$gaji_lama->no_dokumen_sebelumnya }}"
@@ -405,7 +405,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         name="tgl_berlaku_gaji" id="tgl_berlaku_gaji" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->tgl_berlaku_gaji ?? @$gaji_lama->tgl_terhitung_mulai }}">
                                 </td>
@@ -422,7 +422,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required
+                                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Tahun"
                                             pattern="^[0-9]{2}$" maxlength="2"
                                             value="{{ @$kenaikan_gaji->masa_kerja_tahun_sebelumnya ?? @$gaji_lama->masa_kerja_tahun_baru }}"
@@ -433,7 +433,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required
+                                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Bulan"
                                             id="masa_kerja_bulan_sebelumnya"
                                             value="{{ @$kenaikan_gaji->masa_kerja_bulan_sebelumnya ?? @$gaji_lama->masa_kerja_bulan_baru }}"
@@ -463,7 +463,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="number"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="number"
                                         name="gaji_pokok_baru" id="gaji_pokok_baru" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->gaji_pokok_baru }}" placeholder="Gaji Pokok Baru">
                                 </td>
@@ -481,7 +481,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required
+                                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Tahun" value="{{ @$kenaikan_gaji->masa_kerja_tahun_baru ??
     @$gaji_lama->masa_kerja_tahun_baru ? @$gaji_lama->masa_kerja_tahun_baru + 2 : 0 }}" id="masa_kerja_tahun_baru"
                                             name="masa_kerja_tahun_baru" pattern="^[0-9]{2}$" maxlength="2">
@@ -491,7 +491,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required
+                                        <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Bulan"
                                             value="{{ @$kenaikan_gaji->masa_kerja_bulan_baru ?? 0 }}"
                                             id="masa_kerja_bulan_baru" name="masa_kerja_bulan_baru" pattern="^[0-9]{2}$"
@@ -513,7 +513,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="text"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         placeholder="Dalam Golongan" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->golongan ?? @$pangkat[0] }}">
                                 </td>
@@ -530,7 +530,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         name="tgl_terhitung_mulai" id="tgl_terhitung_mulai"
                                         class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->tgl_terhitung_mulai }}">
@@ -564,7 +564,7 @@
                                 </td>
                                 <td colspan="2">
                                     b. Kenaikan gaji berkala berikutnya pada tanggal
-                                    <input {{ Auth::user()->role != 'Admin' ? 'readonly ' : ' '}}required type="date"
+                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="date"
                                         name="tgl_kenaikan_berikutnya" readonly id="tgl_kenaikan_berikutnya"
                                         value="{{ @$kenaikan_gaji->tgl_kenaikan_berikutnya }}"
                                         class="form-control border-danger">
@@ -631,7 +631,7 @@
                                     4. Kepala Cabang PT. Taspen(Persero) Bengkulu di Bengkulu <br>
                                     5. Bendaharawan Gaji PNS yang bersangkutan <br>
                                     6. Pegawai yang bersangkutan <br> <br>
-                                    @if (Auth::user()->role == 'Admin')
+                                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
                                         <label><b>Status Dokumen:</b></label>
                                         <select required style="width: 50%" name="status" id="status"
                                             class="border-danger form-control">
@@ -651,7 +651,7 @@
                             <tr>
                                 <td width="5%"></td>
                                 <td>
-                                    @if (Auth::user()->role == 'Admin')
+                                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
                                         <button id="tombol_kirim" class="btn btn-primary"
                                             style="border-radius: 8px !important;">Submit</button>
                                     @endif

@@ -221,9 +221,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/hapus-data-import', 'App\Http\Controllers\StatistikController@hapusDataImport');
 
     //ERROR IMPORTS
-    Route::GET('/error-imports', function(){
+    Route::GET('/error-imports', function () {
         return view('backend.statistik.error');
     });
+
+    //PROSES KENAIKAN GAJI
+    Route::get('/proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@index');
+    Route::get('/data-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@data');
+    Route::get('/detail-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@detail');
+    Route::post('/store-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@store');
+    Route::post('/verifikasi-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@verifikasi');
+    
 });
 
 //LOGOUT

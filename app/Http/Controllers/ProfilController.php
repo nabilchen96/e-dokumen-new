@@ -39,7 +39,14 @@ class ProfilController extends Controller
                 'skpds.nama_skpd'
             );
 
-        if (Auth::user()->role == 'Admin') {
+        if (
+            Auth::user()->role == 'Admin' ||
+            Auth::user()->role == 'Staff BKPSDM' ||
+            Auth::user()->role == 'Kabid BKPSDM' ||
+            Auth::user()->role == 'Sekretaris BKPSDM' ||
+            Auth::user()->role == 'Kepala BKPSDM' ||
+            Auth::user()->role == 'Inspektorat'
+        ) {
 
             $profil = $profil->get();
 
@@ -206,7 +213,14 @@ class ProfilController extends Controller
                 'skpds.nama_skpd'
             )->where('profils.id', Request('id'));
 
-        if (Auth::user()->role == 'Admin') {
+        if (
+            Auth::user()->role == 'Admin' ||
+            Auth::user()->role == 'Staff BKPSDM' ||
+            Auth::user()->role == 'Kabid BKPSDM' ||
+            Auth::user()->role == 'Sekretaris BKPSDM' ||
+            Auth::user()->role == 'Kepala BKPSDM' ||
+            Auth::user()->role == 'Inspektorat'
+        ) {
 
             $profil = $profil->first();
 

@@ -72,10 +72,10 @@
     </div>
     <div class="row">
         <div class="col-12 mt-2">
-            <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
+            <a style="border-radius: 8px !important;" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
                 <i class="bi bi-file-earmark-excel"></i> Import
-            </a>
-            <a href="#" class="btn btn-danger btn-sm" id="deleteButton">
+            </a> &nbsp;
+            <a style="border-radius: 8px !important;" href="#" class="btn btn-danger btn-sm" id="deleteButton">
                 <i class="bi bi-bug"></i> Hapus Data Import
             </a>
             <!-- Modal Import-->
@@ -100,11 +100,6 @@
                                             </span><br>
 
                                         </li>
-                                        <!-- <li>
-                                                        <span>
-                                                            *Data yang wajib diisi setidaknya Nama, NIP, NIK, Email, Nomor HP
-                                                        </span>
-                                                    </li> -->
                                     </ul>
                                 </div>
                             </div>
@@ -681,8 +676,8 @@
                     {
                         render: function (data, type, row) {
                             return `<a href="/detail-statistik-skpd?nama_skpd=${row.nama_skpd}">
-                                    <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
-                                </a>`;
+                                        <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                                    </a>`;
                         }
                     }
                 ]

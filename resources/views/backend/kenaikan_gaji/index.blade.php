@@ -180,7 +180,7 @@
                     render: function (data, type, row, meta) {
                         if (row.status != 'Draft') {
                             return `<a href="/export-kenaikan-gaji?data=${row.id}">
-                                            <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
+                                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
                                         </a>`
                         } else {
                             return ``

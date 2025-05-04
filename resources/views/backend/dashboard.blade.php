@@ -62,7 +62,7 @@
             <div class="col-lg-12 mb-4">
                 <h3 class="font-weight-bold">Dashboard</h3>
                 <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
-                    Welcome back to APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</h6>
+                    Welcome back to Aplikasi <span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</h6>
             </div>
             @if (@$profil)
                 <div class="col-lg-5">

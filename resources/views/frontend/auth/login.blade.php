@@ -18,8 +18,8 @@
   <link rel="stylesheet" href="login-form-02/css/style.css">
 
   <!-- Favicons -->
-  <link href="{{ url('ilanding/logo.png') }}" rel="icon">
-  <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
+  <link href="{{ url('pandu.jpeg') }}" rel="icon">
+  <link href="{{ url('pandu.jpeg') }}" rel="apple-touch-icon">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map {
@@ -34,7 +34,7 @@
       }
     }
   </style>
-  <title>APLIKASI PENDATAAN NON ASN</title>
+  <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
 </head>
 
 <body>
@@ -56,7 +56,7 @@
       <div class="container">
         <div class="row align-items-center justify-content-center" style="margin-top: -50px !important;">
           <div class="col-md-7">
-            <h3>Login to <br><strong>APLIKASI PENDATAAN MANDIRI TENAGA NON ASN</strong></h3>
+            <h3>Login to <br><strong><span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</strong></h3>
             <br>
             <form id="formLogin">
               <div class="form-group first">

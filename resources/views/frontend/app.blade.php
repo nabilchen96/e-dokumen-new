@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>APLIKASI PENDATAAN NON ASN</title>
+  <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="{{ url('ilanding/logo.png') }}" rel="icon">
-  <link href="{{ url('ilanding/logo.png') }}" rel="apple-touch-icon">
+  <link href="{{ url('pandu.jpeg') }}" rel="icon">
+  <link href="{{ url('pandu.jpeg') }}" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -127,9 +127,9 @@
                 <i class="bi bi-gear-fill me-2"></i>
                 Panduan Aplikasi
               </div> -->
-              <h2>Aplikasi</h2>
-              <h1 class="mb-4">
-                Pendataan Mandiri <br> Tenaga Non ASN<br>
+              <h2>Aplikasi <span class="text-danger">PANDU</span></h2>
+              <h1 style="font-size: 3.5rem !important;" class="mb-4">
+                Pengelolaan Kepegawaian Terpadu <br>
                 <span class="accent-text">Bengkulu Utara</span>
               </h1>
 

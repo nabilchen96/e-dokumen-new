@@ -276,7 +276,7 @@ class StatistikController extends Controller
 
     public function hapusDataImport()
     {
-        PegawaiImport::delete();
+        PegawaiImport::truncate(); // Menghapus semua data tanpa trigger event model
 
         return back();
     }

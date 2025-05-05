@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PegawaiImport;
 use Illuminate\Http\Request;
 use DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -22,43 +23,43 @@ class StatistikController extends Controller
     public function index()
     {
 
-        $s3 = DB::table('profils')
+        $s3 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'S-3/Doktor')
             ->where('status_input', 'Import')
             ->count();
 
-        $s2 = DB::table('profils')
+        $s2 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'S-2')
             ->where('status_input', 'Import')
             ->count();
 
-        $s1 = DB::table('profils')
+        $s1 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'S-1/Sarjana')
             ->where('status_input', 'Import')
             ->count();
 
 
-        $d1 = DB::table('profils')
+        $d1 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'Diploma I')
             ->where('status_input', 'Import')
             ->count();
 
-        $d2 = DB::table('profils')
+        $d2 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'Diploma II')
             ->where('status_input', 'Import')
             ->count();
 
-        $d3 = DB::table('profils')
+        $d3 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'Diploma III/Sarjana Muda')
             ->where('status_input', 'Import')
             ->count();
 
-        $d4 = DB::table('profils')
+        $d4 = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'Diploma IV')
             ->where('status_input', 'Import')
             ->count();
 
-        $sma = DB::table('profils')
+        $sma = DB::table('pegawai_imports')
             ->where('tingkat_pendidikan', 'SLTA')
             ->orwhere('tingkat_pendidikan', 'SLTA Kejuruan')
             ->where('status_input', 'Import')
@@ -79,7 +80,7 @@ class StatistikController extends Controller
     public function dataPendidikan()
     {
 
-        $data = DB::table('profils')
+        $data = DB::table('pegawai_imports')
             ->select(
                 'tingkat_pendidikan',
                 DB::raw("SUM(CASE WHEN jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki"),
@@ -88,7 +89,7 @@ class StatistikController extends Controller
             ->groupBy('tingkat_pendidikan')
             ->whereNotIn('status_pegawai', ['Honorer'])
             ->whereNotNull('tingkat_pendidikan')
-            ->where('profils.status_input', 'Import')
+            ->where('pegawai_imports.status_input', 'Import')
             ->get();
 
         return response()->json($data);
@@ -97,7 +98,7 @@ class StatistikController extends Controller
     public function dataJenisKelamin()
     {
 
-        $data = DB::table('profils')
+        $data = DB::table('pegawai_imports')
             ->select(
                 'jenis_kelamin',
                 DB::raw('count(jenis_kelamin) as total')
@@ -105,7 +106,7 @@ class StatistikController extends Controller
             ->groupBy('jenis_kelamin')
             ->whereNotNull('jenis_kelamin')
             ->whereNotIn('status_pegawai', ['Honorer'])
-            ->where('profils.status_input', 'Import')
+            ->where('pegawai_imports.status_input', 'Import')
             ->get();
 
         return response()->json($data);
@@ -114,23 +115,15 @@ class StatistikController extends Controller
     public function dataJenisJabatan()
     {
 
-        $data = DB::table('profils')
+        $data = DB::table('pegawai_imports')
             ->select(
                 'jenis_jabatan',
                 DB::raw('count(jenis_jabatan) as total')
             )
             ->groupBy('jenis_jabatan')
             ->whereNotNull('jenis_jabatan')
-            ->where('profils.status_input', 'Import')
+            ->where('pegawai_imports.status_input', 'Import')
             ->get();
-
-        // $data = DB::table('profils')
-        //     ->select(
-        //         DB::raw("COALESCE(jenis_jabatan, 'Lainnya') as jenis_jabatan"),
-        //         DB::raw('count(*) as total')
-        //     )
-        //     ->groupBy(DB::raw("COALESCE(jenis_jabatan, 'Lainnya')"))
-        //     ->get();
 
         return response()->json($data);
     }
@@ -138,7 +131,7 @@ class StatistikController extends Controller
     public function dataPangkat()
     {
 
-        $data = DB::table('profils')
+        $data = DB::table('pegawai_imports')
             ->select(
                 'pangkat',
                 DB::raw("SUM(CASE WHEN jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki"),
@@ -147,7 +140,7 @@ class StatistikController extends Controller
             ->groupBy('pangkat')
             ->whereNotIn('status_pegawai', ['Honorer'])
             ->whereNotNull('pangkat')
-            ->where('profils.status_input', 'Import')
+            ->where('pegawai_imports.status_input', 'Import')
             ->get();
 
         return response()->json($data);
@@ -156,39 +149,16 @@ class StatistikController extends Controller
     public function dataSkpd()
     {
 
-        // $data = DB::table('dokumens')
-        //     ->join('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
-        //     ->leftjoin('users', 'users.id', '=', 'dokumens.id_user')
-        //     ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-        //     ->select(
-        //         'skpds.nama_skpd',
-        //         // DB::raw('COUNT(DISTINCT dokumens.id_user) as total')
-        //         'skpds.id as id_skpd',
-        //         DB::raw("SUM(CASE WHEN profils.jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki"),
-        //         DB::raw("SUM(CASE WHEN profils.jenis_kelamin = 'Perempuan' THEN 1 ELSE 0 END) as perempuan")
-        //     )
-        //     ->whereIn('dokumens.id', function ($query) {
-        //         // Select the latest dokumen per user
-        //         $query->selectRaw('MAX(dokumens.id)')
-        //             ->from('dokumens')
-        //             ->groupBy('dokumens.id_user');
-        //     })
-        //     ->groupBy('skpds.id')
-        //     ->where('profils.status_input', 'Import')
-        //     ->whereNotIn('profils.status_pegawai', ['Honorer'])
-        //     ->get();
-
-        $data = DB::table('profils')
-            ->join('users', 'users.id', '=', 'profils.id_user')
+        $data = DB::table('pegawai_imports')
             ->select(
-                'profils.unor as nama_skpd',
-                DB::raw("SUM(CASE WHEN profils.jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki"),
-                DB::raw("SUM(CASE WHEN profils.jenis_kelamin = 'Perempuan' THEN 1 ELSE 0 END) as perempuan")
+                'pegawai_imports.unor as nama_skpd',
+                DB::raw("SUM(CASE WHEN pegawai_imports.jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki"),
+                DB::raw("SUM(CASE WHEN pegawai_imports.jenis_kelamin = 'Perempuan' THEN 1 ELSE 0 END) as perempuan")
             )
-            ->whereNotNull('profils.unor')
+            ->whereNotNull('pegawai_imports.unor')
             ->groupBy('unor')
-            ->where('profils.status_input', 'Import')
-            ->whereNotIn('profils.status_pegawai', ['Honorer'])
+            ->where('pegawai_imports.status_input', 'Import')
+            ->whereNotIn('pegawai_imports.status_pegawai', ['Honorer'])
             ->get();
 
 
@@ -197,7 +167,7 @@ class StatistikController extends Controller
 
     public function dataUmur()
     {
-        $data = DB::table('profils')
+        $data = DB::table('pegawai_imports')
             ->selectRaw("
                 TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) as umur,
                 SUM(CASE WHEN jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) as laki_laki,
@@ -208,7 +178,7 @@ class StatistikController extends Controller
             ->groupBy(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())')) // Perbaiki groupBy
             ->havingRaw('umur BETWEEN 17 AND 70') // 👈 filter umur
             ->orderBy('umur')
-            ->where('profils.status_input', 'Import')
+            ->where('pegawai_imports.status_input', 'Import')
             ->get();
 
 
@@ -218,33 +188,18 @@ class StatistikController extends Controller
     public function detailPendidikan()
     {
 
-        $data = DB::table('users')
-            ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-            ->leftjoin('dokumens', 'dokumens.id_user', '=', 'users.id')
-            ->leftjoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+        $data = DB::table('pegawai_imports')
             ->select(
-                'users.name',
-                'users.no_wa',
-                'skpds.nama_skpd',
-                'profils.*',
-                DB::raw("TIMESTAMPDIFF(YEAR, profils.tanggal_lahir, CURDATE()) as umur")
+                'pegawai_imports.*',
+                DB::raw("TIMESTAMPDIFF(YEAR, pegawai_imports.tanggal_lahir, CURDATE()) as umur")
             )
-            ->where(function ($query) {
-                // Kondisi untuk mengambil dokumen terakhir atau tidak ada dokumen
-                $query->whereNull('dokumens.id')  // Mengambil data tanpa dokumen
-                    ->orWhereIn('dokumens.id', function ($subQuery) {
-                    $subQuery->selectRaw('MAX(dokumens.id)')
-                        ->from('dokumens')
-                        ->groupBy('dokumens.id_user');
-                });
-            })
-            ->where('profils.status_input', 'Import')
-            ->whereNotIn('status_pegawai', ['Honorer']);
+            ->where('pegawai_imports.status_input', 'Import')
+            ->whereNotIn('pegawai_imports.status_pegawai', ['Honorer']);
 
         if (Request('pendidikan') == 'SMA') {
-            $data = $data->where('profils.tingkat_pendidikan', 'SLTA Kejuruan')->orWhere('profils.tingkat_pendidikan', 'SLTA')->get();
+            $data = $data->where('pegawai_imports.tingkat_pendidikan', 'SLTA Kejuruan')->orWhere('pegawai_imports.tingkat_pendidikan', 'SLTA')->get();
         } else {
-            $data = $data->where('profils.tingkat_pendidikan', Request('pendidikan'))->get();
+            $data = $data->where('pegawai_imports.tingkat_pendidikan', Request('pendidikan'))->get();
         }
 
         $title = 'Pencarian Berdasarkan Lulusan ' . Request('pendidikan');
@@ -257,44 +212,15 @@ class StatistikController extends Controller
 
     public function detailSkpd()
     {
-        // Periksa apakah ada nilai umur yang diberikan di URL atau form
-        // $data = DB::table('users')
-        //     ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-        //     ->leftjoin('dokumens', 'dokumens.id_user', '=', 'users.id')
-        //     ->leftjoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
-        //     ->where('skpds.id', Request('id_skpd'))
-        //     ->select(
-        //         'users.name',
-        //         'skpds.nama_skpd',
-        //         'profils.*',
-        //         DB::raw("TIMESTAMPDIFF(YEAR, profils.tanggal_lahir, CURDATE()) as umur")
-        //     )
-        //     ->where('profils.status_input', 'Import')
-        //     ->where(function ($query) {
-        //         // Kondisi untuk mengambil dokumen terakhir atau tidak ada dokumen
-        //         $query->whereNull('dokumens.id')  // Mengambil data tanpa dokumen
-        //             ->orWhereIn('dokumens.id', function ($subQuery) {
-        //             $subQuery->selectRaw('MAX(dokumens.id)')
-        //                 ->from('dokumens')
-        //                 ->groupBy('dokumens.id_user');
-        //         });
-        //     })
-        //     ->whereNotIn('status_pegawai', ['Honorer'])
-        //     ->get();
-
-
-        $data = DB::table('profils')
-            ->join('users', 'users.id', '=', 'profils.id_user')
+        $data = DB::table('pegawai_imports')
             ->select(
-                'users.name',
-                'users.no_wa',
-                'profils.*',
-                DB::raw("TIMESTAMPDIFF(YEAR, profils.tanggal_lahir, CURDATE()) as umur")
+                'pegawai_imports.*',
+                DB::raw("TIMESTAMPDIFF(YEAR, pegawai_imports.tanggal_lahir, CURDATE()) as umur")
             )
             // ->groupBy('unor')
-            ->where('profils.status_input', 'Import')
-            ->whereNotIn('profils.status_pegawai', ['Honorer'])
-            ->where('profils.unor', Request('nama_skpd') ?? '')
+            ->where('pegawai_imports.status_input', 'Import')
+            ->whereNotIn('pegawai_imports.status_pegawai', ['Honorer'])
+            ->where('pegawai_imports.unor', Request('nama_skpd') ?? '')
             ->get();
 
         $title = 'Pencarian Berdasarkan SKPD ' . Request('nama_skpd');
@@ -308,16 +234,13 @@ class StatistikController extends Controller
     public function detailUmur()
     {
 
-        $data = DB::table('users')
-            ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+        $data = DB::table('pegawai_imports')
             ->select(
-                'users.name',
-                'users.no_wa',
-                'profils.*',
-                DB::raw("TIMESTAMPDIFF(YEAR, profils.tanggal_lahir, CURDATE()) as umur")
+                'pegawai_imports.*',
+                DB::raw("TIMESTAMPDIFF(YEAR, pegawai_imports.tanggal_lahir, CURDATE()) as umur")
             )
-            ->whereRaw("TIMESTAMPDIFF(YEAR, profils.tanggal_lahir, CURDATE()) = ?", [Request('umur')])
-            ->where('profils.status_input', 'Import')
+            ->whereRaw("TIMESTAMPDIFF(YEAR, pegawai_imports.tanggal_lahir, CURDATE()) = ?", [Request('umur')])
+            ->where('pegawai_imports.status_input', 'Import')
             ->whereNotIn('status_pegawai', ['Honorer'])
             ->get();
 
@@ -353,21 +276,7 @@ class StatistikController extends Controller
 
     public function hapusDataImport()
     {
-
-        DB::transaction(function () {
-            // Cari semua user_id dari profils yang status 'import'
-            $userIds = Profil::where('status_input', 'Import')->pluck('id_user');
-
-            // dd($userIds);
-
-            if ($userIds->isNotEmpty()) {
-                // Hapus users yang id-nya ada di daftar itu
-                User::whereIn('id', $userIds)->delete();
-
-                // Hapus profils dengan status 'import'
-                Profil::where('status_input', 'Import')->delete();
-            }
-        });
+        PegawaiImport::delete();
 
         return back();
     }

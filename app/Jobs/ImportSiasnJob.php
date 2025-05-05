@@ -34,16 +34,10 @@ class ImportSiasnJob implements ShouldQueue
         $this->filePath = $filePath;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         $spreadsheet = IOFactory::load(storage_path('app/' . $this->filePath));
         $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-
 
         $pangkatMapping = [
             'I/a' => 'I/a - Juru Muda Tingkat I',
@@ -77,69 +71,17 @@ class ImportSiasnJob implements ShouldQueue
                 continue;
             }
 
-            // $user = null;
-            // $profil = null;
-
-            // Cek berdasarkan NIP
-            // $profil = Profil::where('nip', trim($row['B']))->first();
-            // if ($profil) {
-            //     $user = User::where('id', $profil->id_user)->first();
-            // }
-
-            // // Jika belum ditemukan, cek berdasarkan NIK
-            // if (!$user && !$profil) {
-            //     $profil = Profil::where('nik', trim($row['O']))->first();
-            //     if ($profil) {
-            //         $user = User::where('id', $profil->id_user)->first();
-            //     }
-            // }
-
             try {
-                // $tanggal_input = trim($row['I']); // Mendapatkan data tanggal dari Excel
-                // $tanggal_lahir = null;
+                $nik = ltrim(trim($row['O']), "'");
 
-                // $parts = explode('/', $tanggal_input);
-
-                // // Tambahkan angka 0 di depan jika kurang dari 2 digit
-                // $tanggal = str_pad($parts[0], 2, '0', STR_PAD_LEFT); // Tanggal
-                // $bulan = str_pad($parts[1], 2, '0', STR_PAD_LEFT);   // Bulan
-                // $tahun = $parts[2]; // Tahun tetap
-
-                // // Susun ke format YYYY-MM-DD
-                // $tanggal_lahir = $tahun . '-' . $bulan . '-' . $tanggal;
-
-
-                // Di sini kita generate email dan no_wa baru supaya tidak duplicate
-                $email = trim($row['Q']);
-                $no_wa = trim($row['P']);
-
-                // if (empty($email) || User::where('email', $email)->exists()) {
-                //     $email = 'generated-' . uniqid() . '@example.com';
-                // }
-
-                // if (empty($no_wa) || User::where('no_wa', $no_wa)->exists()) {
-                //     $no_wa = '62' . rand(1000000000, 9999999999); // nomor WA random
-                // }
-
-                // $email = 'generated-' . uniqid() . '@example.com';
-                // $no_wa = '62' . rand(1000000000, 9999999999); // nomor WA random
-
-                // if (!$user) {
-                    $user = User::create([
-                        'name' => trim($row['D']) ?: 'Nama Kosong',
-                        'email' => 'ID: '.uniqid().', Email : '.$email,
-                        'no_wa' => 'ID: '.uniqid().', No Telp :'.$no_wa,
-                        'password' => Hash::make('password123'),
-                        'role' => 'Pegawai',
-                        'status_input' => 'Import'
-                    ]);
-                // }
-
-                DB::table('profils')->updateOrInsert(
-                    ['id_user' => $user->id],
+                DB::table('pegawai_imports')->updateOrInsert(
+                    ['nik' => $nik], // kondisi pencocokan
                     [
-                        'nik' => ltrim(trim($row['O']), "'"),
+                        'name' => trim($row['D']) ?: 'Nama Kosong',
+                        // 'email' => $row['Q'] ?? '-',
+                        'no_wa' => $row['P'] ?? '-',
                         'nip' => ltrim(trim($row['B']), "'"),
+                        // 'nama' => trim($row['D']) ?: 'Nama Kosong',
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
                         'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
@@ -156,6 +98,8 @@ class ImportSiasnJob implements ShouldQueue
                         'pangkat' => $pangkatMapping[trim($row['AK'])] ?? trim($row['AK']),
                         'jabatan' => trim($row['AR']),
                         'email_gov' => trim($row['R']),
+                        'email' => trim($row['Q']),
+                        // 'no_wa' => trim($row['P']),
                         'jenis_pegawai' => trim($row['W']),
                         'kedudukan_hukum' => trim($row['Y']),
                         'status_cpns' => trim($row['Z']),
@@ -181,15 +125,14 @@ class ImportSiasnJob implements ShouldQueue
                         'updated_at' => now()
                     ]
                 );
-
             } catch (\Exception $e) {
                 \Log::error('Gagal import baris ke ' . $index . ': ' . $e->getMessage());
 
                 ErrorImport::create([
-                    'keterangan' => 'Data gagal input. Perbaiki data ' . json_encode($row)
+                    'keterangan' => 'Gagal import baris ke ' . $index . ': ' . $e->getMessage()
                 ]);
             }
         }
-
     }
+
 }

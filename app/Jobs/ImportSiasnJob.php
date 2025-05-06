@@ -74,30 +74,6 @@ class ImportSiasnJob implements ShouldQueue
             try {
                 $nik = ltrim(trim($row['O']), "'");
 
-                $tgl_raw = trim($row['I']);
-                $tanggal_lahir = null;
-
-                // Jika nilai numerik (kemungkinan serial date Excel)
-                if (is_numeric($tgl_raw) && $tgl_raw > 10000 && $tgl_raw < 60000) {
-                    // Konversi dari Excel serial number ke timestamp
-                    $timestamp = ($tgl_raw - 25569) * 86400; // Excel start date 1900-01-01
-                    $tanggal_lahir = date('Y-m-d', $timestamp);
-
-                    // Jika format dd/mm/yyyy (misalnya hasil dari kolom 'General' Excel)
-                } elseif (preg_match('#^\d{2}/\d{2}/\d{4}$#', $tgl_raw)) {
-                    $parts = explode('/', $tgl_raw);
-                    $tanggal_lahir = "{$parts[2]}-{$parts[1]}-{$parts[0]}";
-
-                    // Format standar lain yang bisa diparse oleh strtotime
-                } elseif (strtotime($tgl_raw)) {
-                    $tanggal_lahir = date('Y-m-d', strtotime($tgl_raw));
-
-                    // Jika tidak bisa dikenali
-                } else {
-                    $tanggal_lahir = null;
-                }
-
-
                 DB::table('pegawai_imports')->updateOrInsert(
                     ['nik' => $nik], // kondisi pencocokan
                     [
@@ -108,8 +84,7 @@ class ImportSiasnJob implements ShouldQueue
                         // 'nama' => trim($row['D']) ?: 'Nama Kosong',
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
-                        // 'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
-                        'tanggal_lahir' => $tanggal_lahir,
+                        'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
                         'alamat' => trim($row['S']),
                         'agama' => trim($row['L']),
                         'status_kawin' => trim($row['N']),

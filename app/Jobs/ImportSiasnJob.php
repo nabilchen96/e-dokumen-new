@@ -41,21 +41,7 @@ class ImportSiasnJob implements ShouldQueue
 
         $pangkatMapping = [
             'I/a' => 'I/a - Juru Muda Tingkat I',
-            'I/b' => 'I/b - Juru Muda Tingkat II',
-            'I/c' => 'I/c - Juru',
-            'I/d' => 'I/d - Juru Tingkat I',
-            'II/a' => 'II/a - Pengatur Muda',
-            'II/b' => 'II/b - Pengatur Muda Tingkat I',
-            'II/c' => 'II/c - Pengatur',
-            'II/d' => 'II/d - Pengatur Tingkat I',
-            'III/a' => 'III/a - Penata Muda',
-            'III/b' => 'III/b - Penata Muda Tingkat I',
-            'III/c' => 'III/c - Penata',
-            'III/d' => 'III/d - Penata Tingkat I',
-            'IV/a' => 'IV/a - Pembina',
-            'IV/b' => 'IV/b - Pembina Tingkat I - Pembina Tk.I',
-            'IV/c' => 'IV/c - Pembina Utama Muda',
-            'IV/d' => 'IV/d - Pembina Utama Madya',
+            // ... [keep your existing pangkat mappings] ...
             'IV/e' => 'IV/e - Pembina Utama',
             'VII' => 'VII',
             'IX' => 'IX',
@@ -74,52 +60,46 @@ class ImportSiasnJob implements ShouldQueue
             try {
                 $nik = ltrim(trim($row['O']), "'");
 
-                // Handle date conversion properly
-                $rawDate = trim($row['I']);
-                $tanggalLahir = null;
+                // Enhanced date handling function
+                $parseDate = function ($rawDate) {
+                    if (empty(trim($rawDate)))
+                        return null;
 
-                // Option 1: If Excel date is stored as DateTime object
-                if ($rawDate instanceof \DateTime) {
-                    $tanggalLahir = $rawDate->format('Y-m-d');
-                }
-                // Option 2: If Excel date is stored as serial number (Excel timestamp)
-                elseif (is_numeric($rawDate)) {
-                    $tanggalLahir = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($rawDate)->format('Y-m-d');
-                }
-                // Option 3: If date is in string format (DD/MM/YYYY)
-                else {
-                    // Clean the date string (remove any non-date characters)
-                    $cleanedDate = preg_replace('/[^0-9\/]/', '', $rawDate);
+                    // If it's already a DateTime object (from PhpSpreadsheet)
+                    if ($rawDate instanceof \DateTime) {
+                        return $rawDate->format('Y-m-d');
+                    }
 
-                    // Try different date formats
-                    $dateFormats = ['d/m/Y', 'm/d/Y', 'Y-m-d'];
-                    foreach ($dateFormats as $format) {
+                    // If it's Excel serial number
+                    if (is_numeric($rawDate)) {
+                        return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($rawDate)->format('Y-m-d');
+                    }
+
+                    // Clean the date string
+                    $cleanedDate = preg_replace('/[^0-9\/-]/', '', trim($rawDate));
+
+                    // Try multiple date formats
+                    $formats = ['d/m/Y', 'm/d/Y', 'Y-m-d', 'd-m-Y'];
+                    foreach ($formats as $format) {
                         $date = \DateTime::createFromFormat($format, $cleanedDate);
                         if ($date) {
-                            $tanggalLahir = $date->format('Y-m-d');
-                            break;
+                            return $date->format('Y-m-d');
                         }
                     }
 
-                    // Fallback if all parsing fails
-                    if (!$tanggalLahir) {
-                        $tanggalLahir = '1970-01-01'; // or null or whatever default you prefer
-                        \Log::warning("Failed to parse date: " . $rawDate);
-                    }
-                }
+                    \Log::warning("Failed to parse date: " . $rawDate);
+                    return null;
+                };
 
                 DB::table('pegawai_imports')->updateOrInsert(
-                    ['nik' => $nik], // kondisi pencocokan
+                    ['nik' => $nik],
                     [
                         'name' => trim($row['D']) ?: 'Nama Kosong',
-                        // 'email' => $row['Q'] ?? '-',
                         'no_wa' => $row['P'] ?? '-',
                         'nip' => ltrim(trim($row['B']), "'"),
-                        // 'nama' => trim($row['D']) ?: 'Nama Kosong',
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
-                        // 'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
-                        'tanggal_lahir' => $tanggalLahir,
+                        'tanggal_lahir' => $parseDate($row['I']),
                         'alamat' => trim($row['S']),
                         'agama' => trim($row['L']),
                         'status_kawin' => trim($row['N']),
@@ -134,18 +114,17 @@ class ImportSiasnJob implements ShouldQueue
                         'jabatan' => trim($row['AR']),
                         'email_gov' => trim($row['R']),
                         'email' => trim($row['Q']),
-                        // 'no_wa' => trim($row['P']),
                         'jenis_pegawai' => trim($row['W']),
                         'kedudukan_hukum' => trim($row['Y']),
                         'status_cpns' => trim($row['Z']),
                         'kartu_asn_virtual' => trim($row['AA']),
                         'nomor_sk_cpns' => trim($row['AB']),
-                        'tanggal_sk_cpns' => date('Y-m-d', strtotime(trim($row['AC']))),
-                        'tmt_cpns' => date('Y-m-d', strtotime(trim($row['AD']))),
+                        'tanggal_sk_cpns' => $parseDate($row['AC']),
+                        'tmt_cpns' => $parseDate($row['AD']),
                         'nomor_sk_pns' => trim($row['AE']),
-                        'tanggal_sk_pns' => date('Y-m-d', strtotime(trim($row['AF']))),
-                        'tmt_pns' => date('Y-m-d', strtotime(trim($row['AG']))),
-                        'tmt_golongan' => date('Y-m-d', strtotime(trim($row['AL']))),
+                        'tanggal_sk_pns' => $parseDate($row['AF']),
+                        'tmt_pns' => $parseDate($row['AG']),
+                        'tmt_golongan' => $parseDate($row['AL']),
                         'mk_tahun' => trim($row['AM']),
                         'mk_bulan' => trim($row['AN']),
                         'jenis_jabatan' => trim($row['AP']),
@@ -162,7 +141,6 @@ class ImportSiasnJob implements ShouldQueue
                 );
             } catch (\Exception $e) {
                 \Log::error('Gagal import baris ke ' . $index . ': ' . $e->getMessage());
-
                 ErrorImport::create([
                     'keterangan' => 'Gagal import baris ke ' . $index . ': ' . $e->getMessage()
                 ]);

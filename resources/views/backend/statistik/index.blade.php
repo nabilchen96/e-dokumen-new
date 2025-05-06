@@ -94,11 +94,13 @@
                                         required>
                                     <ul>
                                         <li>
-                                            <span>*Unduh format import SIASN <a
+                                            <span>Unduh format import SIASN <a
                                                     href="{{ asset('format_import_siasn_terbaru.xlsx') }}">Template
                                                     Import SIASN</a>
                                             </span><br>
-
+                                        </li>
+                                        <li>
+                                            <span>Gunakan tipe data date pada kolom TANGGAL LAHIR (dd/mm/yyyy)</span>
                                         </li>
                                     </ul>
                                 </div>

@@ -74,6 +74,40 @@ class ImportSiasnJob implements ShouldQueue
             try {
                 $nik = ltrim(trim($row['O']), "'");
 
+                // Handle date conversion properly
+                $rawDate = trim($row['I']);
+                $tanggalLahir = null;
+
+                // Option 1: If Excel date is stored as DateTime object
+                if ($rawDate instanceof \DateTime) {
+                    $tanggalLahir = $rawDate->format('Y-m-d');
+                }
+                // Option 2: If Excel date is stored as serial number (Excel timestamp)
+                elseif (is_numeric($rawDate)) {
+                    $tanggalLahir = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($rawDate)->format('Y-m-d');
+                }
+                // Option 3: If date is in string format (DD/MM/YYYY)
+                else {
+                    // Clean the date string (remove any non-date characters)
+                    $cleanedDate = preg_replace('/[^0-9\/]/', '', $rawDate);
+
+                    // Try different date formats
+                    $dateFormats = ['d/m/Y', 'm/d/Y', 'Y-m-d'];
+                    foreach ($dateFormats as $format) {
+                        $date = \DateTime::createFromFormat($format, $cleanedDate);
+                        if ($date) {
+                            $tanggalLahir = $date->format('Y-m-d');
+                            break;
+                        }
+                    }
+
+                    // Fallback if all parsing fails
+                    if (!$tanggalLahir) {
+                        $tanggalLahir = '1970-01-01'; // or null or whatever default you prefer
+                        \Log::warning("Failed to parse date: " . $rawDate);
+                    }
+                }
+
                 DB::table('pegawai_imports')->updateOrInsert(
                     ['nik' => $nik], // kondisi pencocokan
                     [
@@ -84,7 +118,8 @@ class ImportSiasnJob implements ShouldQueue
                         // 'nama' => trim($row['D']) ?: 'Nama Kosong',
                         'jenis_kelamin' => trim($row['J']) == 'M' ? 'Laki-laki' : 'Perempuan',
                         'tempat_lahir' => trim($row['H']),
-                        'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
+                        // 'tanggal_lahir' => date('Y-m-d', strtotime(trim($row['I']))),
+                        'tanggal_lahir' => $tanggalLahir,
                         'alamat' => trim($row['S']),
                         'agama' => trim($row['L']),
                         'status_kawin' => trim($row['N']),

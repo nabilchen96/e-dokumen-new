@@ -20,6 +20,10 @@ class UserController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role == 'Pegawai') {
+            return redirect('dashboard');
+        }
+
         return view('backend.users.index');
     }
 

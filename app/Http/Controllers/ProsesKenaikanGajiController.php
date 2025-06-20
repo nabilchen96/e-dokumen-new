@@ -13,6 +13,10 @@ class ProsesKenaikanGajiController extends Controller
 {
     public function index()
     {
+        if(Auth::user()->role == 'Pegawai'){
+            return redirect('dashboard');
+        }
+
         $data = DB::table('proses_kenaikan_gajis as pkg')
             ->leftJoin('users as user_0', 'user_0.id', '=', 'pkg.id_user_0')
             ->leftJoin('users as user_1', 'user_1.id', '=', 'pkg.id_user_1')

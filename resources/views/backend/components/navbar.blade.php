@@ -50,7 +50,8 @@
                 Auth::user()->role == 'Admin' ||
                 Auth::user()->role == 'OPD' ||
                 Auth::user()->role == 'SKPD' ||
-                Auth::user()->role == 'Kepala BKPSDM'
+                Auth::user()->role == 'Kepala BKPSDM' ||
+                Auth::user()->role == 'Pegawai'
             )
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false" aria-controls="ui-basic">
@@ -98,7 +99,7 @@
                             )
                             @foreach ($jenis_dokumen as $i)
                                 <li class="nav-item">
-                                    <a style="white-space: normal; line-height: 1.5;" class="nav-link"
+                                    <a style="white-space: normal; line-height: 1;" class="nav-link"
                                         href="{{ url('file-dokumen') }}?jenis_dokumen={{ $i->id }}">
                                         {{ $i->jenis_dokumen }}
                                     </a>
@@ -111,6 +112,7 @@
             </li>
         @endif
         <li class="nav-item">
+            @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai')
             <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                 aria-controls="ui-basic">
                 <!-- <i class="icon-layout menu-icon"></i> -->
@@ -118,6 +120,7 @@
                 <span class="menu-title">Dok. Berkala</span>
                 <i class="menu-arrow"></i>
             </a>
+            @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
                     @if (
@@ -135,7 +138,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (Auth::user()->role != 'SKPD' || Auth::user()->role != 'Pegawai')
+                    @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai')
                         <li class="nav-item">
                             <a style="white-space: normal; line-height: 1.5;" class="nav-link"
                                 href="{{ url('proses-kenaikan-gaji') }}">

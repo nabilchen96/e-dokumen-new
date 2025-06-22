@@ -48,25 +48,31 @@ class KenaikanGajiController extends Controller
 
             $unitKerjaId = Auth::user()->id_unit_kerja;
 
-            // Ambil semua ID user yang pernah mengunggah dokumen di unit kerja yang sama
-            $userIdsInSameUnit = DB::table('dokumens')
-                ->where('id_unit_kerja', $unitKerjaId)
-                ->pluck('id_user');
+            if ($unitKerjaId === null) {
+                // Jika user OPD belum punya unit kerja, kembalikan data kosong
+                $data = collect(); // atau bisa juga response kosong
+                
+            } else {
 
-            // Query utama: ambil data kenaikan gaji berdasarkan user-user tersebut
-            $data = DB::table('kenaikan_gajis')
-                ->leftJoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
-                ->leftJoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
-                ->leftJoin('users', 'users.id', '=', 'profils.id_user') // pegawai
-                ->leftJoin('users as u', 'u.id', '=', 'k.id_user') // kepala
-                ->select(
-                    'kenaikan_gajis.*',
-                    'users.name',
-                    'profils.nip'
-                )
-                ->whereIn('users.id', $userIdsInSameUnit)
-                ->get();
-
+                // Ambil semua ID user yang pernah mengunggah dokumen di unit kerja yang sama
+                $userIdsInSameUnit = DB::table('dokumens')
+                    ->where('id_unit_kerja', $unitKerjaId)
+                    ->pluck('id_user');
+    
+                // Query utama: ambil data kenaikan gaji berdasarkan user-user tersebut
+                $data = DB::table('kenaikan_gajis')
+                    ->leftJoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
+                    ->leftJoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
+                    ->leftJoin('users', 'users.id', '=', 'profils.id_user') // pegawai
+                    ->leftJoin('users as u', 'u.id', '=', 'k.id_user') // kepala
+                    ->select(
+                        'kenaikan_gajis.*',
+                        'users.name',
+                        'profils.nip'
+                    )
+                    ->whereIn('users.id', $userIdsInSameUnit)
+                    ->get();
+            }
 
         }else{
             

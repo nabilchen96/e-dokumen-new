@@ -18,7 +18,7 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('skydash/css/vertical-layout-light/style.css') }}">
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
@@ -126,7 +126,7 @@
                 style="box-shadow: 0px 5px 21px -5px #CDD1E1;">
                 <a class="navbar-brand brand-logo mr-5" style="font-size: 16px; margin-left: 20px;"
                     href="{{ url('/') }}">
-                    <h3><b> <img style="height: 65px;" src="{{ url('pandu.jpeg') }}" alt="">  </b></h3>
+                    <h3><b> <img style="height: 65px;" src="{{ url('pandu.jpeg') }}" alt=""> </b></h3>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ url('/') }}">
                     <!-- <h4><b>🚀</b></h4> -->
@@ -147,6 +147,13 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                             aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" style="padding-top: 0; padding-bottom: 0;">
+                                <i class="bi bi-envelope"></i>
+                                {{ Auth::user()->email }}
+                            </a>
+                            <a class="dropdown-item" style="padding-top: 0; padding-bottom: 0;">
+                                <i class="bi bi-person-circle"></i> {{ Auth::user()->role }}
+                            </a>
                             <a class="dropdown-item" href="{{ url('logout') }}">
                                 <i class="ti-power-off text-primary"></i>
                                 Logout
@@ -190,7 +197,7 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-               
+
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->

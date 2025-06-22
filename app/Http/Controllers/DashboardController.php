@@ -208,7 +208,16 @@ class DashboardController extends Controller
 
         } elseif (Auth::user()->role == 'OPD'){
 
-            $kenaikan_gaji = $kenaikan_gaji->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
+                $unitKerjaId = Auth::user()->id_unit_kerja;
+
+                if ($unitKerjaId === null) {
+                    // Jika user OPD belum punya unit kerja, tidak boleh melihat data
+                    $kenaikan_gaji = collect(); // atau bisa return kosong
+                } else {
+                    $kenaikan_gaji = $kenaikan_gaji
+                        ->where('dokumens.id_unit_kerja', $unitKerjaId)
+                        ->get();
+                }
         }
 
 
@@ -243,7 +252,16 @@ class DashboardController extends Controller
 
         } elseif (Auth::user()->role == 'OPD'){
 
-            $dokumen_periksa = $dokumen_periksa->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
+            $unitKerjaId = Auth::user()->id_unit_kerja;
+
+            if ($unitKerjaId === null) {
+                // Jika user OPD belum punya unit kerja, tidak boleh melihat data
+                $dokumen_periksa = collect(); // atau bisa return kosong
+            } else {
+                $dokumen_periksa = $dokumen_periksa
+                    ->where('dokumens.id_unit_kerja', $unitKerjaId)
+                    ->get();
+            }
         }
 
 

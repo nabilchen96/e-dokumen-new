@@ -113,25 +113,26 @@
         @endif
         <li class="nav-item">
             @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai')
-            <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
-                aria-controls="ui-basic">
-                <!-- <i class="icon-layout menu-icon"></i> -->
-                <i class="bi bi-file-earmark-text menu-icon"></i>
-                <span class="menu-title">Dok. Berkala</span>
-                <i class="menu-arrow"></i>
-            </a>
+                <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
+                    aria-controls="ui-basic">
+                    <!-- <i class="icon-layout menu-icon"></i> -->
+                    <i class="bi bi-file-earmark-text menu-icon"></i>
+                    <span class="menu-title">Dok. Berkala</span>
+                    <i class="menu-arrow"></i>
+                </a>
             @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
                     @if (
-                        Auth::user()->role != 'SKPD' && 
-                        Auth::user()->role != 'Pegawai' && 
-                        Auth::user()->role != 'Staff BKPSDM' && 
-                        Auth::user()->role != 'Kabid BKPSDM' &&
-                        Auth::user()->role != 'Sekretaris BKPSDM' &&
-                        Auth::user()->role != 'Kepala BKPSDM' && 
-                        Auth::user()->role != 'Inspektorat' &&
-                        Auth::user()->role != 'Bendahara Gaji DPKAD')
+                            Auth::user()->role != 'SKPD' &&
+                            Auth::user()->role != 'Pegawai' &&
+                            Auth::user()->role != 'Staff BKPSDM' &&
+                            Auth::user()->role != 'Kabid BKPSDM' &&
+                            Auth::user()->role != 'Sekretaris BKPSDM' &&
+                            Auth::user()->role != 'Kepala BKPSDM' &&
+                            Auth::user()->role != 'Inspektorat' &&
+                            Auth::user()->role != 'Bendahara Gaji DPKAD'
+                        )
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
                                 Kenaikan Gaji
@@ -149,15 +150,17 @@
                 </ul>
             </div>
         </li>
-        @if (Auth::user()->role == 'Pegawai' || 
-            Auth::user()->role == 'Admin' ||
-            Auth::user()->role == 'Staff BKPSDM' ||
-            Auth::user()->role == 'Kabid BKPSDM' ||
-            Auth::user()->role == 'Sekretaris BKPSDM' ||
-            Auth::user()->role == 'Kepala BKPSDM' || 
-            Auth::user()->role == 'SKPD' ||
-            Auth::user()->role == 'OPD' || 
-            Auth::user()->role == 'Inspektorat')
+        @if (
+                Auth::user()->role == 'Pegawai' ||
+                Auth::user()->role == 'Admin' ||
+                Auth::user()->role == 'Staff BKPSDM' ||
+                Auth::user()->role == 'Kabid BKPSDM' ||
+                Auth::user()->role == 'Sekretaris BKPSDM' ||
+                Auth::user()->role == 'Kepala BKPSDM' ||
+                Auth::user()->role == 'SKPD' ||
+                Auth::user()->role == 'OPD' ||
+                Auth::user()->role == 'Inspektorat'
+            )
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('profil') }}">
                     <i class="bi bi-person menu-icon"></i>

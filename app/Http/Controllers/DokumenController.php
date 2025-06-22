@@ -47,7 +47,7 @@ class DokumenController extends Controller
 
             $data = $data->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
 
-        } elseif (Auth::user()->role == 'OPD'){
+        } elseif (Auth::user()->role == 'OPD' && Auth::user()->id_unit_kerja){
 
             $data = $data->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
         }

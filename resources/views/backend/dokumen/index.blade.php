@@ -36,79 +36,51 @@
     </style>
 @endpush
 @section('content')
-<div class="row" style="margin-top: -200px;">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-12 col-xl-8 mb-xl-0">
-                <h3 class="font-weight-bold">Data
-                    {{ $jenis = DB::table('jenis_dokumens')->where('id', Request('jenis_dokumen'))->value('jenis_dokumen') }}
-                </h3>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12 mt-4">
-        <div class="card w-100">
-            <div class="card-body">
-                @if (Auth::user()->role == 'Pegawai')
-                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
-                        Tambah
-                    </button>
-                @endif
-                <div class="table-responsive">
-                    <table id="myTable" class="table table-striped" style="width: 100%;">
-                        <thead class="bg-info text-white">
-                            <tr>
-                                <th width="5%">No</th>
-                                <th>Pemilik</th>
-                                <th>Jenis Dokumen</th>
-                                <th>Tanggal Berlaku</th>
-                                <th>Tanggal Upload</th>
-                                <th>SKPD / Unit Kerja</th>
-                                <th>Status</th>
-                                <th width="5%">PDF</th>
-                                <th width="5%">Edit</th>
-                                <th width="5%">Hapus</th>
-                            </tr>
-                        </thead>
-                    </table>
+    <div class="row" style="margin-top: -200px;">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-12 col-xl-8 mb-xl-0">
+                    <h3 class="font-weight-bold">Data
+                        {{ $jenis = DB::table('jenis_dokumens')->where('id', Request('jenis_dokumen'))->value('jenis_dokumen') }}
+                    </h3>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="updateStatusForm">
-                @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
-                    <div class="modal-header p-3">
-                        <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
+    <div class="row">
+        <div class="col-12 mt-4">
+            <div class="card w-100">
+                <div class="card-body">
+                    <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
+                        Tambah
+                    </button>
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped" style="width: 100%;">
+                            <thead class="bg-info text-white">
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th>Pemilik</th>
+                                    <th>Jenis Dokumen</th>
+                                    <th>Tanggal Berlaku</th>
+                                    <th>Tanggal Upload</th>
+                                    <th>SKPD / Unit Kerja</th>
+                                    <th>Status</th>
+                                    <th width="5%">PDF</th>
+                                    <th width="5%">Edit</th>
+                                    <th width="5%">Hapus</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
-                    <div class="modal-body">
-                        <div id="respon_error" class="text-danger mb-4"></div>
-                        <input type="hidden" name="id" id="id">
-                        <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
-                        <div class="form-group">
-                            <label>Status Dokumen</label>
-                            <select name="status" id="status" class="form-control" required>
-                                <option value="">--PILIH STATUS--</option>
-                                <option>Sedang Dalam Pengecekan</option>
-                                <option>Dokumen Diterima</option>
-                                <option>Perlu Diperbaiki</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer p-3">
-                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                            <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
-                        </div>
-                    </div>
-                @endif
-            </form>
-            <form id="form">
-                @if(Auth::user()->role == 'Pegawai')
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form">
                     <div class="modal-header p-3">
                         <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>
@@ -185,9 +157,37 @@
                         <div class="form-group">
                             <label>Pemilik</label>
                             @php
-                                if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD') {
+                                if (Auth::user()->role == 'Admin') {
 
                                     $users = DB::table('users')->get();
+
+                                } elseif (Auth::user()->role == 'SKPD') {
+
+                                    $users = DB::table('dokumens')
+                                        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+                                        ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+                                        ->select(
+                                            'users.id',
+                                            'users.name'
+                                        )
+                                        ->where('dokumens.id_skpd', Auth::user()->id_skpd)
+                                        ->groupBy('users.id')
+                                        ->get();
+
+                                } elseif (Auth::user()->role == 'OPD') {
+
+                                    $users = DB::table('dokumens')
+                                        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+                                        ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
+                                        ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                                        ->select(
+                                            'users.id',
+                                            'users.name', 
+                                            'profils.nip'
+                                        )
+                                        ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
+                                        ->groupBy('users.id')
+                                        ->get();
 
                                 } else {
 
@@ -219,16 +219,26 @@
                                 <option value="">PILIH UNIT KERJA</option>
                             </select>
                         </div>
+                        @if(Auth::user()->role != 'Pegawai')
+                            <div class="form-group">
+                                <label>Status Dokumen</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">--PILIH STATUS--</option>
+                                    <option>Sedang Dalam Pengecekan</option>
+                                    <option>Dokumen Diterima</option>
+                                    <option>Perlu Diperbaiki</option>
+                                </select>
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer p-3">
                         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                         <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
                     </div>
-                @endif
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 @push('script')
     <script>
@@ -284,31 +294,31 @@
                 {
                     render: function (data, type, row, meta) {
                         return `${row.status ?? 'Belum Diperiksa'}
-                                    <br> <span style="display: none;">${row.dokumen}</span>
-                                `
+                                                    <br> <span style="display: none;">${row.dokumen}</span>
+                                                `
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                                </a>`
+                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                                                </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                </a>`
+                                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                                </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                </a>`
+                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                </a>`
                     }
                 },
                 ]
@@ -338,6 +348,32 @@
                 modal.find('#tanggal_akhir_dokumen').val(cokData[0].tanggal_akhir_dokumen)
                 modal.find('#id_user').val(cokData[0].id_user)
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
+
+                const skpdId = document.getElementById('id_skpd').value
+                const unitKerjaSelect = document.getElementById('id_unit_kerja');
+                unitKerjaSelect.innerHTML = '<option value="">Memuat data...</option>';
+
+                // Panggil data unit kerja dengan Axios
+                axios.get(`/data-unit-kerja/${skpdId}`)
+                    .then(response => {
+                        const data = response.data;
+                        unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
+
+                        // Tambahkan setiap unit kerja ke dalam dropdown
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id;
+                            option.textContent = item.unit_kerja;
+                            unitKerjaSelect.appendChild(option);
+                        });
+
+                        modal.find('#id_unit_kerja').val(cokData[0].id_unit_kerja)
+                    })
+                    .catch(error => {
+                        console.error('Error fetching unit kerja:', error);
+                        unitKerjaSelect.innerHTML = '<option value="">GAGAL MEMUAT DATA</option>';
+                    });
+
             }
         })
 
@@ -380,46 +416,6 @@
                         });
 
                         document.getElementById('respon_error').innerHTML = respon_error
-                    }
-
-                    document.getElementById("tombol_kirim").disabled = false;
-                })
-                .catch(function (res) {
-                    document.getElementById("tombol_kirim").disabled = false;
-                    //handle error
-                    console.log(res);
-                });
-        }
-
-        updateStatusForm.onsubmit = (e) => {
-
-            let formData = new FormData(updateStatusForm);
-
-            e.preventDefault();
-
-            document.getElementById("tombol_kirim").disabled = true;
-
-            axios({
-                method: 'post',
-                url: '/update-status-dokumen',
-                data: formData,
-            })
-                .then(function (res) {
-                    //handle success         
-                    if (res.data.responCode == 1) {
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sukses',
-                            text: res.data.respon,
-                            timer: 3000,
-                            showConfirmButton: false
-                        })
-
-                        location.reload('/file-dokumen')
-
-                    } else {
-
                     }
 
                     document.getElementById("tombol_kirim").disabled = false;

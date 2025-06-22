@@ -34,6 +34,15 @@
             bottom: 7px !important;
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <style>
+        .ts-control{
+            border-radius: 0.375rem; 
+            line-height: 1.5 !important; 
+            font-size: 0.9375rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+    </style>
 @endpush
 @section('content')
 <div class="row" style="margin-top: -200px;">
@@ -101,7 +110,6 @@
                         <input name="name" id="name" type="text" placeholder="Nama Lengkap"
                             class="form-control form-control-sm" aria-describedby="emailHelp" required>
                     </div>
-
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
                         <input name="password" id="password" type="password" placeholder="Password"
@@ -114,16 +122,40 @@
                             <option value="">PILIH ROLE</option>
                             @if (Auth::user()->role == 'Admin')                            
                                 <option value="Admin">Admin</option>
+                                <option value="SKPD">SKPD</option>
+                                <option>Staff BKPSDM</option>
+                                <option>Kabid BKPSDM</option>
+                                <option>Sekretaris BKPSDM</option>
+                                <option>Kepala BKPSDM</option>
+                                <option>Bendahara Gaji DPKAD</option>
+                                <option>Inspektorat</option>
                             @endif
-                            <option value="SKPD">SKPD</option>
                             <option value="Pegawai">Pegawai</option>
                             <option>OPD</option>
-                            <option>Staff BKPSDM</option>
-                            <option>Kabid BKPSDM</option>
-                            <option>Sekretaris BKPSDM</option>
-                            <option>Kepala BKPSDM</option>
-                            <option>Bendahara Gaji DPKAD</option>
-                            <option>Inspektorat</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="id_skpd_group" style="display: none;">
+                        <label for="exampleInputPassword1">PILIH SKPD</label>
+                        <select name="id_skpd" class="my-select" id="id_skpd">
+                            <option value="">PILIH SKPD</option>
+                            @php 
+                                $skpd = DB::table('skpds')->get();
+                            @endphp 
+                            @foreach( $skpd as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama_skpd }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="id_opd_group" style="display: none;">
+                        <label for="exampleInputPassword1">PILIH OPD/Unit Kerja</label>
+                        <select name="id_unit_kerja" class="my-select2" id="id_unit_kerja">
+                            <option value="">PILIH OPD/Unit Kerja</option>
+                            @php 
+                                $unit_kerja = DB::table('unit_kerjas')->get();
+                            @endphp 
+                            @foreach( $unit_kerja as $u)
+                                <option value="{{ $u->id }}">{{ $u->unit_kerja }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group" id="status_pegawai_group" style="display: none;">
@@ -179,6 +211,7 @@
 
 @endsection
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
         document.getElementById('importForm').addEventListener('submit', function (event) {
             event.preventDefault();  // Mencegah reload halaman
@@ -212,18 +245,36 @@
 
     </script>
     <script>
+        let select = ''
+        let select2 = ''
         document.addEventListener('DOMContentLoaded', function () {
             getData()
+            select = new TomSelect('#id_unit_kerja');
+            select2 = new TomSelect('#id_skpd');
         })
 
         document.getElementById('role').addEventListener('change', function () {
             const role = this.value;
             const statusPegawaiGroup = document.getElementById('status_pegawai_group');
+            const id_skpd = document.getElementById('id_skpd_group');
+            const id_unit_kerja = document.getElementById('id_opd_group');
 
             if (role === 'Pegawai') {
-                statusPegawaiGroup.style.display = 'block'; // Tampilkan field Status Pegawai
+                statusPegawaiGroup.style.display = 'block';
             } else {
-                statusPegawaiGroup.style.display = 'none'; // Sembunyikan field Status Pegawai
+                statusPegawaiGroup.style.display = 'none';
+            }
+
+            if (role === 'SKPD') {
+                id_skpd.style.display = 'block'; 
+            } else {
+                id_skpd.style.display = 'none';
+            }
+
+            if (role === 'OPD') {
+                id_unit_kerja.style.display = 'block';
+            } else {
+                id_unit_kerja.style.display = 'none';
             }
         });
 
@@ -253,7 +304,9 @@
                     }
                 },
                 {
-                    data: 'role'
+                    render: function (data, type, row, meta) {
+                        return `${row.role} <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
+                    }
                 },
                 {
                     data: 'status_pegawai'
@@ -285,14 +338,19 @@
             var button = $(event.relatedTarget); // Button that triggered the modal
             var recipient = button.data('bs-id'); // Extract info from data-* attributes
             var cok = $("#myTable").DataTable().rows().data().toArray();
-
+            
             let cokData = cok.filter((dt) => {
                 return dt.id == recipient;
             });
 
             const statusPegawaiGroup = document.getElementById('status_pegawai_group');
+            const id_skpd = document.getElementById('id_skpd_group');
+            const id_unit_kerja = document.getElementById('id_opd_group');
+
             document.getElementById("form").reset();
             document.getElementById('id').value = '';
+            select.setValue('');
+            select2.setValue('');
             $('.error').empty();
 
             if (recipient) {
@@ -304,6 +362,10 @@
                 modal.find('#role').val(cokData[0].role);
                 modal.find('#no_wa').val(cokData[0].no_wa);
                 modal.find('#status_pegawai').val(cokData[0].status_pegawai);
+                // modal.find('#id_skpd').val(cokData[0].id_skpd);
+                // modal.find('#id_unit_kerja').val(cokData[0].id_unit_kerja);
+                select.setValue(cokData[0].id_unit_kerja);
+                select2.setValue(cokData[0].id_skpd);
 
                 // Tampilkan Status Pegawai jika role adalah Pegawai
                 if (cokData[0].role === 'Pegawai') {
@@ -311,9 +373,23 @@
                 } else {
                     statusPegawaiGroup.style.display = 'none';
                 }
+
+                if (cokData[0].role === 'SKPD') {
+                    id_skpd.style.display = 'block';
+                } else {
+                    id_skpd.style.display = 'none';
+                }
+
+                if (cokData[0].role === 'OPD') {
+                    id_unit_kerja.style.display = 'block';
+                } else {
+                    id_unit_kerja.style.display = 'none';
+                }
             } else {
                 // Tambah Mode
                 statusPegawaiGroup.style.display = 'none'; // Sembunyikan Status Pegawai
+                id_skpd.style.display = 'none'; // Sembunyikan Status Pegawai
+                id_unit_kerja.style.display = 'none'; // Sembunyikan Status Pegawai
             }
         });
 

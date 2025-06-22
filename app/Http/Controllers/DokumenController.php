@@ -35,7 +35,7 @@ class DokumenController extends Controller
             ->where('jenis_dokumens.id', Request('jenis_dokumen'));
 
 
-        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD' || Auth::user()->role == 'Kepala BKPSDM') {
+        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kepala BKPSDM') {
 
             $data = $data->get();
 
@@ -45,8 +45,11 @@ class DokumenController extends Controller
 
         } elseif (Auth::user()->role == 'SKPD'){
 
-            $data = $data->where('users.id_creator', Auth::id())->get();
+            $data = $data->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
 
+        } elseif (Auth::user()->role == 'OPD'){
+
+            $data = $data->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
         }
 
 
@@ -122,7 +125,8 @@ class DokumenController extends Controller
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
             'id_skpd' => $request->id_skpd,
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
-            'id_unit_kerja' => $request->id_unit_kerja
+            'id_unit_kerja' => $request->id_unit_kerja, 
+            'status' => $request->status
         ]);
 
         return response()->json([
@@ -209,8 +213,8 @@ class DokumenController extends Controller
             'tanggal_akhir_dokumen' => $request->tanggal_akhir_dokumen,
             'id_skpd' => $request->id_skpd ?? $user->id_skpd,
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
-            'status' => $user->status == 'Perlu Diperbaiki' && $request->file('dokumen') ? 'Belum Diperiksa' : $user->status,
-            'id_unit_kerja' => $request->id_unit_kerja
+            'status' => $request->status,
+            'id_unit_kerja' => $request->id_unit_kerja, 
         ]);
 
         return response()->json([

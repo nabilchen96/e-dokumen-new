@@ -176,6 +176,8 @@ class DashboardController extends Controller
             ->join('users', 'users.id', '=', 'dokumens.id_user')
             ->join('profils', 'profils.id_user', '=', 'users.id')
             ->leftjoin('kenaikan_gajis', 'kenaikan_gajis.id_dokumen', '=', 'dokumens.id')
+            ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')                
             ->select(
                 'dokumens.tanggal_akhir_dokumen',
                 'users.name',
@@ -196,36 +198,52 @@ class DashboardController extends Controller
             ->where('jenis_dokumen_berkala', 'Kenaikan Gaji')
             ->orderByRaw('total_hari ASC');
 
-        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD'){
+        if(Auth::user()->role == 'Admin'){
+
             $kenaikan_gaji = $kenaikan_gaji->get();
-        }elseif(Auth::user()->role == 'SKPD'){
-            $kenaikan_gaji = $kenaikan_gaji->where('users.id_creator', Auth::id())->get();
+
+        }elseif (Auth::user()->role == 'SKPD'){
+
+            $kenaikan_gaji = $kenaikan_gaji->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+
+        } elseif (Auth::user()->role == 'OPD'){
+
+            $kenaikan_gaji = $kenaikan_gaji->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
         }
 
 
         $dokumen_periksa = DB::table('dokumens')
-        ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
-        ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
-        ->select(
-            'dokumens.*',
-            'jenis_dokumens.jenis_dokumen',
-            'users.name',
-            'profils.nip'
-        )
-        ->where(function($query) {
-            $query->whereNull('dokumens.status')
-                ->orWhere('dokumens.status', 'Sedang Dalam Pengecekan')
-                ->orWhere('dokumens.status', 'Perlu Diperbaiki')
-                ->orWhere('dokumens.status', 'Belum Diperiksa');
-        })
-        ->limit(10)
-        ->orderBy('dokumens.created_at', 'asc');
+                            ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
+                            ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+                            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                            ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+                            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
+                            ->select(
+                                'dokumens.*',
+                                'jenis_dokumens.jenis_dokumen',
+                                'users.name',
+                                'profils.nip'
+                            )
+                        ->where(function($query) {
+                                $query->whereNull('dokumens.status')
+                                    ->orWhere('dokumens.status', 'Sedang Dalam Pengecekan')
+                                    ->orWhere('dokumens.status', 'Perlu Diperbaiki')
+                                    ->orWhere('dokumens.status', 'Belum Diperiksa');
+                            })
+                            ->limit(10)
+                            ->orderBy('dokumens.created_at', 'asc');
 
-        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD'){
+        if(Auth::user()->role == 'Admin'){
+
             $dokumen_periksa = $dokumen_periksa->get();
-        }elseif(Auth::user()->role == 'SKPD'){
-            $dokumen_periksa = $dokumen_periksa->where('users.id_creator', Auth::id())->get();
+
+        }elseif (Auth::user()->role == 'SKPD'){
+
+            $dokumen_periksa = $dokumen_periksa->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+
+        } elseif (Auth::user()->role == 'OPD'){
+
+            $dokumen_periksa = $dokumen_periksa->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
         }
 
 

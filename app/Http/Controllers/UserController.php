@@ -32,16 +32,51 @@ class UserController extends Controller
 
         $user = DB::table('users')
             ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftjoin('skpds', 'skpds.id', '=', 'users.id_skpd')
+            ->leftjoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
             ->select(
                 'users.*',
-                'profils.status_pegawai'
+                'profils.status_pegawai',
+                'skpds.nama_skpd', 
+                'unit_kerjas.unit_kerja'
             );
 
         if (Auth::user()->role == 'Admin') {
             $user = $user->get();
+
         } elseif (Auth::user()->role == 'SKPD') {
-            $user = $user->where('users.id_creator', Auth::id())
-                ->orwhere('users.id', Auth::id())->get();
+
+            //query untuk mendapatkan skpd yang sama dengan user skpd
+
+            // Ambil ID SKPD dari user yang login
+            $skpdId = Auth::user()->id_skpd;
+
+            // Subquery untuk ambil dokumen terbaru tiap user pada SKPD yang sama
+            $latestDokumenSubquery = DB::table('dokumens as d1')
+                ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
+                ->where('d1.id_skpd', $skpdId)
+                ->groupBy('d1.id_user');
+
+            // Join ke dokumen agar bisa difilter berdasarkan SKPD dan ambil updated_at terbaru
+            $user = DB::table('users')
+                ->join('profils', 'profils.id_user', '=', 'users.id')
+                ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
+                ->join('dokumens as d', 'd.id_user', '=', 'users.id')
+                ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
+                    $join->on('d.id_user', '=', 'latest.id_user')
+                        ->on('d.updated_at', '=', 'latest.latest_update');
+                })
+                ->where('d.id_skpd', $skpdId)
+                ->select(
+                    'users.*',
+                    'profils.status_pegawai',
+                    'skpds.nama_skpd',
+                    'd.updated_at as dokumen_terakhir'
+                )
+                ->get();
+
+            // $user = $user->where('users.id', Auth::id())->get();
+            // $user = $user2->concat($user);
         }
 
 
@@ -69,7 +104,9 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'no_wa' => $request->no_wa,
-                'id_creator' => Auth::id()
+                'id_creator' => Auth::id(),
+                'id_skpd' => $request->id_skpd, 
+                'id_unit_kerja' => $request->id_unit_kerja
             ]);
 
             if ($request->role == 'Pegawai') {
@@ -112,7 +149,9 @@ class UserController extends Controller
                 'role' => $request->role,
                 'email' => $request->email,
                 'no_wa' => $request->no_wa,
-                'password' => $request->password ? Hash::make($request->password) : $user->password
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
+                'id_skpd' => $request->id_skpd, 
+                'id_unit_kerja' => $request->id_unit_kerja
             ]);
 
             if ($request->role == 'Pegawai') {

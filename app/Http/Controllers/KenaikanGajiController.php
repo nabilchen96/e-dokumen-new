@@ -223,13 +223,22 @@ class KenaikanGajiController extends Controller
         $templateProcessor->setValue('nip_kepala', @$data->nip_kepala);
 
 
-        $pdf = PDF::loadview('backend.kenaikan_gaji.export_pdf', [
-            'data' => @$data, 
-            'kepala' => @$kepala, 
-            'instansi' => @$instansi,
-        ]);
+        // $pdf = PDF::loadview('backend.kenaikan_gaji.export_pdf', [
+        //     'data' => @$data, 
+        //     'kepala' => @$kepala, 
+        //     'instansi' => @$instansi,
+        // ]);
 
-        $pdf->setPaper('legal', 'portrait');
-        return $pdf->stream('document.pdf');
+        // $pdf->setPaper('legal', 'portrait');
+        // return $pdf->stream('document.pdf');
+
+        // Path untuk menyimpan hasil
+        $outputPath = storage_path('app/public/dokumen_kenaikan_gaji_'.@$data->nip_pegawai.'_'.@$data->nama_pegawai.'.docx');
+
+        // Simpan file hasil
+        $templateProcessor->saveAs($outputPath);
+
+        // Kembalikan file sebagai respons download
+        return response()->download($outputPath)->deleteFileAfterSend(true);
     }
 }

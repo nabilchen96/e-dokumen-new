@@ -155,6 +155,8 @@
             Auth::user()->role == 'Kabid BKPSDM' ||
             Auth::user()->role == 'Sekretaris BKPSDM' ||
             Auth::user()->role == 'Kepala BKPSDM' || 
+            Auth::user()->role == 'SKPD' ||
+            Auth::user()->role == 'OPD' || 
             Auth::user()->role == 'Inspektorat')
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('profil') }}">

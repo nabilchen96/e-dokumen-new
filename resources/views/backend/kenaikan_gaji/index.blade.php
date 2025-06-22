@@ -58,7 +58,7 @@
         <div class="col-12 mt-4">
             <div class="card w-100">
                 <div class="card-body">
-                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
+                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
                         <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
                             Tambah
                         </button>
@@ -73,8 +73,10 @@
                                     <th>Gaji Lama</th>
                                     <th>Gaji Baru</th>
                                     <th width="5%">File</th>
-                                    <th width="5%">Edit</th>
-                                    <th width="5%">Hapus</th>
+                                    @if(Auth::user()->role != 'OPD')
+                                        <th width="5%">Edit</th>
+                                        <th width="5%">Hapus</th>
+                                    @endif
                                 </tr>
                             </thead>
                         </table>
@@ -83,7 +85,7 @@
             </div>
         </div>
     </div>
-    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
+    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
         <!-- Modal -->
         <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -166,7 +168,7 @@
                     'processing': 'Loading...'
                 },
                 columnDefs: [
-                    { orderable: false, targets: [5, 6, 7] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                    { orderable: true, } // Kolom ke-0 dan ke-2 tidak bisa di-sort
                 ],
                 columns: [{
                     render: function (data, type, row, meta) {
@@ -195,6 +197,7 @@
                                 <br> ${row.tgl_terhitung_mulai ? `<b>Tgl Berlaku</b>: ${formatTanggal(row.tgl_terhitung_mulai)}` : `-`}`
                     }
                 },
+
                 {
                     render: function (data, type, row, meta) {
                         if (row.status != 'Draft') {
@@ -206,21 +209,23 @@
                         }
                     }
                 },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="/edit-kenaikan-gaji?data=${row.id}">
-                                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                                </a>`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                            .id) + `)">
-                                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                                </a>`
-                    }
-                },
+                @if(Auth::user()->role !=  'OPD')
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a href="/edit-kenaikan-gaji?data=${row.id}">
+                                <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                            </a>`
+                        }
+                    },
+                    {
+                        render: function (data, type, row, meta) {
+                            return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                                .id) + `)">
+                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                            </a>`
+                        }
+                    },
+                @endif
                 ]
             })
         }

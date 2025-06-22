@@ -32,7 +32,16 @@ class ProsesKenaikanGajiController extends Controller
                 'user_4.name as name_4',
                 'user_5.name as name_5',
                 'pkg.*'
-            )->get();
+            );
+
+        if(Auth::user()->role == 'OPD'){
+
+            $data = $data->where('user_0.id', Auth::user()->id)->get();
+
+        }else{
+
+            $data = $data->get();
+        }
 
         return view('backend.proses_kenaikan_gaji.index', [
             'data' => $data

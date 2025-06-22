@@ -36,13 +36,37 @@ class KenaikanGajiController extends Controller
                 'profils.nip',
             );
 
-        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD'){
+        if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD'){
 
             $data = $data->get();
 
-        }elseif (Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD'){
+        }elseif (Auth::user()->role == 'SKPD'){
 
             $data = $data->where('users.id_creator', Auth::id())->get();
+
+        }elseif(Auth::user()->role == 'OPD'){
+
+            $unitKerjaId = Auth::user()->id_unit_kerja;
+
+            // Ambil semua ID user yang pernah mengunggah dokumen di unit kerja yang sama
+            $userIdsInSameUnit = DB::table('dokumens')
+                ->where('id_unit_kerja', $unitKerjaId)
+                ->pluck('id_user');
+
+            // Query utama: ambil data kenaikan gaji berdasarkan user-user tersebut
+            $data = DB::table('kenaikan_gajis')
+                ->leftJoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
+                ->leftJoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
+                ->leftJoin('users', 'users.id', '=', 'profils.id_user') // pegawai
+                ->leftJoin('users as u', 'u.id', '=', 'k.id_user') // kepala
+                ->select(
+                    'kenaikan_gajis.*',
+                    'users.name',
+                    'profils.nip'
+                )
+                ->whereIn('users.id', $userIdsInSameUnit)
+                ->get();
+
 
         }else{
             

@@ -132,7 +132,7 @@
                                 ->where('id', Request('jenis_dokumen'))
                                 ->first();
                         @endphp
-                        @if (in_array($kenaikan_gaji->jenis_dokumen, $variations))
+                        @if (Str::contains(Str::lower($kenaikan_gaji->jenis_dokumen), 'gaji'))
                             <div class="form-group">
                                 <label>Jenis Dokumen Berkala</label>
                                 <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"

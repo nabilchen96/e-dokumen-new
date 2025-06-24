@@ -5,10 +5,11 @@
                 [ <i class="bi bi-bell"></i> ]
                 Proses Dokumen Berkala
             </h3>
-            <span class="text-danger">
-                Informasi Tentang Berapa Hari Lagi Dokumen Akan Berakhir
+            <span class="text-danger" style="font-size: 14px !important;">
+                Informasi Tentang Berapa Hari Lagi Dokumen Akan Berakhir. <br>
+                 Menampilkan maksimal 50 data
             </span>
-            <div class="mb-4"></div>
+            <div class="mb-1"></div>
             <div class="table-responsive" style="height: 290px;">
                 <table id="myTable" width="100%" class="table table-striped">
                     <thead class="bg-info text-white">

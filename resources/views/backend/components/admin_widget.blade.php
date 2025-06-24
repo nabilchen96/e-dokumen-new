@@ -258,10 +258,11 @@
                     [ <i class="bi bi-bell"></i> ]
                     Dokumen Belum Diperiksa
                 </h3>
-                <span class="text-danger">
-                    Informasi Dokumen yang Belum Diperiksa oleh Admin
+                <span class="text-danger" style="font-size: 14px !important;">
+                    Informasi Dokumen yang Belum Diperiksa oleh Admin. <br>
+                    Menampilkan maksimal 50 data
                 </span>
-                <div class="mb-4"></div>
+                <div class="mb-1"></div>
                 <div class="table-responsive" id="tabel" style="height: 290px;">
                     <table id="myTable2" class="table table-striped">
                         <thead class="bg-info text-white">

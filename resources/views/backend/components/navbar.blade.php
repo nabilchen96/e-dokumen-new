@@ -7,7 +7,7 @@
             </a>
 
         </li>
-        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
+        @if (Auth::user()->role == 'Admin')
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                     <i class="icon-layout menu-icon"></i>

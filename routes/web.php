@@ -231,6 +231,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/detail-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@detail');
     Route::post('/store-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@store');
     Route::post('/verifikasi-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@verifikasi');
+    Route::post('/delete-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@delete');
     
 });
 

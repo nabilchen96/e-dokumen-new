@@ -53,7 +53,9 @@
             <div class="card-body">
                 @php
                     $instansi = DB::table('instansis')->where('status', 'Aktif')->first();
+
                     $kenaikan_gaji = DB::table('kenaikan_gajis')->where('id', Request('data'))->first();
+                    
                     $pegawai = DB::table('profils')
                         ->leftjoin('users', 'users.id', '=', 'profils.id_user')
                         ->where('profils.id', $kenaikan_gaji->id_profil)
@@ -67,7 +69,8 @@
                             'profils.id'
                         )
                         ->first();
-                    $kantor = DB::table('dokumens')
+
+                    @$kantor = DB::table('dokumens')
                         ->leftjoin('users', 'users.id', '=', 'dokumens.id_user')
                         ->leftjoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
                         ->where('users.id', $pegawai->id_user)
@@ -145,7 +148,9 @@
                             name="id_profil" id="id_profil" value="{{ @$pegawai->id }}">
                         <table width="100%">
                             <tr>
-                                <td width="5%"></td>
+                                <td width="5%">                    
+
+                                </td>
                                 <td width="10%"></td>
                                 <td></td>
                                 <td width="35%"></td>

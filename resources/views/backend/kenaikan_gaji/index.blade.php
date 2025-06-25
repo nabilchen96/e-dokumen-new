@@ -107,18 +107,26 @@
                                         ->select(
                                             'users.id',
                                             'users.name', 
-                                            'profils.nip'
-                                        )
-                                        ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
-                                        //->Orwhere('status_pegawai', 'PNS')
-                                        //->Orwhere('status_pegawai', 'P3K')
-                                        ->groupBy('users.id')
-                                        ->get();
+                                            'profils.nip', 
+                                            'profils.id as id_profil'
+                                        );
+
+                                    if(Auth::user()->role == 'Admin'){
+                                        $pegawai = $pegawai->groupBy('users.id')
+                                                    ->get();
+                                    }else{
+                                        $pegawai = $pegawai
+                                                    //->where('dokumens.id_skpd', Auth::user()->id_unit_kerja)
+                                                    //->Orwhere('status_pegawai', 'PNS')
+                                                    //->Orwhere('status_pegawai', 'P3K')
+                                                    ->groupBy('users.id')
+                                                    ->get();
+                                    }
                                 @endphp
                                 <select name="id_profil" id="id_profil" class="" required>
                                     <option value="">PILIH PEGAWAI</option>
                                     @foreach ($pegawai as $p)
-                                        <option value="{{ $p->id }}">{{ strtoupper($p->name) }} <b>NIP: {{ $p->nip }}</b> </option>
+                                        <option value="{{ $p->id_profil }}">{{ strtoupper($p->name) }} <b>NIP: {{ $p->nip }}</b> </option>
                                     @endforeach
                                 </select>
                             </div>

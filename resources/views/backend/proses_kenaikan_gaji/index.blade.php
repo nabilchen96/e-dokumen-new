@@ -68,6 +68,7 @@
                                     <th colspan="5" style="border: #ced4da solid 1px !important;" class="text-center">Proses
                                         Kenaikan Gaji</th>
                                     <th rowspan="2" style="vertical-align: middle;"></th>
+                                    <th rowspan="2" style="vertical-align: middle;"></th>
                                 </tr>
                                 <tr class="border-top">
                                     <th>[1]. Staff <br> BKPSDM</th>
@@ -163,7 +164,11 @@
                                                 <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                                             </a>
                                         </td>
-
+                                        <td>
+                                            <a href="#" onclick="hapusData({{ $item->id }})">
+                                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -248,6 +253,48 @@
                     //handle error
                     console.log(res);
                 });
+        }
+
+        hapusData = (id) => {
+            Swal.fire({
+                title: "Yakin hapus data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: "Batal"
+
+            }).then((result) => {
+
+                if (result.value) {
+                    axios.post('/delete-proses-kenaikan-gaji', {
+                        id
+                    })
+                        .then((response) => {
+                            if (response.data.responCode == 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                })
+
+                                location.reload('/proses-kenaikan-gaji')
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Gagal...',
+                                    text: response.data.respon,
+                                })
+                            }
+                        }, (error) => {
+                            console.log(error);
+                        });
+                }
+
+            });
         }
     </script>
 @endpush

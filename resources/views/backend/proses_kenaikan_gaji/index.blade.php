@@ -68,7 +68,9 @@
                                     <th colspan="5" style="border: #ced4da solid 1px !important;" class="text-center">Proses
                                         Kenaikan Gaji</th>
                                     <th rowspan="2" style="vertical-align: middle;"></th>
-                                    <th rowspan="2" style="vertical-align: middle;"></th>
+                                    @if (Auth::user()->role == 'Admin')
+                                        <th rowspan="2" style="vertical-align: middle;"></th>
+                                    @endif
                                 </tr>
                                 <tr class="border-top">
                                     <th>[1]. Staff <br> BKPSDM</th>
@@ -164,11 +166,13 @@
                                                 <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                                             </a>
                                         </td>
-                                        <td>
-                                            <a href="#" onclick="hapusData({{ $item->id }})">
-                                                <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                            </a>
-                                        </td>
+                                        @if (Auth::user()->role == 'Admin')
+                                            <td>
+                                                <a href="#" onclick="hapusData({{ $item->id }})">
+                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                                </a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

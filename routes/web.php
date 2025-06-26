@@ -201,15 +201,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-profil-pegawai', 'App\Http\Controllers\ProfilController@updateProfilPegawai');
     Route::post('/delete-profil', 'App\Http\Controllers\ProfilController@delete');
 
-    //STATISTIK PEGAWAI
-    Route::get('/statistik', 'App\Http\Controllers\StatistikController@index');
-    Route::get('/data-pendidikan', 'App\Http\Controllers\StatistikController@dataPendidikan');
-    Route::get('/data-jenis-kelamin', 'App\Http\Controllers\StatistikController@dataJenisKelamin');
-    Route::get('/data-jenis-jabatan', 'App\Http\Controllers\StatistikController@dataJenisJabatan');
-    Route::get('/data-pangkat', 'App\Http\Controllers\StatistikController@dataPangkat');
-    Route::get('/data-statistik-skpd', 'App\Http\Controllers\StatistikController@dataSkpd');
-    Route::get('/data-statistik-umur', 'App\Http\Controllers\StatistikController@dataUmur');
-
     //DETAIL STATISTIK PEGAWAI
     Route::get('/detail-statistik-pendidikan', 'App\Http\Controllers\StatistikController@detailPendidikan');
     Route::get('/detail-statistik-pangkat', 'App\Http\Controllers\StatistikController@detailPangkat');
@@ -234,6 +225,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@delete');
     
 });
+
+//STATISTIK PEGAWAI
+Route::get('/statistik', 'App\Http\Controllers\StatistikController@index');
+Route::get('/data-pendidikan', 'App\Http\Controllers\StatistikController@dataPendidikan');
+Route::get('/data-jenis-kelamin', 'App\Http\Controllers\StatistikController@dataJenisKelamin');
+Route::get('/data-jenis-jabatan', 'App\Http\Controllers\StatistikController@dataJenisJabatan');
+Route::get('/data-pangkat', 'App\Http\Controllers\StatistikController@dataPangkat');
+Route::get('/data-statistik-skpd', 'App\Http\Controllers\StatistikController@dataSkpd');
+Route::get('/data-statistik-umur', 'App\Http\Controllers\StatistikController@dataUmur');
 
 //LOGOUT
 Route::get('/logout', function () {

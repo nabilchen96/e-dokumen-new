@@ -35,13 +35,13 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Email address <sup class="text-danger">*</sup></label>
-                <input value="{{ @$profil->email }}" class="form-control form-control-sm">
+                <input value="{{ @$profil->email }}" name="email" id="email" class="form-control form-control-sm" required>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="no_wa">No Whatsapp <sup class="text-danger">*</sup></label>
-                <input name="no_wa" id="no_wa" type="text" value="{{ @$profil->no_wa }}" placeholder="082777120"
+                <input id="no_wa" name="no_wa" type="text" value="{{ @$profil->no_wa }}" placeholder="082777120"
                     class="form-control form-control-sm" aria-describedby="emailHelp" required>
             </div>
         </div>

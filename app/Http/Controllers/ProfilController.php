@@ -177,7 +177,7 @@ class ProfilController extends Controller
             'id_user' => 'required',
             'name' => 'required',
             'nik' => 'required',
-            // 'email'     => 'required|email|unique:users,email,' . $request->id_user,
+            'email'     => 'required|email|unique:users,email,' . $request->id_user,
             'no_wa' => 'required',
             'jenis_kelamin' => 'required',
             'tempat_lahir' => 'required',
@@ -196,6 +196,10 @@ class ProfilController extends Controller
 
         } else {
             $data = User::find($request->id_user);
+            $data->update([
+                'name' => $request->name,  
+                'email' => $request->email, 
+            ]);
 
             $profil = Profil::find($request->id);
             $profil->update([

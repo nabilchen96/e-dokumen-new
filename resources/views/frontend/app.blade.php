@@ -134,7 +134,7 @@
               </h1>
 
               <p class="mb-4 mb-md-5">
-                Aplikasi pengumpulan dokumen dan kelengkapan mandiri data non ASN Bengkulu Utara.
+                Aplikasi pengumpulan dokumen dan kelengkapan mandiri data ASN Bengkulu Utara.
                 Segera Lengkapi Data Diri Anda dan Jadikan Aplikasi ini Menjadi Alat Bantu Yang Baik
               </p>
 

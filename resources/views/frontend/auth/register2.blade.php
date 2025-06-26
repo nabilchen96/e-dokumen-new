@@ -59,7 +59,7 @@
             <div class="container">
                 <div class="row align-items-center justify-content-center" style="margin-top: -50px !important; height: 125vh !important;">
                     <div class="col-md-9">
-                        <h3>Register to <br><strong>APLIKASI PENDATAAN MANDIRI  TENAGA NON ASN</strong></h3>
+                        <h3>Register to <br><strong>APLIKASI PENDATAAN MANDIRI  ASN</strong></h3>
                         <br>
                         <form id="formRegister">
                             <div class="row">

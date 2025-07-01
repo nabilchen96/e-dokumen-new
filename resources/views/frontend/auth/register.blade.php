@@ -9,8 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
   <!-- Favicon -->
-  <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="icon">
-  <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="apple-touch-icon">
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-[#fce5e9] to-[#f7d6e6] flex items-center justify-center relative">

@@ -23,9 +23,9 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
 
-    <!-- Favicons -->
-    <link href="{{ url('pandu.jpeg') }}" rel="icon">
-    <link href="{{ url('pandu.jpeg') }}" rel="apple-touch-icon">
+      <!-- Favicon -->
+    <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
+    <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
     @stack('style')
     <style>
         .btn {

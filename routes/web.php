@@ -61,6 +61,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-user', 'App\Http\Controllers\UserController@delete');
     Route::get('/export-excel-user', 'App\Http\Controllers\UserController@exportExcel');
     Route::post('/import-excel-user', 'App\Http\Controllers\UserController@importExcel');
+    
+    // Route::post('/cek-email', [UserController::class, 'cekEmail']);
+
 
     //JENIS DOKUMEN
     Route::get('/jenis-dokumen', 'App\Http\Controllers\JenisDokumenController@index');

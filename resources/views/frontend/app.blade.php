@@ -7,8 +7,8 @@
     <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
 
     <!-- Favicon -->
-    <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="icon">
-    <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="apple-touch-icon">
+    <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
+    <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">

@@ -239,7 +239,7 @@ class DashboardController extends Controller
                                     ->orWhere('dokumens.status', 'Perlu Diperbaiki')
                                     ->orWhere('dokumens.status', 'Belum Diperiksa');
                             })
-                            ->limit(50)
+                            // ->limit(50)
                             ->orderBy('dokumens.created_at', 'asc');
 
         if(Auth::user()->role == 'Admin'){

@@ -9,8 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
   <!-- Favicon -->
-  <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="icon">
-  <link href="{{ url('ilanding/assets/img/pandu2.png') }}" rel="apple-touch-icon">
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -97,6 +97,9 @@
   </div>
 
   <!-- Script Login -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <script>
   function showPassword(show) {

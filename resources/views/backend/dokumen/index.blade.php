@@ -34,10 +34,19 @@
             bottom: 7px !important;
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <style>
+        .ts-control {
+            border-radius: 0.375rem;
+            line-height: 1.5 !important;
+            font-size: 0.9375rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+    </style>
 @endpush
 @section('content')
     <div class="row" style="margin-top: -200px;">
-        <div class="col-md-12">
+        <div class="col-md-12 text-white text-white">
             <div class="row">
                 <div class="col-12 col-xl-8 mb-xl-0">
                     <h3 class="font-weight-bold">Data
@@ -194,7 +203,7 @@
                                     $users = DB::table('users')->where('id', Auth::id())->get();
                                 }
                             @endphp
-                            <select name="id_user" id="id_user" class="form-control" required>
+                            <select name="id_user" id="id_user" required>
                                 @foreach ($users as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
@@ -203,7 +212,6 @@
                         <div class="form-group">
                             <label>SKPD <sup class="text-danger">*</sup></label>
                             @php
-
                                 $skpd = DB::table('skpds')->get();
                             @endphp
                             <select name="id_skpd" id="id_skpd" class="form-control" required>
@@ -241,9 +249,12 @@
     </div>
 @endsection
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             getData()
+            // new TomSelect('#id_user');
+            tomSelectUser = new TomSelect('#id_user');
         })
 
         function getData() {
@@ -294,31 +305,31 @@
                 {
                     render: function (data, type, row, meta) {
                         return `${row.status ?? 'Belum Diperiksa'}
-                                                    <br> <span style="display: none;">${row.dokumen}</span>
-                                                `
+                            <br> <span style="display: none;">${row.dokumen}</span>
+                        `
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                                                </a>`
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a data-toggle="modal" data-target="#modal"
-                                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                </a>`
+                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        </a>`
                     }
                 },
                 {
                     render: function (data, type, row, meta) {
                         return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                             .id) + `)">
-                                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                                </a>`
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                        </a>`
                     }
                 },
                 ]
@@ -346,7 +357,9 @@
                 modal.find('#status').val(cokData[0].status)
                 modal.find('#tanggal_dokumen').val(cokData[0].tanggal_dokumen)
                 modal.find('#tanggal_akhir_dokumen').val(cokData[0].tanggal_akhir_dokumen)
-                modal.find('#id_user').val(cokData[0].id_user)
+                // modal.find('#id_user').val(cokData[0].id_user)
+                // modal.find('#id_user').val(cokData[0].id_user).trigger('change');
+                tomSelectUser.setValue(cokData[0].id_user);
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
 
                 const skpdId = document.getElementById('id_skpd').value
@@ -373,6 +386,8 @@
                         console.error('Error fetching unit kerja:', error);
                         unitKerjaSelect.innerHTML = '<option value="">GAGAL MEMUAT DATA</option>';
                     });
+
+                
 
             }
         })

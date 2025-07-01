@@ -44,6 +44,23 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#layanan" aria-expanded="false" aria-controls="ui-basic">
+                    <i class="bi bi-box-seam menu-icon"></i>
+                    <span class="menu-title">Layanan</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="layanan">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a style="white-space: normal; line-height: 1;" class="nav-link"
+                                href="{{ url('kenaikan-gaji-berkala') }}">
+                                Kenaikan Gaji Berkala
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         @else
         @endif
         @if(

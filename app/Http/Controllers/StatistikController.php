@@ -65,7 +65,7 @@ class StatistikController extends Controller
             ->where('status_input', 'Import')
             ->count();
 
-        return view('backend.statistik.index', [
+        return view('backend.dashboard', [
             's3' => $s3,
             's2' => $s2,
             's1' => $s1,

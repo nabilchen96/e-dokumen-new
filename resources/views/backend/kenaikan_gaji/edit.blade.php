@@ -487,8 +487,9 @@
                                 <td>
                                     <div class="input-group">
                                         <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
-                                            type="number" class="form-control border-danger" placeholder="Tahun" value="{{ @$kenaikan_gaji->masa_kerja_tahun_baru ??
-    @$gaji_lama->masa_kerja_tahun_baru ? @$gaji_lama->masa_kerja_tahun_baru + 2 : 0 }}" id="masa_kerja_tahun_baru"
+                                            type="number" class="form-control border-danger" placeholder="Tahun" 
+                                            value="{{ @$kenaikan_gaji->masa_kerja_tahun_baru ?? 
+   (@$gaji_lama->masa_kerja_tahun_baru ? @$gaji_lama->masa_kerja_tahun_baru + 2 : 0) }}" id="masa_kerja_tahun_baru"
                                             name="masa_kerja_tahun_baru" pattern="^[0-9]{2}$" maxlength="2">
                                         <span style="height: 38px;" class="input-group-text border-danger"
                                             id="basic-addon2">Tahun</span>
@@ -518,7 +519,7 @@
                                     :
                                 </td>
                                 <td colspan="2">
-                                    <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
+                                    <input name="golongan" {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required type="text"
                                         placeholder="Dalam Golongan" class="form-control border-danger"
                                         value="{{ @$kenaikan_gaji->golongan ?? @$pangkat[0] }}">
                                 </td>

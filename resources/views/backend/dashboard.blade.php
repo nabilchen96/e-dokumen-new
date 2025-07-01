@@ -128,7 +128,7 @@
                                     <i class="bi bi-person-circle float-right"></i>
                                 </h4>
                                 <h2>
-                                    {{ @$s3 ?? 0}}
+                                    {{ $s3}}
                                 </h2>
                                 <span>Orang <i class="bi bi-arrow-right"></i></span>
                             </div>

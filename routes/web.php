@@ -51,7 +51,7 @@ Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
 Route::group(['middleware' => 'auth'], function () {
 
     //DASHBOARD
-    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
+    Route::get('/dashboard', 'App\Http\Controllers\StatistikController@index');
 
     //USER
     Route::get('/user', 'App\Http\Controllers\UserController@index');

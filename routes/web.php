@@ -51,7 +51,7 @@ Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
 Route::group(['middleware' => 'auth'], function () {
 
     //DASHBOARD
-    Route::get('/dashboard', 'App\Http\Controllers\StatistikController@index');
+    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
 
     //USER
     Route::get('/user', 'App\Http\Controllers\UserController@index');
@@ -114,7 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-informasi', 'App\Http\Controllers\InformasiController@delete');
 
     //KENAIKAN GAJI BERKALA
-     Route::get('/kenaikan-gaji-berkala', 'App\Http\Controllers\KenaikanGajiBerkalaController@index');
+    Route::get('/kenaikan-gaji-berkala', 'App\Http\Controllers\KenaikanGajiBerkalaController@index');
 
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');

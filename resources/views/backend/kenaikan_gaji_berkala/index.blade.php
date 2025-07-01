@@ -59,10 +59,8 @@
 <div class="row" style="margin-top: -200px;">
     <div class="col-md-12 grid-margin">
         <div class="row">
-            <div class="col-lg-12 mb-4 text-white">
-                <h3 class="font-weight-bold">Dashboard</h3>
-                <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
-                    Welcome back to Aplikasi <span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</h6>
+            <div class="col-lg-12 mb-2 text-white">
+                <h3 class="font-weight-bold">Layanan</h3>
             </div>
             @if (@$profil)
                 <div class="col-lg-5">

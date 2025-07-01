@@ -11,6 +11,63 @@ class DashboardController extends Controller
     public function index()
     {
 
+        if(Auth::user()->role == 'Admin'){
+
+            $s3 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'S-3/Doktor')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $s2 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'S-2')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $s1 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'S-1/Sarjana')
+            ->where('status_input', 'Import')
+            ->count();
+
+
+        $d1 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'Diploma I')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $d2 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'Diploma II')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $d3 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'Diploma III/Sarjana Muda')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $d4 = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'Diploma IV')
+            ->where('status_input', 'Import')
+            ->count();
+
+        $sma = DB::table('pegawai_imports')
+            ->where('tingkat_pendidikan', 'SLTA')
+            ->orwhere('tingkat_pendidikan', 'SLTA Kejuruan')
+            ->where('status_input', 'Import')
+            ->count();
+
+
+            return view('backend.statistik.index', [
+                's3' => $s3,
+                's2' => $s2,
+                's1' => $s1,
+                'sma' => $sma,
+                'd1' => $d1,
+                'd2' => $d2,
+                'd3' => $d3,
+                'd4' => $d4
+            ]);
+        }
+
         $id_user = Auth::id();
 
         $profil = DB::table('profils')->where('id_user', $id_user)->first();

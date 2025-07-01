@@ -111,15 +111,16 @@ class AuthController extends Controller
         $otp = rand(100000, 999999);
 
         // Simpan ke database
-        Otp::create([
-            'no_wa' => $noWa,
-            'otp' => $otp,
-        ]);
+        // Otp::create([
+        //     'no_wa' => $noWa,
+        //     'otp' => $otp,
+        // ]);
 
         $data = [
             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
             'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun', // Isi pesan
+            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
+            'delay' => '3'
         ];
 
         // Mengirim request POST menggunakan Guzzle
@@ -131,6 +132,12 @@ class AuthController extends Controller
 
             // Menangani respons
             if ($response->successful()) {
+
+                Otp::create([
+                    'no_wa' => $noWa,
+                    'otp' => $otp,
+                ]);
+
                 $result = $response->json(); // Mendapatkan respons sebagai array
                 return response()->json([
                     'status' => 'success',
@@ -278,19 +285,21 @@ class AuthController extends Controller
         $otp = rand(100000, 999999);
 
         // Simpan ke database
-        Otp::create([
-            'no_wa' => $noWa,
-            'otp' => $otp,
-        ]);
+        // Otp::create([
+        //     'no_wa' => $noWa,
+        //     'otp' => $otp,
+        // ]);
 
         $data = [
             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
             'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun', // Isi pesan
+            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
+            'delay' => '3'
         ];
 
         // Mengirim request POST menggunakan Guzzle
         try {
+            
             $response = Http::withHeaders([
                 'Authorization' => 'Q6YBrZNnsuaMewvjVueW',
                 'Content-Type' => 'application/x-www-form-urlencoded',
@@ -298,12 +307,20 @@ class AuthController extends Controller
 
             // Menangani respons
             if ($response->successful()) {
+
+                // Simpan OTP hanya jika pengiriman sukses
+                Otp::create([
+                    'no_wa' => $noWa,
+                    'otp' => $otp,
+                ]);
+
                 $result = $response->json(); // Mendapatkan respons sebagai array
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Pesan berhasil dikirim.',
                     'data' => $result,
                 ]);
+
             } else {
                 return response()->json([
                     'status' => 'error',

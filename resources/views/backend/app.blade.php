@@ -185,9 +185,9 @@
                 <div style="
                     background: #4b49ac;
                     background-image:  
-                    url('https://cdn.pixabay.com/photo/2022/08/05/07/06/background-7366180_1280.jpg'); 
+                    url('{{ asset('bundaran.jpeg') }}'); 
                     height: 200px; 
-                    background-position: center;
+                    background-position: center 80%;
                     background-size: cover;
                     width: 100%;">
 

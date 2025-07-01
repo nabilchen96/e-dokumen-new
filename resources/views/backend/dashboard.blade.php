@@ -1,466 +1,769 @@
 @extends('backend.app')
 @push('style')
-    <link href="{{ asset('bell.css') }}" rel="stylesheet">
-    @push('style')
-        <style>
-            #myTable_filter input {
-                height: 29.67px !important;
-            }
+    <style>
+        #myTable_filter input {
+            height: 29.67px !important;
+        }
 
-            #myTable_length select {
-                height: 29.67px !important;
-            }
+        #myTable_length select {
+            height: 29.67px !important;
+        }
 
-            .btn {
-                border-radius: 50px !important;
-            }
+        .btn {
+            border-radius: 50px !important;
+        }
 
-            .table-striped tbody tr:nth-of-type(odd) {
-                background-color: #9e9e9e21 !important;
-            }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #9e9e9e21 !important;
+        }
 
-            th,
-            td {
-                font-size: 13.2px !important;
-            }
+        td,
+        th {
+            font-size: 13.5px !important;
+            /* padding: 5px !important; */
+            /* white-space: nowrap !important; */
+        }
 
-            /* Mengatur ukuran dan margin panah sorting di DataTables */
-            table.dataTable thead .sorting::after,
-            table.dataTable thead .sorting_asc::after,
-            table.dataTable thead .sorting_desc::after {
-                margin-bottom: 5px !important;
-                content: "▲" !important;
-                top: 7px !important;
-            }
+        td {
+            padding: 7px !important;
+        }
 
-            table.dataTable thead .sorting::before,
-            table.dataTable thead .sorting_asc::before,
-            table.dataTable thead .sorting_desc::before {
-                margin-top: -5px !important;
-                content: "▼" !important;
-                bottom: 7px !important;
-            }
-        </style>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <style>
-            #map {
-                height: 600px;
-                width: 100%;
-            }
-        </style>
-    @endpush
+        /* Mengatur ukuran dan margin panah sorting di DataTables */
+        table.dataTable thead .sorting::after,
+        table.dataTable thead .sorting_asc::after,
+        table.dataTable thead .sorting_desc::after {
+            margin-bottom: 5px !important;
+            content: "▲" !important;
+            top: 7px !important;
+        }
+
+        table.dataTable thead .sorting::before,
+        table.dataTable thead .sorting_asc::before,
+        table.dataTable thead .sorting_desc::before {
+            margin-top: -5px !important;
+            content: "▼" !important;
+            bottom: 7px !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: calc(2.25rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+    </style>
 @endpush
 @section('content')
-@php
-    @$data_user = Auth::user();
-    @$profil = DB::table('profils')->where('id_user', Auth::id())->first();
-@endphp
-
-<div class="row" style="margin-top: -200px;">
-    <div class="col-md-12 grid-margin">
-        <div class="row">
-            <div class="col-lg-12 mb-4">
-                <h3 class="font-weight-bold">Dashboard</h3>
-                <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
-                    Welcome back to Aplikasi <span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</h6>
+    <div class="row" style="margin-top: -200px;">
+        <div class="col-md-12 text-white">
+            <div class="row">
+                <div class="col-lg-12 mb-4 text-white">
+                    <h3 class="font-weight-bold">Dashboard</h3>
+                    <h6 class="font-weight-normal mb-0">Hi, {{ Auth::user()->name }}.
+                        Welcome back to Aplikasi <span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</h6>
+                </div>
             </div>
-            @if (@$profil)
-                <div class="col-lg-5">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold">[ <i class="bi bi-bell"></i> ] Notifikasi
-                            </h3>
-                            <span class="text-danger">
-                                Informasi dokuman dan data yang wajib dilengkapi
-                            </span>
-                            <ul class="mt-4" style="height: 275px;">
-                                <li style="font-size: 15px;">
-                                    @if ($dokumenBelumDiupload)
-                                        <i class="text-danger bi bi-exclamation-triangle"></i>
-                                        Anda belum mengupload dokumen <b>{{ $dokumenBelumDiupload }}</b>.
-                                        Klik menu dokumen dan pilih jenis dokumen yang ingin diupload.
-                                    @else
-                                        <i class="text-success bi bi-check-circle"></i>
-                                        Terimakasih!, anda sudah mengupload semua dokumen. Cek di menu dokumen untuk melihat
-                                        dokumen dan status dokumen
-                                    @endif
-                                </li>
-                                <li class="mt-2" style="font-size: 15px;">
-                                    @if (@$isiProfil != null)
-                                        <i class="text-danger bi bi-exclamation-triangle"></i>
-                                        Anda belum mengisi data <b>{{ $isiProfil }}</b>.
-                                        Klik <a href="{{ url('profil') }}">menu profil</a> untuk mengisi dan melengkapi data profil.
-                                    @else
-                                        <i class="text-success bi bi-check-circle"></i>
-                                        Terimakasih!, anda sudah mengisi semua data di menu profil. Cek di menu profil untuk
-                                        melihat data profil anda
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-2">
+            <a style="border-radius: 8px !important;" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalimport">
+                <i class="bi bi-file-earmark-excel"></i> Import
+            </a> &nbsp;
+            <a style="border-radius: 8px !important;" href="#" class="btn btn-danger btn-sm" id="deleteButton">
+                <i class="bi bi-bug"></i> Hapus Data Import
+            </a>
+            <!-- Modal Import-->
+            <div class="modal fade" id="modalimport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="importForm" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-header p-3">
+                                <h5 class="modal-title m-2" id="exampleModalLabel">SIASN Import Form</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Import Excel <sup class="text-danger">*</sup> </label>
+                                    <input name="file" id="file" type="file" class="form-control form-control-sm mb-2"
+                                        required>
+                                    <ul>
+                                        <li>
+                                            <span>Unduh format import SIASN <a
+                                                    href="{{ asset('format_import_siasn_terbaru.xlsx') }}">Template
+                                                    Import SIASN</a>
+                                            </span><br>
+                                        </li>
+                                        <li>
+                                            <span>Gunakan tipe data date pada kolom TANGGAL LAHIR (dd/mm/yyyy)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer p-3">
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                <button id="importButton" class="btn btn-primary btn-sm">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="col-lg-7">
-                    <div class="card shadow w-100">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold">[ <i class="bi bi-file-earmark-text"></i> ] Dokumen Anda
-                            </h3>
-                            <span class="text-danger">
-                                Informasi dokuman dan status dokumen anda
-                            </span>
-                            <div class="mt-4 table-responsive" style="height: 290px;">
-                                <table class="table table-striped" style="width: 100%;">
-                                    <thead class="bg-info text-white">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>jenis Dokumen</th>
-                                            <!-- <th>Tanggal Dokumen</th> -->
-                                            <th>Tanggal Upload</th>
-                                            <th>Status Dokumen</th>
-                                            <th width="5%">File</th>
-                                            <th width="5%">Edit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-
-                                            $profil = DB::table('profils')->where('id_user', Auth::id())->first();
-
-                                            $data = DB::table('dokumens')
-                                                ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
-                                                ->where('dokumens.id_user', Auth::id())
-                                                ->select(
-                                                    'dokumens.*',
-                                                    'jenis_dokumens.jenis_dokumen',
-                                                    'jenis_dokumens.punya_tgl_akhir',
-                                                    'jenis_dokumens.id as id_jenis_dokumen'
-                                                )
-                                                ->orderByRaw("
-                                                    CASE 
-                                                        WHEN dokumens.status = 'Perlu Diperbaiki' THEN 1
-                                                        WHEN dokumens.status = 'Sedang Dalam Pengecekan' THEN 2
-                                                        WHEN dokumens.status = 'Belum Diperiksa' THEN 3
-                                                        WHEN dokumens.status IS NULL THEN 4
-                                                        WHEN dokumens.status = 'Dokumen Diterima' THEN 5
-                                                        ELSE 6
-                                                    END
-                                                ")
-                                                ->get();
-                                        @endphp
-                                        @foreach ($data as $k => $item)
-                                            <tr>
-                                                <td>{{ $k + 1 }}</td>
-                                                <td>{{ $item->jenis_dokumen }}</td>
-                                                <td>{{ $item->created_at }}</td>
-                                                <td>
-                                                    {{ $item->status ?? 'Belum Diperiksa' }}
-                                                </td>
-                                                <td>
-                                                    <a target="_blank" href="/convert-to-pdf/{{ $item->dokumen }}">
-                                                        <i style="font-size: 1.5rem;"
-                                                            class="text-danger bi bi-file-earmark-pdf"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    @if ($item->status == 'Perlu Diperbaiki')
-                                                        <a href="#" style="border-radius: 8px !important;" data-toggle="modal"
-                                                            data-target="#modalDokumen" data-bs-id="{{ @$item->id }}"
-                                                            data-bs-id_user="{{ Auth::id() }}"
-                                                            data-bs-id_jenis_dokumen="{{ @$item->id_jenis_dokumen }}"
-                                                            data-bs-tanggal_dokumen="{{ @$item->tanggal_dokumen }}"
-                                                            data-bs-tanggal_akhir_dokumen="{{ @$item->tanggal_akhir_dokumen }}"
-                                                            data-bs-id_skpd="{{ @$item->id_skpd }}"
-                                                            data-bs-jenis_dokumen_berkala="{{ @$item->jenis_dokumen_berkala }}"
-                                                            data-bs-punya_tgl_akhir="{{ @$item->punya_tgl_akhir }}"
-                                                            data-bs-jenis_dokumen="{{ @$item->jenis_dokumen }}">
-                                                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-3/Doktor">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S3
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s3 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
                 </div>
-            @endif
-            @include('backend.components.admin_widget')
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-2">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S2
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s2 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;"
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=S-1/Sarjana">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan S1
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$s1 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma IV">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DIV
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d4 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;"
+                        href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma III/Sarjana Muda">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DIII
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d3 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma II">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DII
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d2 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=Diploma I">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan DI
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$d1 ?? 0}}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+                <div class="col-lg-3 mt-3">
+                    <a style="text-decoration: none;" href="{{ url('detail-statistik-pendidikan') }}?pendidikan=SMA">
+                        <div class="card shadow bg-gradient-info card-img-holder text-white">
+                            <div class="card-body">
+                                <img src="https://themewagon.github.io/purple-react/static/media/circle.953c9ca0.svg"
+                                    class="card-img-absolute" alt="circle">
+                                <h4 class="font-weight-normal mb-3">
+                                    Lulusan SMA
+                                    <i class="bi bi-person-circle float-right"></i>
+                                </h4>
+                                <h2>
+                                    {{ @$sma ?? 0 }}
+                                </h2>
+                                <span>Orang <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <!-- //peta -->
-            <div class="col-lg-12 mt-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h3 class="font-weight-bold mb-4">
-                            [ <i class="bi bi-geo-alt"></i> ]
-                            Data Sebaran Pegawai
-                        </h3>
-                        <div id="map"></div>
-                    </div>
+        <div class="col-lg-6 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="jenisKelamin"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="jenisJabatan"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="pangkat"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div id="umur"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 mt-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="mt-4">Distribusi SKPD</h3>
+                    <p class="mb-4">Total Pegawai ASN Berdasarkan SKPD</p>
+                    <table id="myTable" class="table table-striped display" style="width:100%">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th>No</th>
+                                <th>SKPD</th>
+                                <th>Laki-laki</th>
+                                <th>Perempuan</th>
+                                <th>Total</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="modalDokumen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="formDokumen">
-                @if(Auth::user()->role == 'Pegawai')
-                    <div class="modal-header p-3">
-                        <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div id="respon_error" class="text-danger mb-4"></div>
-                        <input type="hidden" name="id" id="id">
-                        <input type="hidden" name="id_dokumen" id="id_dokumen">
-                        <div class="form-group">
-                            <label>Dokumen <sup class="text-danger">*</sup></label>
-                            <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
-                                class="form-control form-control-sm" required accept=".pdf, image/*">
-                        </div>
-                        <div class="form-group">
-                            <label>Jenis Dokumen <sup class="text-danger">*</sup></label>
-                            <input type="text" placeholder="Dokumen" id="jenis_dokumen" class="form-control form-control-sm"
-                                required readonly>
-                        </div>
-                        @php
-                            $variations = [
-                                'dokumen berkala',
-                                'Dokumen Berkala',
-                                'Dokumen berkala',
-                                'dokumen Berkala',
-                                'DOKUMEN BERKALA',
-                                'dok. berkala',
-                                'dok berkala',
-                                'Dok. Berkala',
-                                'Dok Berkala',
-                                'DOK. BERKALA',
-                                'DOK BERKALA',
-                                'dokumenberkala',
-                                'DokumenBerkala',
-                                'DOKUMENBERKALA',
-                                'Dokumenberkala',
-                                'dokumenBerkala',
-                                'Kenaikan Gaji',
-                                'Kenaikan gaji',
-                                'kenaikan Gaji',
-                                'kenaikangaji',
-                                'KenaikanGaji',
-                                'Kenaikangaji',
-                                'kenaikanGaji',
-                                'KENAIKAN GAJI',
-                                'KENAIKANGAJI',
-                                'SK Gaji Berkala'
-                            ];
-
-                            $kenaikan_gaji = DB::table('jenis_dokumens')
-                                ->where('id', Request('jenis_dokumen'))
-                                ->first();
-                        @endphp
-                        <div class="form-group">
-                            <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
-                            <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
-                                name="tanggal_dokumen" class="form-control form-control-sm" required>
-                        </div>
-                        <div id="punya_tgl_akhir"></div>
-                        <div class="form-group">
-                            <label>Pemilik <sup class="text-danger">*</sup></label>
-                            <select name="id_user" id="id_user" class="form-control" required>
-                                <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer p-3">
-                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                        <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
-                    </div>
-                @endif
-            </form>
-        </div>
-    </div>
-</div>
-
 @endsection
 @push('script')
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
-        $("#myTable, #myTable2").DataTable({
-            "ordering": true,
-            info: false,
-            paging: false,
-            searching: false,
-            order: [[3, 'asc']]
-        })
-    </script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Initialize the map
-        const map = L.map('map').setView([-3.4020431,102.5991136], 10);
-        // Adjust default view coordinates
+        axios.get('/data-pendidikan')
+            .then(response => {
+                const rawData = response.data;
 
-        // Add OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 21,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+                const categories = rawData.map(item => {
+                    return item.tingkat_pendidikan == null ? 'Belum Isi' : item.tingkat_pendidikan;
+                });
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
 
-        // Fetch district data from Laravel backend
-        fetch('/data-peta') // Adjust this endpoint as necessary
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(district => {
-                    const marker = L.marker([district.latitude, district.longitude]).addTo(map);
-                    marker.bindPopup(`
-                        <strong>${district.nama_skpd}</strong><br>
-                        Total pegawai: ${district.total_employees}
-                    `);
+                console.log(dataLaki);
+
+
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Pendidikan'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Pendidikan'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        title: {
+                            text: 'Tingkat Pendidikan'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
                 });
             })
-            .catch(error => console.error('Error fetching district data:', error));
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
     </script>
     <script>
-        $('#modalDokumen').on('show.bs.modal', function (event) {
-            const button = event.relatedTarget
+        axios.get('/data-jenis-kelamin')
+            .then(response => {
+                const rawData = response.data;
 
-            const id = button.getAttribute('data-bs-id')
-            const id_user = button.getAttribute('data-bs-id_user')
-            const tanggal_dokumen = button.getAttribute('data-bs-tanggal_dokumen')
-            const tanggal_akhir_dokumen = button.getAttribute('data-bs-tanggal_akhir_dokumen')
-            const id_skpd = button.getAttribute('data-bs-id_skpd')
-            const jenis_dokumen_berkala = button.getAttribute('data-bs-jenis_dokumen_berkala')
-            const jenis_dokumen = button.getAttribute('data-bs-jenis_dokumen')
-            const punya_tgl_akhir = button.getAttribute('data-bs-punya_tgl_akhir')
-            const id_jenis_dokumen = button.getAttribute('data-bs-id_jenis_dokumen')
+                const dataPie = rawData.map(item => {
+                    let label = item.jenis_kelamin
+                    return {
+                        name: label,
+                        y: parseInt(item.total)
+                    };
+                });
 
-            if (punya_tgl_akhir == 'Ya') {
-                document.getElementById('punya_tgl_akhir').innerHTML = `
-                                                            <div class="form-group">
-                                                                <label>Tanggal Akhir Dokumen</label>
-                                                                <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
-                                                                    name="tanggal_akhir_dokumen" class="form-control form-control-sm">
-                                                            </div>
-                                                        `
-            } else {
-                document.getElementById('punya_tgl_akhir').innerHTML = ``
-            }
-
-            var modal = $(this)
-            modal.find('#id').val(id)
-            modal.find('#id_user').val(id_user)
-            modal.find('#tanggal_dokumen').val(tanggal_dokumen)
-            modal.find('#tanggal_akhir_dokumen').val(tanggal_akhir_dokumen)
-            // modal.find('#id_skpd').val(id_skpd)
-            // modal.find('#jenis_dokumen_berkala').val(jenis_dokumen_berkala)
-            modal.find('#jenis_dokumen').val(jenis_dokumen)
-            modal.find('#id_dokumen').val(id_jenis_dokumen)
-        })
-
-        formDokumen.onsubmit = (e) => {
-
-            let formData = new FormData(formDokumen);
-
-            document.getElementById('respon_error').innerHTML = ``
-
-            e.preventDefault();
-
-            document.getElementById("tombol_kirim").disabled = true;
-
-            axios({
-                method: 'post',
-                url: '/update-file-dokumen',
-                data: formData,
+                Highcharts.chart('jenisKelamin', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribusi Jenis Kelamin'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Jenis Kelamin'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} orang)'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+                            },
+                        }
+                    },
+                    series: [{
+                        name: 'Persentase',
+                        colorByPoint: true,
+                        data: dataPie
+                    }]
+                });
             })
-                .then(function (res) {
-                    //handle success         
-                    if (res.data.responCode == 1) {
+            .catch(error => {
+                console.error('Gagal memuat data pie chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-jenis-jabatan')
+            .then(response => {
+                const rawData = response.data;
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sukses',
-                            text: res.data.respon,
-                            timer: 3000,
-                            showConfirmButton: false
-                        })
+                const dataPie = rawData.map(item => {
+                    let label = ''; // deklarasi di awal
 
-                        location.reload('/dashboard')
-
+                    if (item.jenis_jabatan != null) {
+                        const words = item.jenis_jabatan.split(' ');
+                        label = words[1] || words[0]; // kata kedua, fallback ke pertama
                     } else {
-                        //respon 
-                        let respon_error = ``
-                        Object.entries(res.data.respon).forEach(([field, messages]) => {
-                            messages.forEach(message => {
-                                respon_error += `<li>${message}</li>`;
-                            });
-                        });
-
-                        document.getElementById('respon_error').innerHTML = respon_error
+                        label = 'Lainnya'; // default jika null
                     }
 
-                    document.getElementById("tombol_kirim").disabled = false;
-                })
-                .catch(function (res) {
-                    document.getElementById("tombol_kirim").disabled = false;
-                    //handle error
-                    console.log(res);
+                    return {
+                        name: label,
+                        y: parseInt(item.total)
+                    };
                 });
-        }
 
-        $('#modalExample').on('show.bs.modal', function (event) {
-
-            const button = event.relatedTarget
-            const id = button.getAttribute('data-bs-id')
-            const status = button.getAttribute('data-bs-status')
-            const id_dokumen = button.getAttribute('data-bs-id_dokumen')
-
-
-            var modal = $(this)
-            modal.find('#id').val(id)
-            modal.find('#status').val(status)
-            modal.find('#id_dokumen').val(id_dokumen)
-        })
-
-        updateStatusForm.onsubmit = (e) => {
-
-            let formData = new FormData(updateStatusForm);
-
-            e.preventDefault();
-
-            document.getElementById("tombol_kirim").disabled = true;
-
-            axios({
-                method: 'post',
-                url: '/update-status-dokumen',
-                data: formData,
+                Highcharts.chart('jenisJabatan', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribusi Jenis Jabatan'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Jenis Jabatan'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} orang)'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+                            },
+                        }
+                    },
+                    series: [{
+                        name: 'Persentase',
+                        colorByPoint: true,
+                        data: dataPie
+                    }]
+                });
             })
-                .then(function (res) {
-                    //handle success         
-                    if (res.data.responCode == 1) {
+            .catch(error => {
+                console.error('Gagal memuat data pie chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-pangkat')
+            .then(response => {
+                const rawData = response.data;
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sukses',
-                            text: res.data.respon,
-                            timer: 3000,
-                            showConfirmButton: false
-                        })
+                const categories = rawData.map(item => {
 
-                        location.reload('/file-dokumen')
 
+                    let label = ''; // deklarasi di awal
+
+                    if (item.pangkat != null) {
+                        const words = item.pangkat.split(' - ');
+                        label = words[0]; // kata kedua, fallback ke pertama
                     } else {
-
+                        label = 'Belum Isi'; // default jika null
                     }
 
-                    document.getElementById("tombol_kirim").disabled = false;
-                })
-                .catch(function (res) {
-                    document.getElementById("tombol_kirim").disabled = false;
-                    //handle error
-                    console.log(res);
+                    return label;
+
                 });
-        }
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
+
+
+                Highcharts.chart('pangkat', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Pangkat'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Pangkat'
+                    },
+                    xAxis: {
+                        categories: categories,
+
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
+    </script>
+    <script>
+        axios.get('/data-statistik-umur')
+            .then(response => {
+                const rawData = response.data;
+
+                const categories = rawData.map(item => {
+                    return item.umur;
+                });
+                const dataLaki = rawData.map(item => Number(item.laki_laki));
+                const dataPerempuan = rawData.map(item => Number(item.perempuan));
+
+                console.log(dataLaki);
+
+
+                Highcharts.chart('umur', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribusi Umur'
+                    },
+                    subtitle: {
+                        text: 'Total Pegawai ASN Berdasarkan Umur'
+                    },
+                    xAxis: {
+                        categories: categories,
+
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Jumlah Orang'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    legend: {
+                        reversed: false
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                            point: {
+                                events: {
+                                    click: function () {
+                                        // Gantilah URL sesuai kebutuhan Anda
+                                        const umur = this.category; // Kategori umur
+                                        window.location.href = `/detail-statistik-umur?umur=${umur}`; // URL berdasarkan umur yang diklik
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Laki-laki',
+                            data: dataLaki,
+                        },
+                        {
+                            name: 'Perempuan',
+                            data: dataPerempuan,
+                        }
+                    ]
+                });
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data chart:', error);
+            });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                ajax: {
+                    url: '/data-statistik-skpd',
+                    dataSrc: ''
+                },
+                pageLength: 100,
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    { data: 'nama_skpd' },
+                    { data: 'laki_laki' },
+                    { data: 'perempuan' },
+                    {
+                        render: function (data, type, row) {
+                            return Number(row.laki_laki) + Number(row.perempuan);
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return `<a href="/detail-statistik-skpd?nama_skpd=${row.nama_skpd}">
+                                        <button style="border-radius: 8px !important;" class="btn btn-primary">Detail</button>
+                                    </a>`;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('importForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Mencegah reload halaman
+            let formData = new FormData(this);  // Mengambil data form
+
+            // Tampilkan SweetAlert proses loading
+            Swal.fire({
+                title: 'Sedang memproses data...',
+                text: 'Mohon menunggu sesaat',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            axios.post('/import-siasn', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            })
+                .then(response => {
+                    Swal.close(); // tutup loading jika berhasil
+                    const data = response.data;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: `${data.message}`,
+                        showConfirmButton: true
+                    }).then(() => {
+                        // Reload saat tombol OK ditekan
+                        location.reload();
+                    });
+                })
+                .catch(error => {
+
+                    Swal.close(); // pastikan loading ditutup saat error
+
+                    // Tampilkan error berdasarkan jenisnya
+                    let errorMessage = 'Terjadi kesalahan saat mengimpor data.';
+                    if (error.code === 'ECONNABORTED') {
+                        errorMessage = 'Waktu proses melebihi batas. Silakan coba lagi atau cek ukuran data.';
+                    } else if (error.response) {
+                        errorMessage = `Server error: ${error}`;
+                    } else if (error.request) {
+                        errorMessage = 'Tidak ada respon dari server.';
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: errorMessage
+                    });
+                });
+        });
+
+    </script>
+    <script>
+        document.getElementById('deleteButton').addEventListener('click', function (e) {
+            e.preventDefault(); // Mencegah redirect langsung
+
+            // Menampilkan SweetAlert konfirmasi
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data ini akan dihapus secara permanen.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, maka arahkan ke URL untuk menghapus data
+                    window.location.href = '{{ url('hapus-data-import') }}';
+                }
+            });
+        });
     </script>
 @endpush

@@ -110,6 +110,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-informasi', 'App\Http\Controllers\InformasiController@update');
     Route::post('/delete-informasi', 'App\Http\Controllers\InformasiController@delete');
 
+    //KENAIKAN GAJI BERKALA
+     Route::get('/kenaikan-gaji-berkala', 'App\Http\Controllers\KenaikanGajiBerkalaController@index');
+
     //DOKUMEN
     Route::get('/file-dokumen', 'App\Http\Controllers\DokumenController@index');
     Route::get('/data-file-dokumen', 'App\Http\Controllers\DokumenController@data');

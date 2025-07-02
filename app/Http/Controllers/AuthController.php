@@ -119,8 +119,10 @@ class AuthController extends Controller
         $data = [
             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
             'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
-            'delay' => '3'
+            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
+            
+📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan
+            'delay' => '5'
         ];
 
         // Mengirim request POST menggunakan Guzzle
@@ -293,8 +295,10 @@ class AuthController extends Controller
         $data = [
             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
             'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
-            'delay' => '3'
+            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
+            
+📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
+            'delay' => '5'
         ];
 
         // Mengirim request POST menggunakan Guzzle

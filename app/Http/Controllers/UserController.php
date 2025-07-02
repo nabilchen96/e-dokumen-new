@@ -16,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+
 class UserController extends Controller
 {
     public function index()
@@ -368,5 +369,15 @@ class UserController extends Controller
             'fail_count' => $failCount
         ]);
     }
+    // public function cekEmail(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email'
+    //     ]);
+    
+    //     $exists = User::where('email', $request->email)->exists();
+    
+    //     return response()->json(['exists' => $exists]);
+    // }
 
 }

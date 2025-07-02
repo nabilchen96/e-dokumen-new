@@ -429,8 +429,8 @@
                                     <div class="input-group">
                                         <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Tahun"
-                                            pattern="^[0-9]{2}$" maxlength="2"
-                                            value="{{ @$kenaikan_gaji->masa_kerja_tahun_sebelumnya ?? @$gaji_lama->masa_kerja_tahun_baru }}"
+                                            maxlength="2"
+                                            value="{{ @$kenaikan_gaji->masa_kerja_tahun_sebelumnya }}"
                                             id="masa_kerja_tahun_sebelumnya" name="masa_kerja_tahun_sebelumnya">
                                         <span style="height: 38px;" class="input-group-text border-danger"
                                             id="basic-addon2">Tahun</span>
@@ -441,8 +441,8 @@
                                         <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Bulan"
                                             id="masa_kerja_bulan_sebelumnya"
-                                            value="{{ @$kenaikan_gaji->masa_kerja_bulan_sebelumnya ?? @$gaji_lama->masa_kerja_bulan_baru }}"
-                                            name="masa_kerja_bulan_sebelumnya" pattern="^[0-9]{2}$" maxlength="2">
+                                            value="{{ @$kenaikan_gaji->masa_kerja_bulan_sebelumnya }}"
+                                            name="masa_kerja_bulan_sebelumnya" maxlength="2">
                                         <span style="height: 38px;" class="input-group-text border-danger"
                                             id="basic-addon2">Bulan</span>
                                     </div>
@@ -488,9 +488,8 @@
                                     <div class="input-group">
                                         <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Tahun" 
-                                            value="{{ @$kenaikan_gaji->masa_kerja_tahun_baru ?? 
-   (@$gaji_lama->masa_kerja_tahun_baru ? @$gaji_lama->masa_kerja_tahun_baru + 2 : 0) }}" id="masa_kerja_tahun_baru"
-                                            name="masa_kerja_tahun_baru" pattern="^[0-9]{2}$" maxlength="2">
+                                            value="{{ @$kenaikan_gaji->masa_kerja_tahun_baru }}" id="masa_kerja_tahun_baru"
+                                            name="masa_kerja_tahun_baru" maxlength="2">
                                         <span style="height: 38px;" class="input-group-text border-danger"
                                             id="basic-addon2">Tahun</span>
                                     </div>
@@ -499,8 +498,8 @@
                                     <div class="input-group">
                                         <input {{ in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) ? '' : 'readonly' }} required
                                             type="number" class="form-control border-danger" placeholder="Bulan"
-                                            value="{{ @$kenaikan_gaji->masa_kerja_bulan_baru ?? 0 }}"
-                                            id="masa_kerja_bulan_baru" name="masa_kerja_bulan_baru" pattern="^[0-9]{2}$"
+                                            value="{{ @$kenaikan_gaji->masa_kerja_bulan_baru }}"
+                                            id="masa_kerja_bulan_baru" name="masa_kerja_bulan_baru"
                                             maxlength="2">
                                         <span style="height: 38px;" class="input-group-text border-danger"
                                             id="basic-addon2">Bulan</span>

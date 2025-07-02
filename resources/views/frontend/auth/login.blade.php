@@ -1,182 +1,144 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link href="login-form-02/https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="login-form-02/fonts/icomoon/style.css">
-
-  <link rel="stylesheet" href="login-form-02/css/owl.carousel.min.css">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="login-form-02/css/bootstrap.min.css">
-
-  <!-- Style -->
-  <link rel="stylesheet" href="login-form-02/css/style.css">
-
-  <!-- Favicons -->
-  <link href="{{ url('pandu.jpeg') }}" rel="icon">
-  <link href="{{ url('pandu.jpeg') }}" rel="apple-touch-icon">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | PANDU</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+  <!-- Favicon -->
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
+  <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
   <style>
-    #map {
-      /* height: 600px; */
-      height: 100vh;
-      width: 100%;
-    }
-
-    @media (max-width: 768px) {
-      .bg {
-        display: none;
-      }
+    body {
+      font-family: 'Roboto', sans-serif;
     }
   </style>
-  <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
 </head>
 
-<body>
+<body
+  class="min-h-screen bg-gradient-to-br from-[#fce5e9] to-[#f7d6e6] flex items-center justify-center relative overflow-hidden">
 
 
-  <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2">
-      <div id="map"></div>
+
+  <!-- Container Login -->
+  <div class="z-10 w-full max-w-md bg-white/30 backdrop-blur-md rounded-2xl shadow-xl p-8 mx-4 text-slate-800">
+
+    <!-- Header -->
+
+    <!-- Logo Tengah Saja -->
+    <div class="flex justify-center mb-6">
+      <img src="{{ url('ilanding/assets/img/pandu2.png') }}" alt="Logo PANDU" class="w-50 h-auto max-h-24 object-contain" />
     </div>
-    <div class="contents order-2 order-md-1">
-      @php
-      $cek = DB::table('informasis')->where('status', 'Aktif')->first();
-      @endphp
-      @if ($cek)
-        <marquee behavior="scroll" direction="left" class="bg-info text-white pt-2 pb-1">
-          <h6>📢📢 {{ $cek->informasi }}</h6>
-        </marquee>
-      @endif
-      <div class="container">
-        <div class="row align-items-center justify-content-center" style="margin-top: -50px !important;">
-          <div class="col-md-7">
-            <h3>Login to <br><strong><span class="text-danger">PANDU</span> Pengelolaan Kepegawaian Terpadu</strong></h3>
-            <br>
-            <form id="formLogin">
-              <div class="form-group first">
-                <label>NIP atau Email</label>
-                <input type="text" class="form-control" placeholder="NIP atau Email" id="nip_email" name="nip_email"
-                  required>
-              </div>
-              <div class="form-group last mb-3">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" placeholder="Your Password" id="password"
-                  required>
-              </div>
 
-              <div class="d-flex mb-5 align-items-center">
-                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
-                  <input type="checkbox" checked="checked" />
-                  <div class="control__indicator"></div>
-                </label>
-                {{-- <span class="ml-auto"><a href="login-form-02/#" class="forgot-pass">Forgot Password</a></span> --}}
-              </div>
 
-              <div class="d-grid">
-                <button type="submit" id="btnLogin" class="btn btn-primary btn-lg btn-block">Sign in</button>
 
-                <button style="display: none; background: #0d6efd;" id="btnLoginLoading"
-                  class="btn btn-info btn-moodle text-white btn-lg btn-block" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <h2 class="text-2xl font-bold mb-2">Login Aplikasi</h2>
+    <p class="text-sm text-slate-700 mb-6">Masukkan akun Anda untuk melanjutkan.</p>
 
-                </button>
-              </div>
-              <br>
-              Dont Have an account? <a href="{{ url('register') }}" class="text-primary">Register</a> <br>
-              Forget Password? <a href="{{ url('reset-password') }}" class="text-primary">Reset Password</a>
-            </form>
-          </div>
-        </div>
+    <!-- Form -->
+    <form id="formLogin" class="space-y-4">
+      <div>
+        <label for="nip_email" class="block text-sm font-medium mb-1">NIP atau Email</label>
+        <input type="text" id="nip_email" name="nip_email" required
+          class="w-full px-4 py-2 rounded-md bg-white/60 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="NIP atau Email" />
       </div>
-    </div>
 
+      <div class="relative">
+          <label for="password" class="block text-sm font-medium mb-1 text-gray-900">Password</label>
+          <input type="password" id="password" name="password" required
+            class="w-full px-4 py-2 pr-10 rounded-md bg-yellow-100 border border-gray-300 focus:outline-none"
+            placeholder="Password" />
+        
+          <!-- Tombol intip password -->
+          <button type="button"
+            onmousedown="showPassword(true)"
+            onmouseup="showPassword(false)"
+            onmouseleave="showPassword(false)"
+            class="absolute right-2 top-0 bottom-0 my-auto h-full flex items-center text-gray-700 translate-y-[12px]">
+            <!-- Ikon mata -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 
+                5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+            </svg>
+          </button>
+        </div>
 
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center">
+          <input type="checkbox" class="mr-2"> Remember me
+        </label>
+        <a href="{{ url('reset-password') }}" class="text-red-500 hover:underline">Lupa Password?</a>
+      </div>
+
+      <button type="submit" id="btnLogin"
+        class="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition">
+        Login
+      </button>
+
+      <button type="button" id="btnLoginLoading" style="display: none;" disabled
+        class="w-full py-2 bg-red-400 text-white rounded-md flex items-center justify-center">
+        <svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z" />
+        </svg>
+        Loading...
+      </button>
+
+      <p class="text-sm text-center mt-4">
+        Belum punya akun?
+        <a href="{{ url('register') }}" class="text-red-500 font-semibold hover:underline">Registrasi</a>
+      </p>
+      
+    </form>
   </div>
 
+  <!-- Script Login -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
   <script>
-    // Initialize the map
-    const map = L.map('map').setView([-2.548926, 118.014863], 5);
-    // Adjust default view coordinates
+  function showPassword(show) {
+    const input = document.getElementById("password");
+    input.type = show ? "text" : "password";
+  }
+    const formLogin = document.getElementById("formLogin");
 
-    // Add OpenStreetMap tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Fetch district data from Laravel backend
-    fetch('/data-peta') // Adjust this endpoint as necessary
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(district => {
-          const marker = L.marker([district.latitude, district.longitude]).addTo(map);
-          marker.bindPopup(`
-                                                <strong>${district.nama_skpd}</strong><br>
-                                                Total pegawai: ${district.total_employees}
-                                            `);
-        });
-      })
-      .catch(error => console.error('Error fetching district data:', error));
-  </script>
-  <script>
     formLogin.onsubmit = (e) => {
-
       e.preventDefault();
 
       const formData = new FormData(formLogin);
-      document.getElementById(`btnLogin`).style.display = "none";
-      document.getElementById(`btnLoginLoading`).style.display = "block";
+      document.getElementById("btnLogin").style.display = "none";
+      document.getElementById("btnLoginLoading").style.display = "flex";
 
-      axios({
-        method: 'post',
-        url: '/loginProses',
-        data: formData,
-      })
-        .then(function (res) {
-          //handle success
+      axios.post('/loginProses', formData)
+        .then(res => {
           if (res.data.responCode == 1) {
-
             Swal.fire({
               icon: 'success',
-              title: 'Berhasil Login',
-              timer: 1000,
-              text: 'Anda akan diarahkan ke halaman dashboard',
-              showConfirmButton: false,
-              // text: res.data.respon
-            })
-
-            setTimeout(() => {
-              location.reload(res.data.respon);
-            }, 1500);
-
+              title: 'Login Berhasil',
+              text: 'Mengalihkan ke dashboard...',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            setTimeout(() => location.reload(), 1500);
           } else {
-
             Swal.fire({
               icon: 'warning',
-              title: 'Ada kesalahan',
-              text: `${res.data.respon}`,
-            })
+              title: 'Login Gagal',
+              text: res.data.respon
+            });
           }
         })
-        .catch(function (res) {
-          //handle error
-          console.log(res);
-        }).then(function () {
-          // always executed              
-          document.getElementById(`btnLogin`).style.display = "block";
-          document.getElementById(`btnLoginLoading`).style.display = "none";
-
+        .catch(err => console.error(err))
+        .finally(() => {
+          document.getElementById("btnLogin").style.display = "block";
+          document.getElementById("btnLoginLoading").style.display = "none";
         });
-
     }
   </script>
 

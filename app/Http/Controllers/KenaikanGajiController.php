@@ -141,10 +141,11 @@ class KenaikanGajiController extends Controller
             }
 
             if ($request->masa_kerja_bulan_baru < 10) {
-                $request->masa_kerja_bulan_baru = str_pad($request->masa_kerja_tahun_baru, 2, '0', STR_PAD_LEFT);
+                $request->masa_kerja_bulan_baru = str_pad($request->masa_kerja_bulan_baru, 2, '0', STR_PAD_LEFT);
             }
 
             // dd($request->masa_kerja_bulan_baru);
+
 
             $request->merge([
                 'masa_kerja_tahun_sebelumnya' => $request->masa_kerja_tahun_sebelumnya,

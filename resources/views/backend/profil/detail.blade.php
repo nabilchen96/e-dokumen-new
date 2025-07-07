@@ -58,6 +58,15 @@
             border-radius: 0.375rem;
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <style>
+        .ts-control {
+            border-radius: 0.375rem;
+            line-height: 1.5 !important;
+            font-size: 0.9375rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+    </style>
 @endpush
 @section('content')
     <div class="row" style="margin-top: -200px;">
@@ -109,4 +118,12 @@
 
 @endsection
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new TomSelect('#instansi_kerja');
+            new TomSelect('#satuan_kerja');
+            new TomSelect('#lokasi_kerja');
+        })
+    </script>
 @endpush

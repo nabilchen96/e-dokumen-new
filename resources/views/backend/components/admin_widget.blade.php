@@ -269,6 +269,7 @@
                             <tr>
                                 <th>Nama / NIP</th>
                                 <th>Status / Jenis Dokumen</th>
+                                <th>Tgl Akhir Dok.</th>
                                 <th>File</th>
                                 <th>Periksa</th>
                             </tr>
@@ -284,6 +285,9 @@
                                     <td>
                                         {{ $i->status ?? 'Belum Diperiksa' }} <br>
                                         Dok. {{ $i->jenis_dokumen ?? 'Lainnya' }}
+                                    </td>
+                                    <td>
+                                        {{ $i->tanggal_akhir_dokumen ? date('d-m-Y', strtotime($i->tanggal_akhir_dokumen)) : '-' }}
                                     </td>
                                     <td>
                                         <a target="_blank" href="{{ url('convert-to-pdf') }}/{{ $i->dokumen }}">

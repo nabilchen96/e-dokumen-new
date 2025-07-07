@@ -32,7 +32,7 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>
-                <select name="pangkat" class="form-control" id="pangkat">
+                <select name="pangkat" class="form-control" id="pangkat" required>
                     <option value="">--PILIH GOLONGAN/PANGKAT</option>
                     <option {{ @$profil->pangkat == 'I/a - Juru Muda' ? 'selected' : '' }}>I/a - Juru Muda</option>
                     <option {{ @$profil->pangkat == 'I/b - Juru Muda Tingkat I' ? 'selected' : '' }}>I/b - Juru Muda
@@ -77,14 +77,14 @@
             <div class="form-group">
                 <label>Jabatan <sup class="text-danger">*</sup></label>
                 <input name="jabatan" id="jabatan" value="{{ @$profil->jabatan }}" type="text"
-                    placeholder="Jabatan" class="form-control form-control-sm">
+                    placeholder="Jabatan" class="form-control form-control-sm" required>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputEmail1">NIP <sup class="text-danger">*</sup></label>
                 <input name="nip" id="nip" value="{{ @$profil->nip }}" type="text" placeholder="NIP"
-                    class="form-control form-control-sm">
+                    class="form-control form-control-sm" required>
             </div>
         </div>
         
@@ -200,7 +200,7 @@
             <div class="form-group">
                 <label for="exampleInputPassword1">TMT Golongan <sup class="text-danger">*</sup></label>
                 <input name="tmt_golongan" value="{{ @$profil->tmt_golongan }}" id="tmt_golongan" type="date"
-                    placeholder="TMT Golongan" class="form-control form-control-sm">
+                    placeholder="TMT Golongan" class="form-control form-control-sm" required>
                     <small class="text-danger">*TMT Golongan terbaru</small>
             </div>
         </div>
@@ -225,7 +225,7 @@
             <div class="form-group">
                 <label for="exampleInputPassword1">Tahun <sup class="text-danger">*</sup></label>
                 <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"
-                    placeholder="Masa Kerja Tahun" class="form-control form-control-sm">
+                    placeholder="Masa Kerja Tahun" class="form-control form-control-sm" required>
             </div>
         </div>
         <div class="col-lg-6">
@@ -233,47 +233,74 @@
             <div class="form-group">
                 <label for="exampleInputPassword1">Bulan <sup class="text-danger">*</sup></label>
                 <input name="mk_bulan" id="mk_bulan" value="{{ @$profil->mk_bulan }}" type="number"
-                    placeholder="Masa Kerja bulan" class="form-control form-control-sm">
+                    placeholder="Masa Kerja bulan" class="form-control form-control-sm" required>
             </div>
         </div>
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>KPPN </label>
+                <label>KPPN <sup class="text-danger">*</sup></label>
                 <input name="kpkn" id="kpkn" value="{{ @@$profil->kpkn }}" type="text" placeholder="KPPN"
-                    class="form-control form-control-sm">
+                    class="form-control form-control-sm" required>
             </div>
         </div>
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Lokasi Kerja </label>
-                <input name="lokasi_kerja" id="lokasi_kerja" value="{{ @@$profil->lokasi_kerja }}" type="text"
-                    placeholder="Lokasi Kerja" class="form-control form-control-sm">
+                <label>Lokasi Kerja <sup class="text-danger">*</sup></label>
+                <!-- <input name="lokasi_kerja" id="lokasi_kerja" value="{{ @@$profil->lokasi_kerja }}" type="text"
+                    placeholder="Lokasi Kerja" class="form-control form-control-sm"> -->
+                @php
+                    $lokasi = DB::table('districts')->get();
+                @endphp
+                <select name="lokasi_kerja" id="lokasi_kerja" required>
+                    <option value="">PILIH LOKASI KERJA</option>
+                    @foreach ($lokasi as $item)
+                        <option {{ $item->name == $profil->lokasi_kerja ? 'selected' : ''}} >{{ $item->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Instansi Induk </label>
-                <input name="instansi_induk" id="instansi_induk" value="{{ @@$profil->instansi_induk }}"
-                    type="text" placeholder="Instansi Induk" class="form-control form-control-sm">
+                <label>Instansi Induk <sup class="text-danger">*</sup></label>
+                <input name="instansi_induk" id="instansi_induk" value="PEMKAB BENGKULU UTARA"
+                    type="text" placeholder="Instansi Induk" class="form-control form-control-sm" required>
             </div>
         </div>
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Instansi Kerja </label>
-                <input name="instansi_kerja" id="instansi_kerja" value="{{ @@$profil->instansi_kerja }}"
-                    type="text" placeholder="Instansi Kerja" class="form-control form-control-sm">
+                <label>Instansi Kerja <sup class="text-danger">*</sup></label>
+                <!-- <input name="instansi_kerja" id="instansi_kerja" value="{{ @@$profil->instansi_kerja }}"
+                    type="text" placeholder="Instansi Kerja" class="form-control form-control-sm"> -->
+                @php
+                    $skpd = DB::table('skpds')->get();
+                @endphp
+                <select name="instansi_kerja" id="instansi_kerja" required>
+                    <option value="">PILIH INSTANSI KERJA</option>
+                    @foreach ($skpd as $item)
+                        <option {{ $item->nama_skpd == $profil->instansi_kerja ? 'selected' : ''}} >{{ $item->nama_skpd }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Satuan Kerja </label>
-                <input name="satuan_kerja" id="satuan_kerja" value="{{ @@$profil->satuan_kerja }}" type="text"
-                    placeholder="Satuan Kerja" class="form-control form-control-sm">
+                <label>Satuan Kerja <sup class="text-danger">*</sup></label>
+                <!-- <input name="satuan_kerja" id="satuan_kerja" value="{{ @@$profil->satuan_kerja }}" type="text"
+                    placeholder="Satuan Kerja" class="form-control form-control-sm"> -->
+                <select name="satuan_kerja" id="satuan_kerja" required>
+                    <option value="">PILIH SATUAN KERJA</option>
+                    @php 
+                        $unit_kerja = DB::table('unit_kerjas')->get();
+                    @endphp 
+                    @foreach( $unit_kerja as $u)
+                        <option {{ $u->unit_kerja == $profil->satuan_kerja ? 'selected' : ''}}>{{ $u->unit_kerja }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         
@@ -292,4 +319,3 @@
         </div>
     </div>
 </form>
-

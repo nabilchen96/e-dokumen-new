@@ -97,10 +97,11 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <a href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3"
-                            class="nav-link tab-link {{ Request('profil') == '3' ? 'active' : '' }}">
+                            class="nav-link {{ Request('profil') == '3' ? 'active' : '' }}">
                             Dokumen
                             </a>
                         </li>
+
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
@@ -129,51 +130,53 @@
             new TomSelect('#lokasi_kerja');
         })
     </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const tabLinks = document.querySelectorAll('.tab-link');
-        const currentProfil = '{{ Request("profil") ?? "1" }}'; // nilai tab aktif sekarang
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabLinks = document.querySelectorAll('.tab-link');
+            const currentProfil = '{{ Request("profil") ?? "1" }}';
 
-        function isFormValid() {
-            const form = document.getElementById('formProfil');
-            if (!form) return true; // Kalau form tidak ada (bukan di tab profil=1), anggap valid
+            function isFormValid() {
+                const form = document.getElementById('formProfil');
+                if (!form) return true;
 
-            let valid = true;
-            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    input.classList.add('is-invalid');
-                    valid = false;
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
-            return valid;
-        }
+                let valid = true;
+                const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        input.classList.add('is-invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+                return valid;
+            }
 
-        tabLinks.forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const targetUrl = this.dataset.target;
+                    const isDokumenTab = targetUrl?.includes('profil=3');
 
-                const targetUrl = this.dataset.target;
+                    // Jika bukan tab dokumen dan sedang di tab profil=1
+                    if (!isDokumenTab && currentProfil === '1') {
+                        if (!isFormValid()) {
+                            e.preventDefault();
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Lengkapi Data!',
+                                text: 'Mohon isi semua kolom wajib sebelum melanjutkan ke Data Pegawai.',
+                                confirmButtonColor: '#3085d6'
+                            });
+                            return;
+                        }
+                    }
 
-                // Jika sedang di tab pertama (profil=1), validasi form dulu
-                if (currentProfil === '1' && !isFormValid()) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Lengkapi Data!',
-                        text: 'Mohon isi semua kolom wajib sebelum melanjutkan.',
-                        confirmButtonColor: '#3085d6'
-                    });
-                    return;
-                }
-
-                // Jika valid atau bukan di profil=1, pindah tab
-                window.location.href = targetUrl;
+                    // Jika valid atau tab dokumen, lanjutkan pindah
+                    if (targetUrl) {
+                        window.location.href = targetUrl;
+                    }
+                });
             });
         });
-    });
-</script>
-
-
+    </script>
 @endpush

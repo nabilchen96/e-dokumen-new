@@ -6,77 +6,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
-    <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('skydash/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('skydash/vendors/ti-icons/css/themify-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('skydash/vendors/css/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
     <link rel="stylesheet" href="{{ asset('skydash/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('skydash/vendors/ti-icons/css/themify-icons.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('skydash/js/select.dataTables.min.css') }}">
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('skydash/css/vertical-layout-light/style.css') }}">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
-
-      <!-- Favicon -->
     <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="icon">
     <link href="{{ url('ilanding/assets/img/pandu3.png') }}" rel="apple-touch-icon">
+    <link rel="stylesheet" href="{{ asset('css/backend/app.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
     @stack('style')
-    <style>
-        .btn {
-            height: 38px;
-            border-radius: 0.25rem;
-        }
-
-        .form-control {
-            height: 38px;
-        }
-
-        .modal .modal-dialog {
-            margin-top: 1.75rem;
-        }
-
-        .card {
-            border-radius: 0.5rem;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #9e9e9e21 !important;
-        }
-
-        .table td {
-            white-space: unset;
-        }
-
-        ::-webkit-scrollbar {
-            width: 15px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #d6dee1;
-            border-radius: 20px;
-            border: 6px solid transparent;
-            background-clip: content-box;
-        }
-
-        table td {
-            line-height: 1.5 !important;
-        }
-
-        .navbar {
-            box-shadow: none !important;
-        }
-    </style>
-
     <script language="javascript">
         function getkey(e) {
             if (window.event)
@@ -204,33 +148,21 @@
         </div>
         <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
-
-    <!-- plugins:js -->
-
     <script src="{{ asset('skydash/vendors/js/vendor.bundle.base.js') }}"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-
     <script src="{{ asset('skydash/vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('skydash/vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('skydash/vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
     <script src="{{ asset('skydash/js/dataTables.select.min.js') }}"></script>
-
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
     <script src="{{ asset('skydash/js/off-canvas.js') }}"></script>
     <script src="{{ asset('skydash/js/hoverable-collapse.js') }}"></script>
     <script src="{{ asset('skydash/js/template.js') }}"></script>
     <script src="{{ asset('skydash/js/settings.js') }}"></script>
     <script src="{{ asset('skydash/js/todolist.js') }}"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page-->
     <script src="{{ asset('skydash/js/dashboard.js') }}"></script>
     <script src="{{ asset('skydash/js/Chart.roundedBarCharts.js') }}"></script>
     <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <!-- End custom js for this page-->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     @stack('script')
 </body>
 

@@ -9,6 +9,12 @@ use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ProfilController extends Controller
 {
@@ -328,5 +334,157 @@ class ProfilController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function exportExcel()
+    {
+        // Ambil data dari database
+        $data = DB::table('users')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'profils.id_unit_kerja')
+            ->leftJoin('skpds', 'skpds.id', '=', 'unit_kerjas.id_skpd')
+            ->where('users.role', 'Pegawai')
+            ->get([
+                'profils.*',
+                'users.name', 
+                'users.email', 
+                'users.no_wa', 
+                'skpds.nama_skpd',
+                'unit_kerjas.unit_kerja', 
+                'users.role'
+            ]);
+
+        // Buat instance baru dari Spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Tambahkan judul kolom
+        $headerColumns = [
+            'A1' => '#',
+            'B1' => 'NAMA',
+            'C1' => 'EMAIL',
+            'D1' => 'NO WA',
+            'E1' => 'ROLE',
+            'F1' => 'STATUS',
+            'G1' => 'NIP',
+            'H1' => 'NIK',
+            'I1' => 'JENIS KELAMIN',
+            'J1' => 'TEMPAT LAHIR',
+            'K1' => 'TANGGAL LAHIR',
+            'L1' => 'PANGKAT',
+            'M1' => 'JABATAN',
+            'N1' => 'GOLONGAN',
+            'O1' => 'SKPD',
+            'P1' => 'UNIT KERJA',
+            'Q1' => 'AGAMA', 
+            'R1' => 'STATUS KAWIN', 
+            'S1' => 'ALAMAT', 
+            'T1' => 'GELAR DEPAN', 
+            'U1' => 'GELAR BELAKANG', 
+            'V1' => 'EMAIL GOV', 
+            'W1' => 'NPWP', 
+            'X1' => 'BPJS', 
+            'Y1' => 'JENIS PEGAWAI', 
+            'Z1' => 'STATUS HUKUM', 
+            'AA1' => 'STATUS ASN', 
+            'AB1' => 'KARTU ASN VIRTUAL', 
+            'AC1' => 'NOMOR SK CPNS/P3K', 
+            'AD1' => 'TANGGAL SK CPNS/P3K', 
+            'AE1' => 'NOMOR SK PNS', 
+            'AF1' => 'TANGGAL SK PNS', 
+            'AG1' => 'TMT PNS',
+            'AH1' => 'TMT GOLONGAN', 
+            'AI1' => 'MASA KERJA TAHUN', 
+            'AJ1' => 'MASA KERJA BULAN', 
+            'AK1' => 'JENIS JABATAN', 
+            'AL1' => 'TINGKAT PENDIDIKAN',
+            'AM1' => 'JURUSAN', 
+            'AN1' => 'KPPN', 
+
+        ];
+        foreach ($headerColumns as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+        }
+
+        // Tambahkan styling untuk header
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+            ]
+        ];
+        $sheet->getStyle('A1:AN1')->applyFromArray($headerStyle);
+
+        // Tambahkan data dari database ke spreadsheet
+        $row = 2;
+        $totalRows = $data->count();
+        foreach ($data as $index => $item) {
+            $sheet->setCellValue('A' . $row, $index + 1);
+            $sheet->setCellValue('B' . $row, $item->name);
+            $sheet->setCellValue('C' . $row, $item->email);
+            $sheet->setCellValue('D' . $row, $item->no_wa);
+            $sheet->setCellValue('E' . $row, $item->role);
+            $sheet->setCellValue('F' . $row, $item->status_pegawai);
+            $sheet->setCellValue('G' . $row, "`$item->nip");
+            $sheet->setCellValue('H' . $row, "`$item->nik");
+            $sheet->setCellValue('I' . $row, $item->jenis_kelamin);
+            $sheet->setCellValue('J' . $row, $item->tempat_lahir);
+            $sheet->setCellValue('K' . $row, $item->tanggal_lahir);
+            $sheet->setCellValue('L' . $row, $item->status_pegawai == 'Honorer' ? '' : $item->pangkat);
+            $sheet->setCellValue('M' . $row, $item->status_pegawai == 'Honorer' ? '' : $item->jabatan);
+            $sheet->setCellValue('N' . $row, $item->status_pegawai == 'Honorer' ? '' : $item->golongan);
+            $sheet->setCellValue('O' . $row, $item->instansi_kerja);
+            $sheet->setCellValue('P' . $row, $item->satuan_kerja);
+            $sheet->setCellValue('Q' . $row, $item->agama);
+            $sheet->setCellValue('R' . $row, $item->status_kawin);
+            $sheet->setCellValue('S' . $row, $item->alamat);
+            $sheet->setCellValue('T' . $row, $item->gelar_depan);
+            $sheet->setCellValue('U' . $row, $item->gelar_belakang);
+            $sheet->setCellValue('V' . $row, $item->email_gov);
+            $sheet->setCellValue('W' . $row, $item->npwp);
+            $sheet->setCellValue('X' . $row, $item->bpjs);
+            $sheet->setCellValue('Y' . $row, $item->jenis_pegawai);
+            $sheet->setCellValue('Z' . $row, $item->kedudukan_hukum);
+            $sheet->setCellValue('AA' . $row, $item->status_cpns);
+            $sheet->setCellValue('AB' . $row, $item->kartu_asn_virtual);
+            $sheet->setCellValue('AC' . $row, $item->nomor_sk_cpns);
+            $sheet->setCellValue('AD' . $row, $item->tanggal_sk_cpns);
+            $sheet->setCellValue('AE' . $row, $item->nomor_sk_pns);
+            $sheet->setCellValue('AF' . $row, $item->tanggal_sk_pns);
+            $sheet->setCellValue('AG' . $row, $item->tmt_pns);
+            $sheet->setCellValue('AH' . $row, $item->tmt_golongan);
+            $sheet->setCellValue('AI' . $row, $item->mk_tahun);
+            $sheet->setCellValue('AJ' . $row, $item->mk_bulan);
+            $sheet->setCellValue('AK' . $row, $item->jenis_jabatan);
+            $sheet->setCellValue('AL' . $row, $item->tingkat_pendidikan);
+            $sheet->setCellValue('AM' . $row, $item->jurusan_pendidikan);
+            $sheet->setCellValue('AN' . $row, $item->kpkn);
+
+            // Terapkan garis pada setiap baris kecuali baris terakhir
+            $sheet->getStyle("A$row:AN$row")->applyFromArray([
+                'borders' => [
+                    'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+                ]
+            ]);
+
+            $row++;
+        }
+
+        // Otomatis menyesuaikan lebar kolom
+        foreach (range('A', 'AN') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Buat writer untuk menulis file Excel
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'pegawai.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+
+        // Tulis file ke lokasi sementara
+        $writer->save($temp_file);
+
+        // Berikan respon file kepada pengguna
+        return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
     }
 }

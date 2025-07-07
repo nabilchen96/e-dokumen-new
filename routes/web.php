@@ -206,6 +206,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-profil', 'App\Http\Controllers\ProfilController@updateProfil');
     Route::post('/update-profil-pegawai', 'App\Http\Controllers\ProfilController@updateProfilPegawai');
     Route::post('/delete-profil', 'App\Http\Controllers\ProfilController@delete');
+    Route::get('/export-excel-profil', 'App\Http\Controllers\ProfilController@exportExcel');
 
     //DETAIL STATISTIK PEGAWAI
     Route::get('/detail-statistik-pendidikan', 'App\Http\Controllers\StatistikController@detailPendidikan');
@@ -230,6 +231,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/verifikasi-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@verifikasi');
     Route::post('/delete-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@delete');
     
+    //LAPORA MASALAH
+    Route::get('/lapor-masalah', 'App\Http\Controllers\LaporMasalahController@index');
+    Route::get('/data-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@data');
+    Route::post('/store-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@store');
+    Route::post('/update-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@update');
+    Route::post('/delete-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@delete');
 });
 
 //STATISTIK PEGAWAI

@@ -74,6 +74,9 @@
         <div class="card w-100">
             <div class="card-body">
                 <div class="table-responsive">
+                    <a class="btn btn-success btn-sm mb-4" href="{{ url('export-excel-profil') }}" data-target="#modalexport">
+                        <i class="bi bi-file-earmark-excel"></i> Export
+                    </a>
                     <table id="myTable" class="table table-striped" style="width: 100%;">
                         <thead class="bg-info text-white">
                             <tr>

@@ -106,7 +106,7 @@ class DashboardController extends Controller
                 'alamat',
                 'status_pegawai',
                 'nik',
-                'id_unit_kerja'
+                'satuan_kerja'
             ];
 
             // Kolom tambahan jika status_pegawai bukan Honorer

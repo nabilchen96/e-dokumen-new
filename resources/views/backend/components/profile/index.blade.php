@@ -1,4 +1,4 @@
-<form method="post" action="{{ url('update-profil') }}">
+<form id="formProfil" method="post" action="{{ url('update-profil') }}">
     @csrf
     @if (session('success'))
         <div class="alert alert-success">

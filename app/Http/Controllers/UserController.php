@@ -296,6 +296,7 @@ class UserController extends Controller
         // Berikan respon file kepada pengguna
         return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
     }
+    
     public function importExcel(Request $request)
     {
         // Validasi input file

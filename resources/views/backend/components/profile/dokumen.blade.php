@@ -28,7 +28,7 @@
                     'unit_kerjas.unit_kerja', 
                     'profils.nip'
                 );
-                $data = $data->where('dokumens.id_user', Request('id'))->get();
+                $data = $data->where('profils.id', Request('id'))->get();
             @endphp
             @foreach($data as $k => $d)
                 <tr>

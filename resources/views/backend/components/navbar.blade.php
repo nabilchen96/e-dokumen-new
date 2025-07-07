@@ -193,5 +193,11 @@
                 </a>
             </li>
         @endif
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('lapor-masalah') }}">
+                <i class="bi bi-headset menu-icon"></i>
+                <span class="menu-title">Lapor Masalah</span>
+            </a>
+        </li>
     </ul>
 </nav>

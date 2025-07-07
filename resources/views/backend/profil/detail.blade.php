@@ -84,18 +84,21 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ Request('profil') == '1' || Request('profil') == null ? 'active' : '' }}"
-                                href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=1">Data Profil</a>
+                            <a href="#" data-target="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=1"
+                            class="nav-link tab-link {{ Request('profil') == '1' || Request('profil') == null ? 'active' : '' }}">
+                            Data Profil
+                            </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ Request('profil') == '2' ? 'active' : '' }}"
-                                href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=2">Data
-                                Pegawai</a>
+                            <a href="#" data-target="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=2"
+                            class="nav-link tab-link {{ Request('profil') == '2' ? 'active' : '' }}">
+                            Data Pegawai
+                            </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ Request('profil') == '3' ? 'active' : '' }}"
-                                href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3">
-                                Dokumen
+                            <a href="#" data-target="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3"
+                            class="nav-link tab-link {{ Request('profil') == '3' ? 'active' : '' }}">
+                            Dokumen
                             </a>
                         </li>
                     </ul>
@@ -126,4 +129,51 @@
             new TomSelect('#lokasi_kerja');
         })
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const currentProfil = '{{ Request("profil") ?? "1" }}'; // nilai tab aktif sekarang
+
+        function isFormValid() {
+            const form = document.getElementById('formProfil');
+            if (!form) return true; // Kalau form tidak ada (bukan di tab profil=1), anggap valid
+
+            let valid = true;
+            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    valid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            return valid;
+        }
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetUrl = this.dataset.target;
+
+                // Jika sedang di tab pertama (profil=1), validasi form dulu
+                if (currentProfil === '1' && !isFormValid()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Lengkapi Data!',
+                        text: 'Mohon isi semua kolom wajib sebelum melanjutkan.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Jika valid atau bukan di profil=1, pindah tab
+                window.location.href = targetUrl;
+            });
+        });
+    });
+</script>
+
+
 @endpush

@@ -1,39 +1,9 @@
 @extends('backend.app')
 @push('style')
     <style>
-        #myTable_filter input {
-            height: 29.67px !important;
-        }
-
-        #myTable_length select {
-            height: 29.67px !important;
-        }
-
-        .btn {
-            border-radius: 50px !important;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #9e9e9e21 !important;
-        }
-
         td,
         th {
             white-space: nowrap !important;
-        }
-    </style>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-    <style>
-        .select2-container .select2-selection--single {
-            height: calc(2.25rem + 2px);
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
         }
     </style>
 @endpush
@@ -676,79 +646,5 @@
 
 @endsection
 @push('script')
-    <script>
-        // Ambil elemen input
-        const tglTerhitungMulai = document.getElementById('tgl_terhitung_mulai');
-        const tglKenaikanBerikutnya = document.getElementById('tgl_kenaikan_berikutnya');
-
-        // Tambahkan event listener untuk perubahan tanggal
-        tglTerhitungMulai.addEventListener('input', function () {
-            const startDate = new Date(tglTerhitungMulai.value);
-
-            // Periksa apakah tanggal valid
-            if (!isNaN(startDate)) {
-                // Tambahkan 2 tahun ke tanggal terhitung mulai
-                startDate.setFullYear(startDate.getFullYear() + 2);
-
-                // Format tanggal menjadi YYYY-MM-DD
-                const year = startDate.getFullYear();
-                const month = String(startDate.getMonth() + 1).padStart(2, '0');
-                const day = String(startDate.getDate()).padStart(2, '0');
-                const formattedDate = `${year}-${month}-${day}`;
-
-                // Set nilai input kenaikan berikutnya
-                tglKenaikanBerikutnya.value = formattedDate;
-            }
-        });
-        form.onsubmit = (e) => {
-
-            let formData = new FormData(form);
-
-            e.preventDefault();
-
-            document.getElementById("tombol_kirim").disabled = true;
-
-            axios({
-                method: 'post',
-                url: '/update-kenaikan-gaji',
-                data: formData,
-            })
-                .then(function (res) {
-                    //handle success         
-                    if (res.data.responCode == 1) {
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sukses',
-                            text: res.data.respon,
-                            timer: 3000,
-                            showConfirmButton: false
-                        })
-
-                        $("#modal").modal("hide");
-                        $('#myTable').DataTable().clear().destroy();
-                        getData()
-
-                    } else {
-                        //respon 
-                        let respon_error = ``
-                        Object.entries(res.data.respon).forEach(([field, messages]) => {
-                            messages.forEach(message => {
-                                respon_error += `<li>${message}</li>`;
-                            });
-                        });
-
-                        document.getElementById('respon_error').innerHTML = respon_error
-
-                    }
-
-                    document.getElementById("tombol_kirim").disabled = false;
-                })
-                .catch(function (res) {
-                    document.getElementById("tombol_kirim").disabled = false;
-                    //handle error
-                    console.log(res);
-                });
-        }
-    </script>
+    <script src="{{ asset('js/backend/kenaikan_gaji/edit.js') }}"></script>
 @endpush

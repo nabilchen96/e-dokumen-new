@@ -116,7 +116,7 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Tingkat Pendidikan<sup class="text-danger">*</sup></label>
+                <label>Pendidikan Terakhir<sup class="text-danger">*</sup></label>
                 <select name="tingkat_pendidikan" id="tingkat_pendidikan" class="form-control" required>
                     <option value="">--PILIH TINGKAT PENDIDIKAN--</option>
                     <option {{ @@$profil->tingkat_pendidikan == 'S-3/Doktor' ? 'selected' : '' }}>S-3/Doktor</option>
@@ -136,7 +136,7 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Tahun Lulus</label>
+                <label>Tahun Lulus<sup class="text-danger">*</sup></label>
                 <input type="number" name="tahun_lulus" value="{{ @@$profil->tahun_lulus }}" class="form-control"
                     id="tahun_lulus" placeholder="Tahun Lulus">
             </div>
@@ -150,14 +150,14 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>NPWP </label>
+                <label>NPWP <sup class="text-danger">*</sup></label>
                 <input type="text" name="npwp" value="{{ @@$profil->npwp }}" class="form-control" id="npwp"
                     placeholder="NPWP">
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>BPJS </label>
+                <label>BPJS <sup class="text-danger">*</sup></label>
                 <input type="text" name="bpjs" value="{{ @@$profil->bpjs }}" class="form-control" id="bpjs"
                     placeholder="BPJS">
             </div>

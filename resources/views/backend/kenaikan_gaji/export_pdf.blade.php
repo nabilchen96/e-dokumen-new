@@ -22,13 +22,13 @@
     @endphp
     <table width="100%">
         <tr>
-            <td width="15%">
+            <td width="10%">
                 <!-- <img width="100%" src="https://upload.wikimedia.org/wikipedia/commons/9/9e/INDONESIA_logo.png" alt=""> -->
                 <img width="100%" src="https://drive.usercontent.google.com/download?id=1vFbsaC1u0WKoesIPKDwnWW9PynVN_61n&export=view&authuser=0" alt="Gambar dari Google Drive">
                 <!-- https://drive.google.com/file/d//view?usp=sharing -->
             </td>
             <td></td>
-            <td width="85%">
+            <td width="90%">
                 <center>
                     <span style="font-size: 16px; font-family: 'Times New Roman', Times, serif;">
                         PEMERINTAH

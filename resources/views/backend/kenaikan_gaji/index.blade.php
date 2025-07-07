@@ -58,7 +58,7 @@
         <div class="col-12 mt-4">
             <div class="card w-100">
                 <div class="card-body">
-                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
+                    @if (Auth::user()->role == 'Admin')
                         <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
                             Tambah
                         </button>

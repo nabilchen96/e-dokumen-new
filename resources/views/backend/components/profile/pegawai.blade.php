@@ -87,24 +87,28 @@
                     class="form-control form-control-sm">
             </div>
         </div>
+        
+        <!--
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputEmail1">Email Gov</label>
                 <input name="email_gov" value="{{ @@$profil->email_gov }}" id="email_gov" type="email"
                     placeholder="Email Gov" class="form-control form-control-sm">
-            </div>
+           </div>
         </div>
+        -->
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Jenis Pegawai <sup class="text-danger">*</sup></label>
                 <select name="jenis_pegawai" class="form-control" id="jenis_pegawai" required>
                     <option value="">--PILIH JENIS PEGAWAI--</option>
-                    <option {{ @$profil->jenis_pegawai == 'PNS Daerah Kab./Kota yang Bekerja pada Kab./Kota' ? 'selected' : '' }}>PNS Daerah Kab./Kota yang Bekerja pada Kab./Kota</option>
-                    <option {{ @$profil->jenis_pegawai == 'PNS Daerah Provinsi yang Bekerja pada Provinsi' ? 'selected' : '' }}>PNS Daerah Provinsi yang Bekerja pada Provinsi</option>
-                    <option {{ @$profil->jenis_pegawai == 'PNS Pusat DPK pada Pemerintah Kabupaten/Kota' ? 'selected' : '' }}>PNS Pusat DPK pada Pemerintah Kabupaten/Kota</option>
-                    <option {{ @$profil->jenis_pegawai == 'PNS Pusat DPK pada Pemerintah Provinsi' ? 'selected' : '' }}>PNS
+                    <option {{ @$profil->jenis_pegawai == 'ASN Daerah Kab./Kota yang Bekerja pada Kab./Kota' ? 'selected' : '' }}>ASN Daerah Kab./Kota yang Bekerja pada Kab./Kota</option>
+                    <option {{ @$profil->jenis_pegawai == 'ASN Daerah Provinsi yang Bekerja pada Provinsi' ? 'selected' : '' }}>ASN Daerah Provinsi yang Bekerja pada Provinsi</option>
+                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat DPK pada Pemerintah Kabupaten/Kota' ? 'selected' : '' }}>ASN Pusat DPK pada Pemerintah Kabupaten/Kota</option>
+                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat DPK pada Pemerintah Provinsi' ? 'selected' : '' }}>ASN
                         Pusat DPK pada Pemerintah Provinsi</option>
-                    <option {{ @$profil->jenis_pegawai == 'PNS Pusat yang Bekerja pada Departemen/Lembaga' ? 'selected' : '' }}>PNS Pusat yang Bekerja pada Departemen/Lembaga</option>
+                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat yang Bekerja pada Departemen/Lembaga' ? 'selected' : '' }}>ASN Pusat yang Bekerja pada Departemen/Lembaga</option>
                 </select>
             </div>
         </div>
@@ -129,11 +133,11 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Status CPNS <sup class="text-danger">*</sup></label>
+                <label>Status ASN <sup class="text-danger">*</sup></label>
                 <select name="status_cpns" class="form-control" id="status_cpns" required>
-                    <option value="">--STATUS CPNS--</option>
-                    <option {{ @$profil->status_cpns == 'C' ? 'selected' : '' }}>C</option>
-                    <option {{ @$profil->status_cpns == 'P' ? 'selected' : '' }}>P</option>
+                    <option value="">--STATUS ASN--</option>
+                    <option {{ @$profil->status_cpns == 'PPPK' ? 'selected' : '' }}>PPPK</option>
+                    <option {{ @$profil->status_cpns == 'PNS' ? 'selected' : '' }}>PNS</option>
                 </select>
             </div>
         </div>
@@ -146,23 +150,28 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="exampleInputPassword1">Nomor SK CPNS <sup class="text-danger">*</sup></label>
+                <label for="exampleInputPassword1">Nomor SK CPNS / SK PPPK <sup class="text-danger">*</sup></label>
                 <input name="nomor_sk_cpns" value="{{ @$profil->nomor_sk_cpns }}" id="nomor_sk_cpns" type="text"
-                    placeholder="Nomor SK CPNS" class="form-control form-control-sm">
+                    placeholder="Nomor SK CPNS / SK PPPK" class="form-control form-control-sm">
+                    <small class="text-danger">*Untuk SK PPPK menggunakan nomor SK PPPK pertama</small>
             </div>
+            
         </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="exampleInputPassword1">Tanggal SK CPNS <sup class="text-danger">*</sup></label>
+                <label for="exampleInputPassword1">Tanggal SK CPNS / SK PPPK <sup class="text-danger">*</sup></label>
                 <input name="tanggal_sk_cpns" value="{{ @$profil->tanggal_sk_cpns }}" id="tanggal_sk_cpns"
-                    type="date" placeholder="Tanggal SK CPNS" class="form-control form-control-sm">
+                    type="date" placeholder="Tanggal SK CPNS / SK PPPK" class="form-control form-control-sm">
+                    <small class="text-danger">*Untuk SK PPPK menggunakan tanggal SK PPPK pertama</small>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label for="exampleInputPassword1">TMT CPNS <sup class="text-danger">*</sup></label>
+                <label for="exampleInputPassword1">TMT CPNS / PPPK <sup class="text-danger">*</sup></label>
                 <input name="tmt_cpns" id="tmt_cpns" value="{{ @$profil->tmt_cpns }}" type="date"
-                    placeholder="TMT CPNS" class="form-control form-control-sm">
+                    placeholder="TMT CPNS / SK PPPK" class="form-control form-control-sm">
+                    <small class="text-danger">*Untuk SK PPPK menggunakan TMT SK PPPK pertama</small>
             </div>
         </div>
         <!-- PNS  -->
@@ -192,22 +201,10 @@
                 <label for="exampleInputPassword1">TMT Golongan <sup class="text-danger">*</sup></label>
                 <input name="tmt_golongan" value="{{ @$profil->tmt_golongan }}" id="tmt_golongan" type="date"
                     placeholder="TMT Golongan" class="form-control form-control-sm">
+                    <small class="text-danger">*TMT Golongan terbaru</small>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label for="exampleInputPassword1">MK Tahun <sup class="text-danger">*</sup></label>
-                <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"
-                    placeholder="MK Tahun" class="form-control form-control-sm">
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label for="exampleInputPassword1">MK Bulan <sup class="text-danger">*</sup></label>
-                <input name="mk_bulan" id="mk_bulan" value="{{ @$profil->mk_bulan }}" type="number"
-                    placeholder="MK bulan" class="form-control form-control-sm">
-            </div>
-        </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Jenis Jabatan <sup class="text-danger">*</sup></label>
@@ -222,13 +219,32 @@
                 </select>
             </div>
         </div>
+        
+        <div class="col-lg-6">
+            Masa Kerja </br>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Tahun <sup class="text-danger">*</sup></label>
+                <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"
+                    placeholder="Masa Kerja Tahun" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            </br>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Bulan <sup class="text-danger">*</sup></label>
+                <input name="mk_bulan" id="mk_bulan" value="{{ @$profil->mk_bulan }}" type="number"
+                    placeholder="Masa Kerja bulan" class="form-control form-control-sm">
+            </div>
+        </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
-                <label>KPKN </label>
-                <input name="kpkn" id="kpkn" value="{{ @@$profil->kpkn }}" type="text" placeholder="KPKN"
+                <label>KPPN </label>
+                <input name="kpkn" id="kpkn" value="{{ @@$profil->kpkn }}" type="text" placeholder="KPPN"
                     class="form-control form-control-sm">
             </div>
         </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Lokasi Kerja </label>
@@ -236,13 +252,7 @@
                     placeholder="Lokasi Kerja" class="form-control form-control-sm">
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label>Unor </label>
-                <input name="unor" id="unor" value="{{ @@$profil->unor }}" type="text"
-                    placeholder="Unor" class="form-control form-control-sm">
-            </div>
-        </div>
+
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Instansi Induk </label>
@@ -250,6 +260,7 @@
                     type="text" placeholder="Instansi Induk" class="form-control form-control-sm">
             </div>
         </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Instansi Kerja </label>
@@ -257,6 +268,7 @@
                     type="text" placeholder="Instansi Kerja" class="form-control form-control-sm">
             </div>
         </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Satuan Kerja </label>
@@ -264,8 +276,20 @@
                     placeholder="Satuan Kerja" class="form-control form-control-sm">
             </div>
         </div>
+        
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Unor Induk</label>
+                    <input name="unor" id="unor" value="{{ @@$profil->unor }}" type="text"
+                    placeholder="Unor" class="form-control form-control-sm">
+                    
+            </div>
+        </div>
+        
+    
         <div class="col-lg-12">
             <button id="tombol_kirim" class="btn btn-primary" style="border-radius: 8px !important;">Submit</button>
         </div>
     </div>
 </form>
+

@@ -83,7 +83,7 @@
                         <select onchange="pilihStatus()" name="status_pegawai" id="status_pegawai" class="form-control" required>
                             <option value="">PILIH STATUS</option>
                             <option>PNS</option>
-                            <option>P3K</option>
+                            <option>PPPK</option>
                             <option value="Honorer">Non ASN</option>
                         </select>
                     </div>
@@ -100,11 +100,24 @@
                             Password  <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input type="password" name="password" id="password" class="form-control pr-10" placeholder="Password" required>
-                            <span id="passwordValidIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 hidden">✔️</span>
+                          <input type="password" name="password" id="password" class="form-control pr-10" placeholder="Password" required>
+                          <span id="passwordValidIcon" class="absolute right-10 top-1/2 transform -translate-y-1/2 text-green-600 hidden">✔️</span>
+                        
+                          <button type="button"
+                            onmousedown="showPassword(true)"
+                            onmouseup="showPassword(false)"
+                            onmouseleave="showPassword(false)"
+                            class="absolute right-2 top-0 bottom-0 my-auto h-full flex items-center text-gray-700 ">
+                            <!-- Ikon mata -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 
+                                5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                            </svg>
+                          </button>
                         </div>
+
                         <small id="passwordHelp" class="text-gray-500 text-sm">
-                            Password minimal 8 karakter dan mengandung huruf besar, huruf kecil, dan angka.
+                            Password minimal 8 karakter harus mengandung huruf kapital, huruf kecil, dan angka.
                         </small>
                     </div>
                     <div>
@@ -156,6 +169,10 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+        function showPassword(show) {
+        const passwordInput = document.getElementById('password');
+        passwordInput.type = show ? 'text' : 'password';
+      }
     // Validasi Password saat Input
         const passwordInput = document.getElementById('password');
         const passwordIcon = document.getElementById('passwordValidIcon');
@@ -164,7 +181,7 @@
             const value = passwordInput.value;
     
             const isValid =
-                value.length >= 8 &&
+                
                 /[a-z]/.test(value) &&
                 /[A-Z]/.test(value) &&
                 /\d/.test(value);
@@ -180,9 +197,7 @@
         function getPasswordValidationMessage(password) {
             let messages = [];
     
-            if (password.length < 8) {
-                messages.push("minimal 8 karakter");
-            }
+            
             if (!/[A-Z]/.test(password)) {
                 messages.push("huruf besar");
             }

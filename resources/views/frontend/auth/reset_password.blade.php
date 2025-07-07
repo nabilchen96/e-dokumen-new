@@ -50,16 +50,17 @@
         <input type="text" name="otp" id="otp" placeholder="Masukkan OTP"
           class="w-full px-4 py-2 rounded-md bg-white/60 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-400"
           required />
-      </div>
+      
       <small class="text-danger">*Jangan berikan kode OTP kepada orang lain</small>
       
-      <div class="relative">
+        <div class="relative">
           <label for="password" class="block text-sm font-medium mb-1 text-gray-900">New Password</label>
           <input type="password" id="password" name="password" required
             class="w-full px-4 py-2 pr-10 rounded-md bg-yellow-100 border border-gray-300 focus:outline-none"
             placeholder="Password" />
         
           <!-- Tombol intip password -->
+        
           <button type="button"
             onmousedown="showPassword(true)"
             onmouseup="showPassword(false)"
@@ -71,7 +72,9 @@
                 5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
             </svg>
           </button>
+          
         </div>
+        <small class="text-danger">*Password minimal 8 karakter harus mengandung huruf kapital, huruf kecil dan angka</small>
         <div class="relative">
           <label for="confirm_password" class="block text-sm font-medium mb-1 text-gray-900">Konfirmasi Password</label>
           <input type="password" id="confirm_password" name="confirm_password" required
@@ -90,6 +93,7 @@
             </svg>
           </button>
         </div>
+    </div>
       <!-- Submit -->
       <button type="submit" id="btnLogin"
         class="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition">
@@ -145,7 +149,7 @@
           Swal.fire({
             icon: 'warning',
             title: 'Password Lemah',
-            html: 'Password  harus mengandung:<br>- Huruf besar<br>- Huruf kecil<br>- Angka'
+            html: 'Password minimal 8 karakter harus mengandung:<br>- Huruf besar<br>- Huruf kecil<br>- Angka'
           });
           return;
         }

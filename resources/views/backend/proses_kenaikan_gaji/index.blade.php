@@ -54,7 +54,7 @@
         <div class="col-12 mt-4">
             <div class="card w-100">
                 <div class="card-body">
-                    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'OPD')
+                    @if (Auth::user()->role == 'Admin')
                         <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
                             Tambah
                         </button>
@@ -64,7 +64,7 @@
                             <thead class="bg-info text-white">
                                 <tr>
                                     <th rowspan="2" style="vertical-align: middle;" width="5%">No</th>
-                                    <th rowspan="2" style="vertical-align: middle;">File Pengantar</th>
+                                    <th rowspan="2" style="vertical-align: middle;">SK Kenaikan Gaji Berkala</th>
                                     <th colspan="5" style="border: #ced4da solid 1px !important;" class="text-center">Proses
                                         Kenaikan Gaji</th>
                                     <th rowspan="2" style="vertical-align: middle;"></th>

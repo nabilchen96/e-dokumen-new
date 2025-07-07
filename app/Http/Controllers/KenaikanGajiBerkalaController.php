@@ -191,8 +191,10 @@ class KenaikanGajiBerkalaController extends Controller
             )
             ->where('dokumens.status', 'Dokumen Diterima')
             ->where(function ($query) {
-                $query->where('kenaikan_gajis.status', 'Draft')
-                    ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
+                // $query->where('kenaikan_gajis.status', 'Draft')
+                //     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
+                $query->where('kenaikan_gajis.status', '!=', 'Draft')
+                        ->orWhereNull('kenaikan_gajis.status');
             })
             ->limit(50)
             ->where('jenis_dokumen_berkala', 'Kenaikan Gaji')

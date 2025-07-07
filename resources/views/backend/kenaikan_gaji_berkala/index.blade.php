@@ -336,12 +336,12 @@
 
             if (punya_tgl_akhir == 'Ya') {
                 document.getElementById('punya_tgl_akhir').innerHTML = `
-                                                            <div class="form-group">
-                                                                <label>Tanggal Akhir Dokumen</label>
-                                                                <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
-                                                                    name="tanggal_akhir_dokumen" class="form-control form-control-sm">
-                                                            </div>
-                                                        `
+                    <div class="form-group">
+                        <label>Tanggal Akhir Dokumen</label>
+                        <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
+                            name="tanggal_akhir_dokumen" class="form-control form-control-sm">
+                    </div>
+                `
             } else {
                 document.getElementById('punya_tgl_akhir').innerHTML = ``
             }

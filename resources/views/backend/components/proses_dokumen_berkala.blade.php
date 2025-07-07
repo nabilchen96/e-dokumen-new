@@ -17,7 +17,9 @@
                             <th>Nama / NIP</th>
                             <th>Dok. Berkala</th>
                             <th>Tgl Akhir Dok.</th>
-                            <th>Proses</th>
+                            @if(Auth::user()->role == 'Admin')
+                                <th>Proses</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -37,33 +39,35 @@
                                     <i class="bi bi-exclamation-triangle"></i>
                                     {{ $i->total_hari }} Hari
                                 </td>
-                                <td>
-                                    @if($i->jenis_dokumen_berkala == 'Kenaikan Gaji')
-                                        @if ($i->id_kenaikan_gaji)
+                                @if(Auth::user()->role == 'Admin')
+                                    <td>
+                                        @if($i->jenis_dokumen_berkala == 'Kenaikan Gaji')
+                                            @if ($i->id_kenaikan_gaji)
                                             <a href="{{ url('edit-kenaikan-gaji') }}?data={{ $i->id_kenaikan_gaji }}">
                                                 <button style="border-radius: 8px !important;" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-fast-forward"></i>
                                                 </button>
                                             </a>
+                                            @else
+                                                <form action="{{ url('store-kenaikan-gaji') }}" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="id_profil" id="id_profil" value="{{ $i->id_profil }}"
+                                                        required>
+                                                    <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ $i->id }}"
+                                                        required>
+                                                    <button style="border-radius: 8px !important;" class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-fast-forward"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @else
-                                            <form action="{{ url('store-kenaikan-gaji') }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="id_profil" id="id_profil" value="{{ $i->id_profil }}"
-                                                    required>
-                                                <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ $i->id }}"
-                                                    required>
-                                                <button style="border-radius: 8px !important;" class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-fast-forward"></i>
-                                                </button>
-                                            </form>
+                                            <button style="border-radius: 8px !important;" data-toggle="modal" data-target="#modal"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="bi bi-fast-forward"></i>
+                                            </button>
                                         @endif
-                                    @else
-                                        <button style="border-radius: 8px !important;" data-toggle="modal" data-target="#modal"
-                                            class="btn btn-sm btn-primary">
-                                            <i class="bi bi-fast-forward"></i>
-                                        </button>
-                                    @endif
-                                </td>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>

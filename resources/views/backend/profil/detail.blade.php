@@ -96,7 +96,7 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a href="#" data-target="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3"
+                            <a href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3"
                             class="nav-link tab-link {{ Request('profil') == '3' ? 'active' : '' }}">
                             Dokumen
                             </a>

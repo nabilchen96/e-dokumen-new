@@ -69,7 +69,7 @@
                                 <tr>
                                     <th width="5%">No</th>
                                     <th>Pemilik</th>
-                                    <th>Jenis Dokumen</th>
+                                    <th>Jenis / Nomor Dokumen</th>
                                     <th>Tanggal Berlaku</th>
                                     <th>Tanggal Upload</th>
                                     <th>SKPD / Unit Kerja</th>
@@ -93,20 +93,6 @@
                     <div class="modal-header p-3">
                         <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>
-                    <div class="modal-body">
-                        <div id="respon_error" class="text-danger mb-4"></div>
-                        <input type="hidden" name="id" id="id">
-                        <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
-                        <div class="form-group">
-                            <label>Dokumen</label>
-                            <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
-                                class="form-control form-control-sm" accept=".pdf, image/*">
-                        </div>
-                        <div class="form-group">
-                            <label>Jenis Dokumen</label>
-                            <input type="text" placeholder="Dokumen" value="{{ $jenis }}"
-                                class="form-control form-control-sm" required readonly>
-                        </div>
                         @php
                             $variations = [
                                 'dokumen berkala',
@@ -141,9 +127,30 @@
                                 ->where('id', Request('jenis_dokumen'))
                                 ->first();
                         @endphp
+                    <div class="modal-body">
+                        <div id="respon_error" class="text-danger mb-4"></div>
+                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id_dokumen" id="id_dokumen" value="{{ Request('jenis_dokumen') }}">
+                        <div class="form-group">
+                            <label>Dokumen <sup class="text-danger">*</sup></label>
+                            <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
+                                class="form-control form-control-sm" accept=".pdf, image/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Dokumen</label>
+                            <input type="text" placeholder="Dokumen" value="{{ $jenis }}"
+                                class="form-control form-control-sm" required readonly>
+                        </div>
+                         @if ($kenaikan_gaji->punya_nomor_dokumen == 'Ya')
+                            <div class="form-group">
+                                <label>Nomor Dokumen <sup class="text-danger">*</sup></label>
+                                <input type="text" name="nomor_dokumen" id="nomor_dokumen" placeholder="nomor_dokumen"
+                                    class="form-control form-control-sm" required>
+                            </div>
+                        @endif
                         @if (Str::contains(Str::lower($kenaikan_gaji->jenis_dokumen), 'gaji'))
                             <div class="form-group">
-                                <label>Jenis Dokumen Berkala</label>
+                                <label>Jenis Dokumen Berkala <sup class="text-danger">*</sup></label>
                                 <select name="jenis_dokumen_berkala" id="jenis_dokumen_berkala"
                                     class="form-control form-control-sm" required>
                                     <option>Kenaikan Gaji</option>
@@ -152,19 +159,19 @@
                             </div>
                         @endif
                         <div class="form-group">
-                            <label>Tanggal Awal Dokumen</label>
+                            <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
                             <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
                                 name="tanggal_dokumen" class="form-control form-control-sm" required>
                         </div>
                         @if ($kenaikan_gaji->punya_tgl_akhir == 'Ya')
                             <div class="form-group">
-                                <label>Tanggal Akhir Dokumen</label>
+                                <label>Tanggal Akhir Dokumen <sup class="text-danger">*</sup></label>
                                 <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
                                     name="tanggal_akhir_dokumen" class="form-control form-control-sm">
                             </div>
                         @endif
                         <div class="form-group">
-                            <label>Pemilik</label>
+                            <label>Pemilik <sup class="text-danger">*</sup></label>
                             @php
                                 if (Auth::user()->role == 'Admin') {
 
@@ -286,7 +293,9 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `${row.jenis_dokumen} <br> ${row.jenis_dokumen_berkala ?? `Lainnya`}`
+                        return `${row.jenis_dokumen}
+                        ${row.nomor_dokumen ? '<br> <b>No. '+row.nomor_dokumen+'</b>' : '<br> <b>No. -</b>'} <br> 
+                        ${row.jenis_dokumen_berkala ?? `Lainnya`}`
                     }
                 },
                 {

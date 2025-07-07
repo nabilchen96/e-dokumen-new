@@ -126,7 +126,8 @@ class DokumenController extends Controller
             'id_skpd' => $request->id_skpd,
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
             'id_unit_kerja' => $request->id_unit_kerja, 
-            'status' => $request->status
+            'status' => $request->status, 
+            'nomor_dokumen' => $request->nomor_dokumen
         ]);
 
         return response()->json([
@@ -215,6 +216,7 @@ class DokumenController extends Controller
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
             'status' => $request->status,
             'id_unit_kerja' => $request->id_unit_kerja, 
+            'nomor_dokumen' => $request->nomor_dokumen
         ]);
 
         return response()->json([

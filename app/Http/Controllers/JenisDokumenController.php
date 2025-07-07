@@ -46,7 +46,8 @@ class JenisDokumenController extends Controller
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
                 'jenis_pegawai' => $request->jenis_pegawai,
-                'punya_tgl_akhir' => $request->punya_tgl_akhir
+                'punya_tgl_akhir' => $request->punya_tgl_akhir,
+                'punya_nomor_dokumen' => $request->punya_nomor_dokumen
             ]);
 
             $data = [
@@ -80,7 +81,8 @@ class JenisDokumenController extends Controller
                 'jenis_dokumen' => $request->jenis_dokumen,
                 'status' => $request->status,
                 'jenis_pegawai' => $request->jenis_pegawai,
-                'punya_tgl_akhir' => $request->punya_tgl_akhir
+                'punya_tgl_akhir' => $request->punya_tgl_akhir,
+                'punya_nomor_dokumen' => $request->punya_nomor_dokumen
             ]);
 
             $data = [

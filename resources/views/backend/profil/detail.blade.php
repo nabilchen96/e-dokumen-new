@@ -92,12 +92,12 @@
                                 href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=2">Data
                                 Pegawai</a>
                         </li>
-                        <!-- <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation">
                             <a class="nav-link {{ Request('profil') == '3' ? 'active' : '' }}"
                                 href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=3">
                                 Dokumen
                             </a>
-                        </li> -->
+                        </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
@@ -106,8 +106,8 @@
                                 @include('backend.components.profile.index')
                             @elseif(Request('profil') == 2)
                                 @include('backend.components.profile.pegawai')
-                            <!-- @elseif(Request('profil') == 3)
-                                @include('backend.components.profile.dokumen') -->
+                            @elseif(Request('profil') == 3)
+                                @include('backend.components.profile.dokumen')
                             @endif
                         </div>
                     </div>

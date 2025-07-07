@@ -61,6 +61,7 @@
                                 <th>Jenis Dokumen</th>
                                 <th>Jenis Pegawai</th>
                                 <th>Masa Berlaku?</th>
+                                <th>Nomor Dokumen?</th>
                                 <th>Status</th>
                                 @if (Auth::user()->role == 'Admin')                                
                                     <th width="5%"></th>
@@ -99,6 +100,13 @@
                     <div class="form-group">
                         <label>Masa Berlaku Dokumen?</label>
                         <select name="punya_tgl_akhir" id="punya_tgl_akhir" class="form-control" required>
+                            <option value="Ya">Aktf</option>
+                            <option value="Tidak">Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Dokumen?</label>
+                        <select name="punya_nomor_dokumen" id="punya_nomor_dokumen" class="form-control" required>
                             <option value="Ya">Aktf</option>
                             <option value="Tidak">Tidak Aktif</option>
                         </select>
@@ -165,6 +173,15 @@
                     }
                 },
                 {
+                    render: function (data, type, row, meta) {
+                        if (row.punya_nomor_dokumen == 'Ya') {
+                            return `Aktif`
+                        } else {
+                            return `Tidak Aktif`
+                        }
+                    }
+                },
+                {
                     data: "status"
                 },
                 @if (Auth::user()->role == 'Admin')
@@ -209,6 +226,7 @@
                 modal.find('#status').val(cokData[0].status)
                 modal.find('#jenis_pegawai').val(cokData[0].jenis_pegawai)
                 modal.find('#punya_tgl_akhir').val(cokData[0].punya_tgl_akhir)
+                modal.find('#punya_nomor_dokumen').val(cokData[0].punya_nomor_dokumen)
             }
         })
 

@@ -9,7 +9,8 @@
         </li>
         @if (Auth::user()->role == 'Admin')
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                    aria-controls="ui-basic">
                     <i class="icon-layout menu-icon"></i>
                     <span class="menu-title">Master</span>
                     <i class="menu-arrow"></i>
@@ -45,7 +46,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#layanan" aria-expanded="false" aria-controls="ui-basic">
+                <a class="nav-link" data-toggle="collapse" href="#layanan" aria-expanded="false"
+                    aria-controls="ui-basic">
                     <i class="bi bi-box-seam menu-icon"></i>
                     <span class="menu-title">Layanan</span>
                     <i class="menu-arrow"></i>
@@ -63,15 +65,10 @@
             </li>
         @else
         @endif
-        @if(
-                Auth::user()->role == 'Admin' ||
-                Auth::user()->role == 'OPD' ||
-                Auth::user()->role == 'SKPD' ||
-                Auth::user()->role == 'Kepala BKPSDM' ||
-                Auth::user()->role == 'Pegawai'
-            )
+        @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM', 'Pegawai']))
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false" aria-controls="ui-basic">
+                <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false"
+                    aria-controls="ui-basic">
                     <i class="bi bi-file-earmark menu-icon"></i>
                     <span class="menu-title">Dokumen</span>
                     <i class="menu-arrow"></i>
@@ -89,31 +86,26 @@
                             $jenis_dokumen = DB::table('jenis_dokumens')
                                 ->where('status', 'Aktif')
                                 ->where(function ($query) use ($profil) {
-                                    if (Auth::user()->role == "Admin" || Auth::user()->role == 'OPD' || Auth::user()->role == 'Kepala BKPSDM') {
+                                    if (in_array(Auth::user()->role, ['Admin', 'OPD', 'Kepala BKPSDM'])) {
                                         $query;
                                     } elseif ($profil->status_pegawai == 'PNS') {
-                                        $query->where('jenis_pegawai', 'like', '%PNS%')
+                                        $query
+                                            ->where('jenis_pegawai', 'like', '%PNS%')
                                             ->orWhere('jenis_pegawai', 'Semua');
-
                                     } elseif ($profil->status_pegawai == 'P3K') {
-                                        $query->where('jenis_pegawai', 'like', '%P3K%')
+                                        $query
+                                            ->where('jenis_pegawai', 'like', '%P3K%')
                                             ->orWhere('jenis_pegawai', 'Semua');
-
                                     } elseif ($profil->status_pegawai == 'Honorer') {
-                                        $query->where('jenis_pegawai', 'like', '%Honorer%')
+                                        $query
+                                            ->where('jenis_pegawai', 'like', '%Honorer%')
                                             ->orWhere('jenis_pegawai', 'Semua');
                                     }
                                 })
                                 ->get();
                         @endphp
 
-                        @if(
-                                $profil->status_pegawai ||
-                                Auth::user()->role == 'Admin' ||
-                                Auth::user()->role == 'OPD' ||
-                                Auth::user()->role == 'SKPD' ||
-                                Auth::user()->role == 'Kepala BKPSDM'
-                            )
+                        @if ($profil->status_pegawai || in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM']))
                             @foreach ($jenis_dokumen as $i)
                                 <li class="nav-item">
                                     <a style="white-space: normal; line-height: 1;" class="nav-link"
@@ -140,16 +132,7 @@
             @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
-                    @if (
-                            Auth::user()->role != 'SKPD' &&
-                            Auth::user()->role != 'Pegawai' &&
-                            Auth::user()->role != 'Staff BKPSDM' &&
-                            Auth::user()->role != 'Kabid BKPSDM' &&
-                            Auth::user()->role != 'Sekretaris BKPSDM' &&
-                            Auth::user()->role != 'Kepala BKPSDM' &&
-                            Auth::user()->role != 'Inspektorat' &&
-                            Auth::user()->role != 'Bendahara Gaji DPKAD'
-                        )
+                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
                                 Kenaikan Gaji
@@ -167,17 +150,7 @@
                 </ul>
             </div>
         </li>
-        @if (
-                Auth::user()->role == 'Pegawai' ||
-                Auth::user()->role == 'Admin' ||
-                Auth::user()->role == 'Staff BKPSDM' ||
-                Auth::user()->role == 'Kabid BKPSDM' ||
-                Auth::user()->role == 'Sekretaris BKPSDM' ||
-                Auth::user()->role == 'Kepala BKPSDM' ||
-                Auth::user()->role == 'SKPD' ||
-                Auth::user()->role == 'OPD' ||
-                Auth::user()->role == 'Inspektorat'
-            )
+        @if (Auth::user()->role != 'Bendahara Gaji DPKAD')
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('profil') }}">
                     <i class="bi bi-person menu-icon"></i>

@@ -3,6 +3,7 @@
 /public/storage
 /public/dokumen
 /public/file_pengantar
+/public/lapor_masalah
 /storage/*.key
 /vendor
 .env

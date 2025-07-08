@@ -171,7 +171,8 @@ class DashboardController extends Controller
 
         }
 
-        if (Auth::user()->role == 'Admin' || 
+        if (
+            Auth::user()->role == 'Admin' || 
             Auth::user()->role == 'SKPD' || 
             Auth::user()->role == 'OPD' || 
             Auth::user()->role == 'Staff BKPSDM' ||
@@ -297,7 +298,7 @@ class DashboardController extends Controller
                                     ->orWhere('dokumens.status', 'Perlu Diperbaiki')
                                     ->orWhere('dokumens.status', 'Belum Diperiksa');
                             })
-                            // ->limit(50)
+                            ->limit(50)
                             ->orderBy('dokumens.created_at', 'asc');
 
         if(Auth::user()->role == 'Admin'){

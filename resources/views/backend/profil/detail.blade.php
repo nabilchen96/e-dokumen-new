@@ -1,22 +1,6 @@
 @extends('backend.app')
 @push('style')
     <style>
-        #myTable_filter input {
-            height: 29.67px !important;
-        }
-
-        #myTable_length select {
-            height: 29.67px !important;
-        }
-
-        .btn {
-            border-radius: 50px !important;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #9e9e9e21 !important;
-        }
-
         td,
         th {
             font-size: 13.5px !important;
@@ -26,47 +10,9 @@
         #map {
             width: 100%;
         }
-
-        /* Mengatur ukuran dan margin panah sorting di DataTables */
-        table.dataTable thead .sorting::after,
-        table.dataTable thead .sorting_asc::after,
-        table.dataTable thead .sorting_desc::after {
-            margin-bottom: 5px !important;
-            content: "▲" !important;
-            top: 7px !important;
-        }
-
-        table.dataTable thead .sorting::before,
-        table.dataTable thead .sorting_asc::before,
-        table.dataTable thead .sorting_desc::before {
-            margin-top: -5px !important;
-            content: "▼" !important;
-            bottom: 7px !important;
-        }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <style>
-        .select2-container .select2-selection--single {
-            height: calc(2.25rem + 2px);
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-        }
-    </style>
-    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-    <style>
-        .ts-control {
-            border-radius: 0.375rem;
-            line-height: 1.5 !important;
-            font-size: 0.9375rem !important;
-            padding: 0.5rem 1rem !important;
-        }
-    </style>
 @endpush
 @section('content')
     <div class="row" style="margin-top: -200px;">

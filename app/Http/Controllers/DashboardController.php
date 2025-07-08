@@ -95,7 +95,7 @@ class DashboardController extends Controller
                 'pangkat' => 'Pangkat',
                 'jabatan' => 'Jabatan',
                 'nik' => 'NIK',
-                'id_unit_kerja' => 'Unit Kerja',
+                // 'id_unit_kerja' => 'Unit Kerja',
                 'satuan_kerja' => 'Satuan Kerja' // tambahkan ini
             ];
 

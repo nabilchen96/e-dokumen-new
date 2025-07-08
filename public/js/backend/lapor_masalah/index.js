@@ -19,22 +19,29 @@ function getData() {
         },
         {
             render: function (data, type, row, meta) {
-                return `<div style="
+                return `
+                <a target="_blank" href="/lapor_masalah/${row.gambar}">
+                <div style="
                     background-image: url('/lapor_masalah/${row.gambar}');
                     background-size: cover;
-                    width: 150px;
-                    height: 100px;
-                "></div>`
+                    width: 250px;
+                    height: 160px;
+                "></div></a>`
             }
         },
         {
             render: function (data, type, row, meta) {
-                return `${row.masalah} <br> ${row.jawaban ?? '-'}`
+                return `<b>Pelapor</b><br>${row.name}<br><br><b>No. WA</b><br>${row.no_wa}`
             }
         },
         {
             render: function (data, type, row, meta) {
-                return `${row.created_at} <br> ${row.status ?? '-'}`
+                return `<b>Dibuat Tanggal</b><br>${row.created_at} <br><br> <b>Status</b><br>${row.status ? row.status : 'Proses'}`
+            }
+        },
+        {
+            render: function (data, type, row, meta) {
+                return `<b>Masalah</b><br>${row.masalah} <br><br> <b>Tanggapan</b><br>${row.jawaban ?? '-'}`
             }
         },
         ...(window.userRole === 'Admin' ? [

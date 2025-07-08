@@ -22,8 +22,9 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Gambar</th>
-                                <th>Masalah / Keterangan</th>
+                                <th width="15%">Pelapor / No. WA</th>
                                 <th>Dibuat Tanggal / Status</th>
+                                <th>Masalah / Keterangan</th>
                                 <th></th>
                                 @if(Auth::user()->role == 'Admin')
                                     <th></th>
@@ -54,8 +55,22 @@
                     </div>
                     <div class="form-group">
                         <label>Masalah <sup class="text-danger">*</sup></label>
-                        <textarea name="masalah" id="masalah" class="form-control form-control-sm" required></textarea>
+                        <textarea name="masalah" id="masalah" placeholder="Masalah" class="form-control form-control-sm" required></textarea>
                     </div>
+                    @if(Auth::user()->role == 'Admin')
+                        <div class="form-group">
+                            <label>Status<sup class="text-danger">*</sup></label>
+                            <select name="status" id="status" class="form-control form-control-sm">
+                                <option>Proses</option>
+                                <option>Selesai</option>
+                                <option>Ditolak</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jawaban</label>
+                            <textarea name="jawaban" id="jawaban" placeholder="Jawaban" class="form-control form-control-sm"></textarea>
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer p-3">
                     <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>

@@ -19,7 +19,13 @@ class LaporMasalahController extends Controller
     public function data()
     {
 
-        $data = DB::table('lapor_masalahs');
+        $data = DB::table('lapor_masalahs')
+                ->leftjoin('users', 'users.id', '=', 'lapor_masalahs.id_user')
+                ->select(
+                    'lapor_masalahs.*', 
+                    'users.name', 
+                    'users.no_wa'
+                );
 
         if(Auth::user()->role == 'Admin'){
             $data = $data->get();
@@ -93,7 +99,8 @@ class LaporMasalahController extends Controller
             $user = LaporMasalah::find($request->id);
             $data = $user->update([
                 'jawaban' => $request->jawaban, 
-                'status'  => $request->status
+                'status'  => $request->status, 
+                'gambar'   => $gambar ?? $user->gambar
             ]);
 
             $data = [

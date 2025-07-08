@@ -7,7 +7,7 @@
             </h3>
             <span class="text-danger" style="font-size: 14px !important;">
                 Informasi Tentang Berapa Hari Lagi Dokumen Akan Berakhir. <br>
-                 Menampilkan maksimal 50 data
+                 Menampilkan maksimal 30 data
             </span>
             <div class="mb-1"></div>
             <div class="table-responsive" style="height: 290px;">

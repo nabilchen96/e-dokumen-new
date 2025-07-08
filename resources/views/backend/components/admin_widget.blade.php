@@ -260,7 +260,7 @@
                 </h3>
                 <span class="text-danger" style="font-size: 14px !important;">
                     Informasi Dokumen yang Belum Diperiksa oleh Admin. <br>
-                    Menampilkan maksimal 50 data
+                    Menampilkan maksimal 30 data
                 </span>
                 <div class="mb-1"></div>
                 <div class="table-responsive" id="tabel" style="height: 290px;">

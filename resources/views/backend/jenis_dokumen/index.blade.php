@@ -51,7 +51,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
-                        <label>jenis Dokumen</label>
+                        <label>Jenis Dokumen</label>
                         <input name="jenis_dokumen" id="jenis_dokumen" type="text" placeholder="Jenis Dokumen"
                             class="form-control form-control-sm" required>
                     </div>

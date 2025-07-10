@@ -79,6 +79,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Jenis Pegawai</label>
                         <select name="jenis_pegawai" id="jenis_pegawai" class="form-control" required>
+                            <option>Only Admin</option>
                             <option>PNS</option>
                             <option>P3K</option>
                             <option>Honorer</option>

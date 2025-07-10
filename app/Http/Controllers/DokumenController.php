@@ -216,7 +216,8 @@ class DokumenController extends Controller
             'jenis_dokumen_berkala' => $request->jenis_dokumen_berkala,
             'status' => $request->status,
             'id_unit_kerja' => $request->id_unit_kerja, 
-            'nomor_dokumen' => $request->nomor_dokumen
+            'nomor_dokumen' => $request->nomor_dokumen,
+            'alasan_ditolak' => $request->alasan_ditolak
         ]);
 
         return response()->json([
@@ -242,7 +243,8 @@ class DokumenController extends Controller
 
             $user = Dokumen::find($request->id);
             $data = $user->update([
-                'status' => $request->status
+                'status' => $request->status, 
+                'alasan_ditolak' => $request->alasan_ditolak
             ]);
 
             $data = [

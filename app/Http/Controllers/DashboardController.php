@@ -246,6 +246,7 @@ class DashboardController extends Controller
                 'dokumens.jenis_dokumen_berkala',
                 'kenaikan_gajis.id as id_kenaikan_gaji',
                 'kenaikan_gajis.status as status_dokumen',
+                'dokumens.alasan_ditolak',
                 DB::raw("DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today') as total_hari")
             )
             ->where('dokumens.status', 'Dokumen Diterima')
@@ -346,6 +347,7 @@ class DashboardController extends Controller
                 'skpds.latitude',
                 'skpds.longitude',
                 'skpds.nama_skpd',
+                'dokumens.alasan_ditolak',
                 DB::raw('COUNT(DISTINCT dokumens.id_user) as total_employees')
             )
             ->whereIn('dokumens.id', function ($query) {

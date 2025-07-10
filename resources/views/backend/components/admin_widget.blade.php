@@ -1,12 +1,10 @@
-@if(
-        Auth::user()->role == 'Admin' ||
+@if (Auth::user()->role == 'Admin' ||
         Auth::user()->role == 'SKPD' ||
         Auth::user()->role == 'Staff BKPSDM' ||
         Auth::user()->role == 'Kabid BKPSDM' ||
         Auth::user()->role == 'Sekretaris BKPSDM' ||
         Auth::user()->role == 'Kepala BKPSDM' ||
-        Auth::user()->role == 'Inspektorat'
-    )
+        Auth::user()->role == 'Inspektorat')
     <div class="col-lg-3 mt-3">
         <div class="card shadow bg-gradient-success card-img-holder text-white">
             <div class="card-body">
@@ -17,7 +15,7 @@
                     <i class="bi bi-person-circle float-right"></i>
                 </h4>
                 <h2>
-                    {{ $total_pegawai ?? 0}}
+                    {{ $total_pegawai ?? 0 }}
                 </h2>
                 <span>Orang</span>
             </div>
@@ -33,7 +31,7 @@
                     <i class="bi bi-person-circle float-right"></i>
                 </h4>
                 <h2>
-                    {{ $total_jenis_dokumen ?? 0}}
+                    {{ $total_jenis_dokumen ?? 0 }}
                 </h2>
                 <span>Jenis</span>
             </div>
@@ -49,7 +47,7 @@
                     <i class="bi bi-person-circle float-right"></i>
                 </h4>
                 <h2>
-                    {{ $total_dokumen ?? 0}}
+                    {{ $total_dokumen ?? 0 }}
                 </h2>
                 <span>Diupload</span>
             </div>
@@ -73,14 +71,12 @@
     </div>
 @endif
 
-@if (
-        Auth::user()->role == 'Staff BKPSDM' ||
+@if (Auth::user()->role == 'Staff BKPSDM' ||
         Auth::user()->role == 'Kabid BKPSDM' ||
         Auth::user()->role == 'Sekretaris BKPSDM' ||
         Auth::user()->role == 'Kepala BKPSDM' ||
         Auth::user()->role == 'Inspektorat' ||
-        Auth::user()->role == 'Bendahara Gaji DPKAD'
-    )
+        Auth::user()->role == 'Bendahara Gaji DPKAD')
     <div class="col-lg-12 mt-4">
         <div class="card shadow">
             <div class="card-body">
@@ -95,7 +91,8 @@
                         <thead class="bg-info text-white">
                             <tr>
                                 <th rowspan="2" style="vertical-align: middle;">File Pengantar</th>
-                                <th colspan="5" style="border: #ced4da solid 1px !important;" class="text-center">Proses
+                                <th colspan="5" style="border: #ced4da solid 1px !important;" class="text-center">
+                                    Proses
                                     Kenaikan Gaji</th>
                                 @if (Auth::user()->role != 'Inspektorat')
                                     <th rowspan="2" style="vertical-align: middle;">Detail</th>
@@ -125,31 +122,31 @@
                                         'user_3.name as name_3',
                                         'user_4.name as name_4',
                                         'user_5.name as name_5',
-                                        'pkg.*'
+                                        'pkg.*',
                                     );
 
                                 if (Auth::user()->role == 'Staff BKPSDM') {
-                                    $datax = $datax->where('pkg.status_1', NULL)->get();
+                                    $datax = $datax->where('pkg.status_1', null)->get();
                                 }
 
                                 if (Auth::user()->role == 'Kabid BKPSDM') {
-                                    $datax = $datax->where('pkg.status_2', NULL)->get();
+                                    $datax = $datax->where('pkg.status_2', null)->get();
                                 }
 
                                 if (Auth::user()->role == 'Sekretaris BKPSDM') {
-                                    $datax = $datax->where('pkg.status_3', NULL)->get();
+                                    $datax = $datax->where('pkg.status_3', null)->get();
                                 }
 
                                 if (Auth::user()->role == 'Kepala BKPSDM') {
-                                    $datax = $datax->where('pkg.status_4', NULL)->get();
+                                    $datax = $datax->where('pkg.status_4', null)->get();
                                 }
 
                                 if (Auth::user()->role == 'Inspektorat') {
                                     $datax = $datax->where('pkg.status_4', 'Dirilis')->get();
                                 }
 
-                                if(Auth::user()->role == 'Bendahara Gaji DPKAD'){
-                                    $datax = $datax->where('pkg.status_4', 'Dirilis')->where('status_5', NULL)->get();
+                                if (Auth::user()->role == 'Bendahara Gaji DPKAD') {
+                                    $datax = $datax->where('pkg.status_4', 'Dirilis')->where('status_5', null)->get();
                                 }
                             @endphp
                             @foreach ($datax as $k => $item)
@@ -250,7 +247,7 @@
 @endif
 
 <!-- @include('backend.components.profil_kepala') -->
-@if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
+@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'OPD')
     <div class="col-lg-6 mt-4">
         <div class="card shadow" style="border-radius: 8px; border: none;">
             <div class="card-body" style="border-radius: 8px; border: none;">
@@ -269,6 +266,7 @@
                             <tr>
                                 <th>Nama / NIP</th>
                                 <th>Status / Jenis Dokumen</th>
+                                <th>Alasan Ditolak / Arahan</th>
                                 <th>Tgl Akhir Dok.</th>
                                 <th>File</th>
                                 <th>Periksa</th>
@@ -286,18 +284,23 @@
                                         {{ $i->status ?? 'Belum Diperiksa' }} <br>
                                         Dok. {{ $i->jenis_dokumen ?? 'Lainnya' }}
                                     </td>
+                                    <td>{{ $i->alasan_ditolak }}</td>
                                     <td>
                                         {{ $i->tanggal_akhir_dokumen ? date('d-m-Y', strtotime($i->tanggal_akhir_dokumen)) : '-' }}
                                     </td>
                                     <td>
                                         <a target="_blank" href="{{ url('convert-to-pdf') }}/{{ $i->dokumen }}">
-                                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                                            <i style="font-size: 1.5rem;"
+                                                class="text-danger bi bi-file-earmark-pdf"></i>
                                         </a>
                                     </td>
                                     <td>
                                         <button style="border-radius: 8px !important;" class="btn btn-sm btn-primary"
-                                            data-toggle="modal" data-target="#modalExample" data-bs-id="{{ $i->id }}"
-                                            data-bs-status="{{ $i->status }}" data-bs-id_dokumen="{{ $i->id_dokumen }}">
+                                            data-toggle="modal" data-target="#modalExample"
+                                            data-bs-id="{{ $i->id }}" 
+                                            data-bs-status="{{ $i->status }}"
+                                            data-bs-alasan_ditolak="{{ $i->alasan_ditolak }}"
+                                            data-bs-id_dokumen="{{ $i->id_dokumen }}">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
@@ -360,6 +363,11 @@
                                 <option>Perlu Diperbaiki</option>
                             </select>
                         </div>
+                        <div class="form-group mt-3" id="alasan_wrapper" style="display: none;">
+                            <label>Alasan Ditolak / Arahan<sup class="text-danger">*</sup></label>
+                            <textarea name="alasan_ditolak" id="alasan_ditolak" class="form-control" rows="3"
+                                placeholder="Masukkan alasan penolakan atau arahan..."></textarea>
+                        </div>
                         <div class="modal-footer p-3">
                             <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                             <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
@@ -370,3 +378,24 @@
         </div>
     </div>
 </div>
+
+@push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('status');
+            const alasanWrapper = document.getElementById('alasan_wrapper');
+            const alasanTextarea = document.getElementById('alasan_ditolak');
+
+            statusSelect.addEventListener('change', function() {
+                if (this.value === 'Perlu Diperbaiki') {
+                    alasanWrapper.style.display = 'block';
+                    alasanTextarea.setAttribute('required', 'required');
+                } else {
+                    alasanWrapper.style.display = 'none';
+                    alasanTextarea.removeAttribute('required');
+                    alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
+                }
+            });
+        });
+    </script>
+@endpush

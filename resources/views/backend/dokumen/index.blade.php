@@ -189,7 +189,7 @@
                                     <option>Perlu Diperbaiki</option>
                                 </select>
                             </div>
-                            <div class="form-group mt-3" id="alasan_wrapper">
+                            <div class="form-group mt-3" id="alasan_wrapper" >
                                 <label>Alasan Ditolak / Arahan<sup class="text-danger">*</sup></label>
                                 <textarea name="alasan_ditolak" id="alasan_ditolak" class="form-control" rows="3"
                                     placeholder="Masukkan alasan penolakan atau arahan ..."></textarea>

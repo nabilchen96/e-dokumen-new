@@ -43,6 +43,12 @@ function getData() {
         },
         {
             render: function (data, type, row, meta) {
+                return `<b>SKPD</b>: ${row.instansi_kerja} <br> 
+                <b>Unit Kerja</b>: ${row.satuan_kerja}`
+            }
+        },
+        {
+            render: function (data, type, row, meta) {
                 return `<b>Jenis Kelamin</b>: ${row.jenis_kelamin} <br> 
                 <b>Tempat lahir</b>: ${row.tempat_lahir} <br> 
                 <b>Tanggal Lahir</b>: ${row.tanggal_lahir} <br>

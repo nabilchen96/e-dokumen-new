@@ -29,6 +29,7 @@
                                     <th>Tanggal Upload</th>
                                     <th>Unor Induk / Unor</th>
                                     <th>Status</th>
+                                    <th>Alasan Ditolak / Arahan </th>
                                     <th width="5%">PDF</th>
                                     <th width="5%">Edit</th>
                                     <th width="5%">Hapus</th>
@@ -284,6 +285,9 @@
                     }
                 },
                 {
+                    data: 'alasan_ditolak'
+                },
+                {
                     render: function (data, type, row, meta) {
                         return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
                             <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
@@ -335,6 +339,7 @@
                 // modal.find('#id_user').val(cokData[0].id_user).trigger('change');
                 tomSelectUser.setValue(cokData[0].id_user);
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
+                modal.find('#alasan_ditolak').val(cokData[0].alasan_ditolak)
 
                 const skpdId = document.getElementById('id_skpd').value
                 const unitKerjaSelect = document.getElementById('id_unit_kerja');

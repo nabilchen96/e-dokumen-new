@@ -29,7 +29,7 @@
                                     <th>Tanggal Upload</th>
                                     <th>Unor Induk / Unor</th>
                                     <th>Status</th>
-                                    <th>Alasan Ditolak / Arahan</th>
+                                    <th>Alasan Ditolak / Arahan </th>
                                     <th width="5%">PDF</th>
                                     <th width="5%">Edit</th>
                                     <th width="5%">Hapus</th>

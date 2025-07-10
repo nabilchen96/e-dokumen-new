@@ -29,7 +29,6 @@
                                     <th>Tanggal Upload</th>
                                     <th>Unor Induk / Unor</th>
                                     <th>Status</th>
-                                    <th>Alasan Ditolak / Arahan</th>
                                     <th width="5%">PDF</th>
                                     <th width="5%">Edit</th>
                                     <th width="5%">Hapus</th>
@@ -49,38 +48,40 @@
                     <div class="modal-header p-3">
                         <h5 class="modal-title m-2" id="exampleModalLabel">Dokumen Form</h5>
                     </div>
-                    @php
-                        $variations = [
-                            'dokumen berkala',
-                            'Dokumen Berkala',
-                            'Dokumen berkala',
-                            'dokumen Berkala',
-                            'DOKUMEN BERKALA',
-                            'dok. berkala',
-                            'dok berkala',
-                            'Dok. Berkala',
-                            'Dok Berkala',
-                            'DOK. BERKALA',
-                            'DOK BERKALA',
-                            'dokumenberkala',
-                            'DokumenBerkala',
-                            'DOKUMENBERKALA',
-                            'Dokumenberkala',
-                            'dokumenBerkala',
-                            'Kenaikan Gaji',
-                            'Kenaikan gaji',
-                            'kenaikan Gaji',
-                            'kenaikangaji',
-                            'KenaikanGaji',
-                            'Kenaikangaji',
-                            'kenaikanGaji',
-                            'KENAIKAN GAJI',
-                            'KENAIKANGAJI',
-                            'SK Gaji Berkala',
-                        ];
+                        @php
+                            $variations = [
+                                'dokumen berkala',
+                                'Dokumen Berkala',
+                                'Dokumen berkala',
+                                'dokumen Berkala',
+                                'DOKUMEN BERKALA',
+                                'dok. berkala',
+                                'dok berkala',
+                                'Dok. Berkala',
+                                'Dok Berkala',
+                                'DOK. BERKALA',
+                                'DOK BERKALA',
+                                'dokumenberkala',
+                                'DokumenBerkala',
+                                'DOKUMENBERKALA',
+                                'Dokumenberkala',
+                                'dokumenBerkala',
+                                'Kenaikan Gaji',
+                                'Kenaikan gaji',
+                                'kenaikan Gaji',
+                                'kenaikangaji',
+                                'KenaikanGaji',
+                                'Kenaikangaji',
+                                'kenaikanGaji',
+                                'KENAIKAN GAJI',
+                                'KENAIKANGAJI',
+                                'SK Gaji Berkala'
+                            ];
 
-                        $kenaikan_gaji = DB::table('jenis_dokumens')->where('id', Request('jenis_dokumen'))->first();
-                    @endphp
+                            $kenaikan_gaji = DB::table('jenis_dokumens')
+                                ->where('id', Request('jenis_dokumen'))
+                                ->first();
+                        @endphp
                     <div class="modal-body">
                         <div id="respon_error" class="text-danger mb-4"></div>
                         <input type="hidden" name="id" id="id">
@@ -95,7 +96,7 @@
                             <input type="text" placeholder="Dokumen" value="{{ $jenis }}"
                                 class="form-control form-control-sm" required readonly>
                         </div>
-                        @if ($kenaikan_gaji->punya_nomor_dokumen == 'Ya')
+                         @if ($kenaikan_gaji->punya_nomor_dokumen == 'Ya')
                             <div class="form-group">
                                 <label>Nomor Dokumen <sup class="text-danger">*</sup></label>
                                 <input type="text" name="nomor_dokumen" id="nomor_dokumen" placeholder="nomor_dokumen"
@@ -133,25 +134,39 @@
                             <label>Pemilik <sup class="text-danger">*</sup></label>
                             @php
                                 if (Auth::user()->role == 'Admin') {
+
                                     $users = DB::table('users')->get();
+
                                 } elseif (Auth::user()->role == 'SKPD') {
+
                                     $users = DB::table('dokumens')
                                         ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
                                         ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
-                                        ->select('users.id', 'users.name')
+                                        ->select(
+                                            'users.id',
+                                            'users.name'
+                                        )
                                         ->where('dokumens.id_skpd', Auth::user()->id_skpd)
                                         ->groupBy('users.id')
                                         ->get();
+
                                 } elseif (Auth::user()->role == 'OPD') {
+
                                     $users = DB::table('dokumens')
                                         ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
                                         ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
                                         ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
-                                        ->select('users.id', 'users.name', 'profils.nip')
+                                        ->select(
+                                            'users.id',
+                                            'users.name', 
+                                            'profils.nip'
+                                        )
                                         ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
                                         ->groupBy('users.id')
                                         ->get();
+
                                 } else {
+
                                     $users = DB::table('users')->where('id', Auth::id())->get();
                                 }
                             @endphp
@@ -179,7 +194,7 @@
                                 <option value="">PILIH UNIT ORGANISASI</option>
                             </select>
                         </div>
-                        @if (Auth::user()->role != 'Pegawai')
+                        @if(Auth::user()->role != 'Pegawai')
                             <div class="form-group">
                                 <label>Status Dokumen</label>
                                 <select name="status" id="status" class="form-control">
@@ -188,11 +203,6 @@
                                     <option>Dokumen Diterima</option>
                                     <option>Perlu Diperbaiki</option>
                                 </select>
-                            </div>
-                            <div class="form-group mt-3" id="alasan_wrapper">
-                                <label>Alasan Ditolak / Arahan<sup class="text-danger">*</sup></label>
-                                <textarea name="alasan_ditolak" id="alasan_ditolak" class="form-control" rows="3"
-                                    placeholder="Masukkan alasan penolakan atau arahan ..."></textarea>
                             </div>
                         @endif
                     </div>
@@ -208,7 +218,7 @@
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             getData()
             // new TomSelect('#id_user');
             tomSelectUser = new TomSelect('#id_user');
@@ -230,22 +240,20 @@
                     'loadingRecords': '&nbsp;',
                     'processing': 'Loading...'
                 },
-                columnDefs: [{
-                        orderable: false,
-                        targets: [7, 8, 9]
-                    } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+                columnDefs: [
+                    { orderable: false, targets: [7, 8, 9] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
                 ],
                 columns: [{
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: "name"
-                    },
-                    {
-                        render: function(data, type, row, meta) {
-                            return `${row.jenis_dokumen}
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: "name"
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return `${row.jenis_dokumen}
                         ${row.nomor_dokumen ? '<br> <b>No. '+row.nomor_dokumen+'</b>' : '<br> <b>No. -</b>'} <br> 
                         ${row.jenis_dokumen_berkala ?? `Lainnya`}`
                     }
@@ -260,7 +268,7 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `Unor Induk: ${row.nama_skpd} <br> Unor : ${row.unit_kerja ?? `-`}`
+                        return `Unor Induk: ${row.nama_skpd} <br> Unor: ${row.unit_kerja ?? `-`}`
                     }
                 },
                 {
@@ -268,39 +276,36 @@
                         return `${row.status ?? 'Belum Diperiksa'}
                             <br> <span style="display: none;">${row.dokumen}</span>
                         `
-                        }
-                    },
-                    {
-                        data: 'alasan_ditolak'
-                    },
-                    {
-                        render: function(data, type, row, meta) {
-                            return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
+                    }
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
                             <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
                         </a>`
-                        }
-                    },
-                    {
-                        render: function(data, type, row, meta) {
-                            return `<a data-toggle="modal" data-target="#modal"
+                    }
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return `<a data-toggle="modal" data-target="#modal"
                             data-bs-id=` + (row.id) + ` href="javascript:void(0)">
                             <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                         </a>`
-                        }
-                    },
-                    {
-                        render: function(data, type, row, meta) {
-                            return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                                .id) + `)">
+                    }
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                            .id) + `)">
                             <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
                         </a>`
-                        }
-                    },
+                    }
+                },
                 ]
             })
         }
 
-        $('#modal').on('show.bs.modal', function(event) {
+        $('#modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var recipient = button.data('bs-id') // Extract info from data-* attributes
             var cok = $("#myTable").DataTable().rows().data().toArray()
@@ -325,7 +330,6 @@
                 // modal.find('#id_user').val(cokData[0].id_user).trigger('change');
                 tomSelectUser.setValue(cokData[0].id_user);
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
-                modal.find('#alasan_ditolak').val(cokData[0].alasan_ditolak)
 
                 const skpdId = document.getElementById('id_skpd').value
                 const unitKerjaSelect = document.getElementById('id_unit_kerja');
@@ -335,8 +339,7 @@
                 axios.get(`/data-unit-kerja/${skpdId}`)
                     .then(response => {
                         const data = response.data;
-                        unitKerjaSelect.innerHTML =
-                        '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
+                        unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT ORGANISASI</option>'; // Reset pilihan
 
                         // Tambahkan setiap unit kerja ke dalam dropdown
                         data.forEach(item => {
@@ -353,7 +356,7 @@
                         unitKerjaSelect.innerHTML = '<option value="">GAGAL MEMUAT DATA</option>';
                     });
 
-
+                
 
             }
         })
@@ -369,11 +372,11 @@
             document.getElementById("tombol_kirim").disabled = true;
 
             axios({
-                    method: 'post',
-                    url: formData.get('id') == '' ? '/store-file-dokumen' : '/update-file-dokumen',
-                    data: formData,
-                })
-                .then(function(res) {
+                method: 'post',
+                url: formData.get('id') == '' ? '/store-file-dokumen' : '/update-file-dokumen',
+                data: formData,
+            })
+                .then(function (res) {
                     //handle success         
                     if (res.data.responCode == 1) {
 
@@ -401,7 +404,7 @@
 
                     document.getElementById("tombol_kirim").disabled = false;
                 })
-                .catch(function(res) {
+                .catch(function (res) {
                     document.getElementById("tombol_kirim").disabled = false;
                     //handle error
                     console.log(res);
@@ -422,8 +425,8 @@
 
                 if (result.value) {
                     axios.post('/delete-file-dokumen', {
-                            id
-                        })
+                        id
+                    })
                         .then((response) => {
                             if (response.data.responCode == 1) {
                                 Swal.fire({
@@ -452,7 +455,7 @@
         }
     </script>
     <script>
-        document.getElementById('id_skpd').addEventListener('change', function() {
+        document.getElementById('id_skpd').addEventListener('change', function () {
             const skpdId = this.value; // Ambil id_skpd yang dipilih
             const unitKerjaSelect = document.getElementById('id_unit_kerja');
 
@@ -479,4 +482,5 @@
                 });
         });
     </script>
+
 @endpush

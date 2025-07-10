@@ -75,6 +75,14 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
+                <label for="exampleInputPassword1">TMT Golongan <sup class="text-danger">*</sup></label>
+                <input name="tmt_golongan" value="{{ @$profil->tmt_golongan }}" id="tmt_golongan" type="date"
+                    placeholder="TMT Golongan" class="form-control form-control-sm" required>
+                    <small class="text-danger">*TMT Golongan terbaru</small>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
                 <label>Jabatan <sup class="text-danger">*</sup></label>
                 <input name="jabatan" id="jabatan" value="{{ @$profil->jabatan }}" type="text"
                     placeholder="Jabatan" class="form-control form-control-sm" required>
@@ -191,14 +199,7 @@
                     placeholder="TMT PNS" class="form-control form-control-sm">
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label for="exampleInputPassword1">TMT Golongan <sup class="text-danger">*</sup></label>
-                <input name="tmt_golongan" value="{{ @$profil->tmt_golongan }}" id="tmt_golongan" type="date"
-                    placeholder="TMT Golongan" class="form-control form-control-sm" required>
-                    <small class="text-danger">*TMT Golongan terbaru</small>
-            </div>
-        </div>
+        
         
         <div class="col-lg-6">
             <div class="form-group">
@@ -235,7 +236,7 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>KPPN <sup class="text-danger">*</sup></label>
-                <input name="kpkn" id="kpkn" value="{{ @@$profil->kpkn }}" type="text" placeholder="KPPN"
+                <input name="kpkn" id="kpkn" value="Badan Keuangan dan Aset Daerah (BKAD)" type="text" placeholder="KPPN"
                     class="form-control form-control-sm" required>
             </div>
         </div>
@@ -260,7 +261,7 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Instansi Induk <sup class="text-danger">*</sup></label>
-                <input name="instansi_induk" id="instansi_induk" value="PEMKAB BENGKULU UTARA"
+                <input name="instansi_induk" id="instansi_induk" value="Pemerintah Kab. Bengkulu Utara"
                     type="text" placeholder="Instansi Induk" class="form-control form-control-sm" required>
             </div>
         </div>

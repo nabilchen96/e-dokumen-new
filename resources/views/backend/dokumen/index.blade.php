@@ -5,6 +5,10 @@
         th {
             text-wrap: nowrap !important;
         }
+
+        .dataTables_wrapper {
+            overflow-x: auto;
+        }
     </style>
 @endpush
 @section('content')
@@ -26,8 +30,8 @@
                     <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
                         Tambah
                     </button>
-                    <div class="table-responsive">
-                        <table id="myTable" class="table table-striped" style="width: 100%;">
+                    <div class="table-responsive" style="overflow-x:auto;">
+                        <table id="myTable" class="display nowrap table table-striped" style="width: 100%;">
                             <thead class="bg-info text-white">
                                 <tr>
                                     <th width="5%">No</th>
@@ -199,10 +203,10 @@
                                     <option>Perlu Diperbaiki</option>
                                 </select>
                             </div>
-                            <div class="form-group mt-3" id="alasan_wrapper">
+                            <div class="form-group mt-3" id="alasan_wrapper" style="display: none;">
                                 <label>Alasan Ditolak / Arahan<sup class="text-danger">*</sup></label>
                                 <textarea name="alasan_ditolak" id="alasan_ditolak" class="form-control" rows="3"
-                                    placeholder="Masukkan alasan penolakan atau arahan ..."></textarea>
+                                    placeholder="Masukkan alasan penolakan atau arahan ..." required></textarea>
                             </div>
                         @endif
                     </div>
@@ -222,7 +226,23 @@
             getData()
             // new TomSelect('#id_user');
             tomSelectUser = new TomSelect('#id_user');
+
+            const statusSelect = document.getElementById('status');
+            const alasanWrapper = document.getElementById('alasan_wrapper');
+            const alasanTextarea = document.getElementById('alasan_ditolak');
+
+            statusSelect.addEventListener('change', function() {
+                if (this.value === 'Perlu Diperbaiki') {
+                    alasanWrapper.style.display = 'block';
+                    alasanTextarea.setAttribute('required', 'required');
+                } else {
+                    alasanWrapper.style.display = 'none';
+                    alasanTextarea.removeAttribute('required');
+                    alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
+                }
+            });
         })
+
 
         function getData() {
 
@@ -257,13 +277,14 @@
                     {
                         render: function(data, type, row, meta) {
                             return `${row.jenis_dokumen}
-                        ${row.nomor_dokumen ? '<br> <b>No. '+row.nomor_dokumen+'</b>' : '<br> <b>No. -</b>'} <br> 
-                        ${row.jenis_dokumen_berkala ?? `Lainnya`}`
+    ${row.nomor_dokumen ? '<br> <b>No. '+row.nomor_dokumen+'</b>' : '<br> <b>No. -</b>'} <br>
+    ${row.jenis_dokumen_berkala ?? `Lainnya`}`
                         }
                     },
                     {
                         render: function(data, type, row, meta) {
-                            return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ?? '-'}`
+                            return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ??
+    '-'}`
                         }
                     },
                     {
@@ -277,8 +298,8 @@
                     {
                         render: function(data, type, row, meta) {
                             return `${row.status ?? 'Belum Diperiksa'}
-                            <br> <span style="display: none;">${row.dokumen}</span>
-                        `
+    <br> <span style="display: none;">${row.dokumen}</span>
+    `
                         }
                     },
                     {
@@ -287,24 +308,23 @@
                     {
                         render: function(data, type, row, meta) {
                             return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-                        </a>`
+        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+    </a>`
                         }
                     },
                     {
                         render: function(data, type, row, meta) {
-                            return `<a data-toggle="modal" data-target="#modal"
-                            data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                            <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                        </a>`
+                            return `<a data-toggle="modal" data-target="#modal" data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+    </a>`
                         }
                     },
                     {
                         render: function(data, type, row, meta) {
                             return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                                 .id) + `)">
-                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                        </a>`
+        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+    </a>`
                         }
                     },
                 ]
@@ -312,6 +332,11 @@
         }
 
         $('#modal').on('show.bs.modal', function(event) {
+
+            const statusSelect = document.getElementById('status');
+            const alasanWrapper = document.getElementById('alasan_wrapper');
+            const alasanTextarea = document.getElementById('alasan_ditolak');
+
             var button = $(event.relatedTarget) // Button that triggered the modal
             var recipient = button.data('bs-id') // Extract info from data-* attributes
             var cok = $("#myTable").DataTable().rows().data().toArray()
@@ -336,7 +361,18 @@
                 // modal.find('#id_user').val(cokData[0].id_user).trigger('change');
                 tomSelectUser.setValue(cokData[0].id_user);
                 modal.find('#id_skpd').val(cokData[0].id_skpd)
+
+                if (cokData[0].status === 'Perlu Diperbaiki') {
+                    alasanWrapper.style.display = 'block';
+                    alasanTextarea.setAttribute('required', 'required');
+                } else {
+                    alasanWrapper.style.display = 'none';
+                    alasanTextarea.removeAttribute('required');
+                    alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
+                }
+
                 modal.find('#alasan_ditolak').val(cokData[0].alasan_ditolak)
+
 
                 const skpdId = document.getElementById('id_skpd').value
                 const unitKerjaSelect = document.getElementById('id_unit_kerja');
@@ -385,7 +421,7 @@
                     data: formData,
                 })
                 .then(function(res) {
-                    //handle success         
+                    //handle success
                     if (res.data.responCode == 1) {
 
                         Swal.fire({
@@ -399,7 +435,7 @@
                         location.reload('/file-dokumen')
 
                     } else {
-                        //respon 
+                        //respon
                         let respon_error = ``
                         Object.entries(res.data.respon).forEach(([field, messages]) => {
                             messages.forEach(message => {

@@ -28,10 +28,10 @@
                                 <a class="nav-link" href="{{ url('district') }}">Daerah</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('skpd') }}">SKPD</a>
+                                <a class="nav-link" href="{{ url('skpd') }}">Unit Organisasi Induk</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Kerja</a>
+                                <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Organisasi</a>
                             </li>
                         @endif
                         @if (Auth::user()->role == 'Admin')
@@ -100,7 +100,7 @@
                                         $query
                                             ->where('jenis_pegawai', 'like', '%Honorer%')
                                             ->orWhere('jenis_pegawai', 'Semua');
-                                    }
+                                    } 
                                 })
                                 ->get();
                         @endphp
@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai')
+            @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' )
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->

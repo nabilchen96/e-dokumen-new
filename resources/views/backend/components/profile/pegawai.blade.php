@@ -104,11 +104,6 @@
                 <select name="jenis_pegawai" class="form-control" id="jenis_pegawai" required>
                     <option value="">--PILIH JENIS PEGAWAI--</option>
                     <option {{ @$profil->jenis_pegawai == 'ASN Daerah Kab./Kota yang Bekerja pada Kab./Kota' ? 'selected' : '' }}>ASN Daerah Kab./Kota yang Bekerja pada Kab./Kota</option>
-                    <option {{ @$profil->jenis_pegawai == 'ASN Daerah Provinsi yang Bekerja pada Provinsi' ? 'selected' : '' }}>ASN Daerah Provinsi yang Bekerja pada Provinsi</option>
-                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat DPK pada Pemerintah Kabupaten/Kota' ? 'selected' : '' }}>ASN Pusat DPK pada Pemerintah Kabupaten/Kota</option>
-                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat DPK pada Pemerintah Provinsi' ? 'selected' : '' }}>ASN
-                        Pusat DPK pada Pemerintah Provinsi</option>
-                    <option {{ @$profil->jenis_pegawai == 'ASN Pusat yang Bekerja pada Departemen/Lembaga' ? 'selected' : '' }}>ASN Pusat yang Bekerja pada Departemen/Lembaga</option>
                 </select>
             </div>
         </div>
@@ -122,7 +117,7 @@
                         Pensiun</option>
                     <option {{ @$profil->kedudukan_hukum == 'Pemberhentian Sementara' ? 'selected' : '' }}>Pemberhentian
                         Sementara</option>
-                    <option {{ @$profil->kedudukan_hukum == 'PNS Kena Hukuman Disiplin' ? 'selected' : '' }}>PNS Kena
+                    <option {{ @$profil->kedudukan_hukum == 'ASN Kena Hukuman Disiplin' ? 'selected' : '' }}>ASN Kena
                         Hukuman Disiplin</option>
                     <option {{ @$profil->kedudukan_hukum == 'PPPK Aktif' ? 'selected' : '' }}>PPPK Aktif</option>
                     <option {{ @$profil->kedudukan_hukum == 'PPPK Tidak Aktif' ? 'selected' : '' }}>PPPK Tidak Aktif
@@ -272,14 +267,14 @@
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Instansi Kerja <sup class="text-danger">*</sup></label>
+                <label>Unit Organisasi Induk <sup class="text-danger">*</sup></label>
                 <!-- <input name="instansi_kerja" id="instansi_kerja" value="{{ @@$profil->instansi_kerja }}"
                     type="text" placeholder="Instansi Kerja" class="form-control form-control-sm"> -->
                 @php
                     $skpd = DB::table('skpds')->get();
                 @endphp
                 <select name="instansi_kerja" id="instansi_kerja" required>
-                    <option value="">PILIH INSTANSI KERJA</option>
+                    <option value="">PILIH UNIT ORGANISASI INDUK</option>
                     @foreach ($skpd as $item)
                         <option {{ $item->nama_skpd == $profil->instansi_kerja ? 'selected' : ''}} >{{ $item->nama_skpd }}</option>
                     @endforeach
@@ -289,11 +284,11 @@
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Satuan Kerja <sup class="text-danger">*</sup></label>
+                <label>Unit Organisasi <sup class="text-danger">*</sup></label>
                 <!-- <input name="satuan_kerja" id="satuan_kerja" value="{{ @@$profil->satuan_kerja }}" type="text"
                     placeholder="Satuan Kerja" class="form-control form-control-sm"> -->
                 <select name="satuan_kerja" id="satuan_kerja" required>
-                    <option value="">PILIH SATUAN KERJA</option>
+                    <option value="">PILIH UNIT ORGANISASI</option>
                     @php 
                         $unit_kerja = DB::table('unit_kerjas')->get();
                     @endphp 
@@ -306,7 +301,7 @@
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Unor Induk</label>
+                <label>Unit Kerja</label>
                     <input name="unor" id="unor" value="{{ @@$profil->unor }}" type="text"
                     placeholder="Unor" class="form-control form-control-sm">
                     

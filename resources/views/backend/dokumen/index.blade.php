@@ -27,7 +27,7 @@
                                     <th>Jenis / No. Dokumen</th>
                                     <th>Tanggal Berlaku</th>
                                     <th>Tanggal Upload</th>
-                                    <th>SKPD / Unit Kerja</th>
+                                    <th>Unor Induk / Unor</th>
                                     <th>Status</th>
                                     <th width="5%">PDF</th>
                                     <th width="5%">Edit</th>
@@ -113,16 +113,21 @@
                                 </select>
                             </div>
                         @endif
+                        
+                       
                         <div class="form-group">
                             <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
                             <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
                                 name="tanggal_dokumen" class="form-control form-control-sm" required>
+                                <small class="text-danger">*Untuk SK CPNS/PNS/P3K/Kenaikan Gaji Berkala/Kenaikan Pangkat/Jabatan gunakan tanggal TMT</small>
                         </div>
+                        
                         @if ($kenaikan_gaji->punya_tgl_akhir == 'Ya')
                             <div class="form-group">
                                 <label>Tanggal Akhir Dokumen <sup class="text-danger">*</sup></label>
                                 <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
                                     name="tanggal_akhir_dokumen" class="form-control form-control-sm">
+                                    <small class="text-danger">*Untuk Tanggal Akhir SK Kenaikan Gaji Berkala di isi dengan tanggal pengajuan selanjutnya pada SK Kenaikan Gaji Berkala yang di Upload</small>
                             </div>
                         @endif
                         <div class="form-group">
@@ -172,21 +177,21 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>SKPD <sup class="text-danger">*</sup></label>
+                            <label>Unit Organisasi Induk<sup class="text-danger">*</sup></label>
                             @php
                                 $skpd = DB::table('skpds')->get();
                             @endphp
                             <select name="id_skpd" id="id_skpd" class="form-control" required>
-                                <option value="">PILIH SKPD</option>
+                                <option value="">PILIH UNIT ORGANISASI INDUK</option>
                                 @foreach ($skpd as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_skpd }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Unit Kerja <sup class="text-danger">*</sup></label>
+                            <label>Unit Organisasi <sup class="text-danger">*</sup></label>
                             <select name="id_unit_kerja" id="id_unit_kerja" class="form-control" required>
-                                <option value="">PILIH UNIT KERJA</option>
+                                <option value="">PILIH UNIT ORGANISASI</option>
                             </select>
                         </div>
                         @if(Auth::user()->role != 'Pegawai')
@@ -263,7 +268,7 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        return `SKPD: ${row.nama_skpd} <br> UNIT KERJA: ${row.unit_kerja ?? `-`}`
+                        return `Unor Induk: ${row.nama_skpd} <br> Unor: ${row.unit_kerja ?? `-`}`
                     }
                 },
                 {

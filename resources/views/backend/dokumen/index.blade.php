@@ -1,4 +1,12 @@
 @extends('backend.app')
+@push('style')
+    <style>
+        td,
+        th {
+            text-wrap: nowrap !important;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="row" style="margin-top: -200px;">
         <div class="col-md-12 text-white text-white">
@@ -112,21 +120,23 @@
                                 </select>
                             </div>
                         @endif
-                        
-                       
+
+
                         <div class="form-group">
                             <label>Tanggal Awal Dokumen <sup class="text-danger">*</sup></label>
                             <input type="date" placeholder="Tanggal Awal Dokumen" id="tanggal_dokumen"
                                 name="tanggal_dokumen" class="form-control form-control-sm" required>
-                                <small class="text-danger">*Untuk SK CPNS/PNS/P3K/Kenaikan Gaji Berkala/Kenaikan Pangkat/Jabatan gunakan tanggal TMT</small>
+                            <small class="text-danger">*Untuk SK CPNS/PNS/P3K/Kenaikan Gaji Berkala/Kenaikan Pangkat/Jabatan
+                                gunakan tanggal TMT</small>
                         </div>
-                        
+
                         @if ($kenaikan_gaji->punya_tgl_akhir == 'Ya')
                             <div class="form-group">
                                 <label>Tanggal Akhir Dokumen <sup class="text-danger">*</sup></label>
                                 <input type="date" placeholder="Tanggal Akhir Dokumen" id="tanggal_akhir_dokumen"
                                     name="tanggal_akhir_dokumen" class="form-control form-control-sm">
-                                    <small class="text-danger">*Untuk Tanggal Akhir SK Kenaikan Gaji Berkala di isi dengan tanggal pengajuan selanjutnya pada SK Kenaikan Gaji Berkala yang di Upload</small>
+                                <small class="text-danger">*Untuk Tanggal Akhir SK Kenaikan Gaji Berkala di isi dengan
+                                    tanggal pengajuan selanjutnya pada SK Kenaikan Gaji Berkala yang di Upload</small>
                             </div>
                         @endif
                         <div class="form-group">
@@ -189,7 +199,7 @@
                                     <option>Perlu Diperbaiki</option>
                                 </select>
                             </div>
-                            <div class="form-group mt-3" id="alasan_wrapper" >
+                            <div class="form-group mt-3" id="alasan_wrapper">
                                 <label>Alasan Ditolak / Arahan<sup class="text-danger">*</sup></label>
                                 <textarea name="alasan_ditolak" id="alasan_ditolak" class="form-control" rows="3"
                                     placeholder="Masukkan alasan penolakan atau arahan ..."></textarea>
@@ -223,6 +233,7 @@
             let jenis_dokumen = params.get('jenis_dokumen'); // "John"
 
             $("#myTable").DataTable({
+                scrollX: true,
                 "ordering": true,
                 ajax: '/data-file-dokumen?jenis_dokumen=' + jenis_dokumen,
                 processing: true,
@@ -248,24 +259,24 @@
                             return `${row.jenis_dokumen}
                         ${row.nomor_dokumen ? '<br> <b>No. '+row.nomor_dokumen+'</b>' : '<br> <b>No. -</b>'} <br> 
                         ${row.jenis_dokumen_berkala ?? `Lainnya`}`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ?? '-'}`
-                    }
-                },
-                {
-                    data: "created_at"
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `Unor Induk: ${row.nama_skpd} <br> Unor : ${row.unit_kerja ?? `-`}`
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return `${row.status ?? 'Belum Diperiksa'}
+                        }
+                    },
+                    {
+                        render: function(data, type, row, meta) {
+                            return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ?? '-'}`
+                        }
+                    },
+                    {
+                        data: "created_at"
+                    },
+                    {
+                        render: function(data, type, row, meta) {
+                            return `Unor Induk: ${row.nama_skpd} <br> Unor : ${row.unit_kerja ?? `-`}`
+                        }
+                    },
+                    {
+                        render: function(data, type, row, meta) {
+                            return `${row.status ?? 'Belum Diperiksa'}
                             <br> <span style="display: none;">${row.dokumen}</span>
                         `
                         }
@@ -336,7 +347,7 @@
                     .then(response => {
                         const data = response.data;
                         unitKerjaSelect.innerHTML =
-                        '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
+                            '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
 
                         // Tambahkan setiap unit kerja ke dalam dropdown
                         data.forEach(item => {

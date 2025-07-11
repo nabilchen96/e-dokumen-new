@@ -29,6 +29,7 @@
                                     <th width="5%">No</th>
                                     <th>Nama/Role/Status/Gol</th>
                                     <th>NIP/NIK/Email/Jabatan</th>
+                                    <th>SKPD / Unit Kerja</th>
                                     <th>JK/Tempat, Tgl Lahir/WA</th>
                                     <th>Peta</th>
                                     <th width="5%">Detail</th>

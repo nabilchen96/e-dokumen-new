@@ -58,34 +58,21 @@ class ProfilController extends Controller
 
         } elseif (Auth::user()->role == 'SKPD') {
 
-            // Ambil ID SKPD dari user yang login
+            // Ambil ID skpd dari user SKPD yang sedang login
             $skpdId = Auth::user()->id_skpd;
 
-            // Subquery untuk ambil dokumen terbaru tiap user pada SKPD yang sama
-            $latestDokumenSubquery = DB::table('dokumens as d1')
-                ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
-                ->where('d1.id_skpd', $skpdId)
-                ->groupBy('d1.id_user');
+            // dd($skpdId);
 
-            // Join ke dokumen agar bisa difilter berdasarkan SKPD dan ambil updated_at terbaru
-            $user2 = DB::table('users')
-                ->join('profils', 'profils.id_user', '=', 'users.id')
-                ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
-                ->join('dokumens as d', 'd.id_user', '=', 'users.id')
-                ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
-                    $join->on('d.id_user', '=', 'latest.id_user')
-                        ->on('d.updated_at', '=', 'latest.latest_update');
-                })
-                ->where('d.id_skpd', $skpdId)
-                ->select(
-                    'users.*',
-                    'profils.*',
-                    'skpds.nama_skpd',
-                    'd.updated_at as dokumen_terakhir'
-                )
-                ->get();
+            if ($skpdId === null) {
+                // Jika user SKPD belum punya skpd, kembalikan data kosong
+                $profil = collect(); // atau bisa juga response kosong
 
-            $profil = $user2;
+            } else {
+                
+                $profil = $profil->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_skpd)->get();
+            }
+            
 
         } else if (Auth::user()->role == 'OPD') {
 
@@ -96,38 +83,9 @@ class ProfilController extends Controller
                 // Jika user OPD belum punya unit kerja, kembalikan data kosong
                 $profil = collect(); // atau bisa juga response kosong
             } else {
-                // Subquery: Ambil dokumen terbaru tiap user dalam unit kerja tersebut
-                $latestDokumenSubquery = DB::table('dokumens as d1')
-                    ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
-                    ->where('d1.id_unit_kerja', $unitKerjaId)
-                    ->groupBy('d1.id_user');
-
-                // Query utama untuk ambil profil user berdasarkan dokumen terakhir di unit kerja yang sama
-                $profil = DB::table('users')
-                    ->join('profils', 'profils.id_user', '=', 'users.id')
-                    ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'profils.id_unit_kerja')
-                    ->leftJoin('skpds', 'skpds.id', '=', 'unit_kerjas.id_skpd')
-                    ->leftJoin('districts', 'districts.id', '=', 'profils.district_id')
-                    ->join('dokumens as d', 'd.id_user', '=', 'users.id')
-                    ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
-                        $join->on('d.id_user', '=', 'latest.id_user')
-                            ->on('d.updated_at', '=', 'latest.latest_update');
-                    })
-                    ->where('d.id_unit_kerja', $unitKerjaId)
-                    ->select(
-                        'users.name',
-                        'users.email',
-                        'users.no_wa',
-                        'users.role',
-                        'profils.*',
-                        'districts.name as district',
-                        'districts.latitude',
-                        'districts.longitude',
-                        'unit_kerjas.unit_kerja',
-                        'skpds.nama_skpd',
-                        'd.updated_at as dokumen_terakhir'
-                    )
-                    ->get();
+                
+                $profil = $profil->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)->get();
             }
 
         } else {

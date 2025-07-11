@@ -22,6 +22,7 @@ class DokumenController extends Controller
 
         $data = DB::table('dokumens')
             ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
             ->leftJoin('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
             ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
             ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
@@ -45,11 +46,15 @@ class DokumenController extends Controller
 
         } elseif (Auth::user()->role == 'SKPD'){
 
-            $data = $data->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            // $data = $data->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            $data = $data->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_skpd)->get();
 
         } elseif (Auth::user()->role == 'OPD' && Auth::user()->id_unit_kerja){
 
-            $data = $data->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
+            // $data = $data->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)->get();
+            $data = $data->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)->get();
         }
 
 

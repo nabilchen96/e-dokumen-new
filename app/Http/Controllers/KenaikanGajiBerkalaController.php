@@ -206,7 +206,10 @@ class KenaikanGajiBerkalaController extends Controller
 
         }elseif (Auth::user()->role == 'SKPD'){
 
-            $kenaikan_gaji = $kenaikan_gaji->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            // $kenaikan_gaji = $kenaikan_gaji->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            $kenaikan_gaji = $kenaikan_gaji->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_skpd)->get();
+
 
         } elseif (Auth::user()->role == 'OPD'){
 
@@ -216,9 +219,12 @@ class KenaikanGajiBerkalaController extends Controller
                     // Jika user OPD belum punya unit kerja, tidak boleh melihat data
                     $kenaikan_gaji = collect(); // atau bisa return kosong
                 } else {
-                    $kenaikan_gaji = $kenaikan_gaji
-                        ->where('dokumens.id_unit_kerja', $unitKerjaId)
-                        ->get();
+                    // $kenaikan_gaji = $kenaikan_gaji
+                    //     ->where('dokumens.id_unit_kerja', $unitKerjaId)
+                    //     ->get();
+                    $kenaikan_gaji = $kenaikan_gaji->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)->get();
+              
                 }
         }
 
@@ -250,7 +256,10 @@ class KenaikanGajiBerkalaController extends Controller
 
         }elseif (Auth::user()->role == 'SKPD'){
 
-            $dokumen_periksa = $dokumen_periksa->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            // $dokumen_periksa = $dokumen_periksa->where('dokumens.id_skpd', Auth::user()->id_skpd)->get();
+            $dokumen_periksa = $dokumen_periksa->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_skpd)->get();
+
 
         } elseif (Auth::user()->role == 'OPD'){
 
@@ -260,9 +269,13 @@ class KenaikanGajiBerkalaController extends Controller
                 // Jika user OPD belum punya unit kerja, tidak boleh melihat data
                 $dokumen_periksa = collect(); // atau bisa return kosong
             } else {
-                $dokumen_periksa = $dokumen_periksa
-                    ->where('dokumens.id_unit_kerja', $unitKerjaId)
-                    ->get();
+                // $dokumen_periksa = $dokumen_periksa
+                //     ->where('dokumens.id_unit_kerja', $unitKerjaId)
+                //     ->get();
+
+                $dokumen_periksa = $dokumen_periksa->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)->get();
+            
             }
         }
 

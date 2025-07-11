@@ -266,7 +266,7 @@
                             <tr>
                                 <th>Nama / NIP</th>
                                 <th>Status / Jenis Dokumen</th>
-                                <th>Alasan Ditolak / Arahan</th>
+                                {{-- <th>Alasan Ditolak / Arahan</th> --}}
                                 <th>Tgl Akhir Dok.</th>
                                 <th>File</th>
                                 <th>Periksa</th>
@@ -284,7 +284,7 @@
                                         {{ $i->status ?? 'Belum Diperiksa' }} <br>
                                         Dok. {{ $i->jenis_dokumen ?? 'Lainnya' }}
                                     </td>
-                                    <td>{{ $i->alasan_ditolak }}</td>
+                                    {{-- <td>{{ $i->alasan_ditolak }}</td> --}}
                                     <td>
                                         {{ $i->tanggal_akhir_dokumen ? date('d-m-Y', strtotime($i->tanggal_akhir_dokumen)) : '-' }}
                                     </td>

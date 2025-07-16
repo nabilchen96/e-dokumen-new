@@ -217,7 +217,7 @@
         </div>
         
         <div class="col-lg-6">
-            Masa Kerja </br>
+            Masa Kerja Golongan </br>
             <div class="form-group">
                 <label for="exampleInputPassword1">Tahun <sup class="text-danger">*</sup></label>
                 <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"

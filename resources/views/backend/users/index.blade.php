@@ -86,7 +86,7 @@
                                 <option>Inspektorat</option>
                             @endif
                             <option value="Pegawai">Pegawai</option>
-                            <option>OPD</option>
+                            <option value="OPD">Unit Kerja</option>
                         </select>
                     </div>
                     <div class="form-group" id="id_skpd_group" style="display: none;">
@@ -102,9 +102,9 @@
                         </select>
                     </div>
                     <div class="form-group" id="id_opd_group" style="display: none;">
-                        <label for="exampleInputPassword1">PILIH OPD/Unit Kerja</label>
+                        <label for="exampleInputPassword1">PILIH Unit Kerja</label>
                         <select name="id_unit_kerja" class="my-select2" id="id_unit_kerja">
-                            <option value="">PILIH OPD/Unit Kerja</option>
+                            <option value="">PILIH Unit Kerja</option>
                             @php 
                                 $unit_kerja = DB::table('unit_kerjas')->get();
                             @endphp 

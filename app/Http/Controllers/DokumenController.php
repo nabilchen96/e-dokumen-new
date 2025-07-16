@@ -31,7 +31,8 @@ class DokumenController extends Controller
                 'jenis_dokumens.jenis_dokumen',
                 'users.name',
                 'skpds.nama_skpd',
-                'unit_kerjas.unit_kerja'
+                'unit_kerjas.unit_kerja', 
+                'profils.nip'
             )
             ->where('jenis_dokumens.id', Request('jenis_dokumen'));
 

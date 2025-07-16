@@ -89,7 +89,7 @@ function getData() {
         },
         {
             render: function (data, type, row, meta) {
-                return `${row.role} <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
+                return `${row.role == 'OPD' ? 'Unit Kerja' : row.role } <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
             }
         },
         {

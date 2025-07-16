@@ -96,7 +96,7 @@
                                 {{ Auth::user()->email }}
                             </a>
                             <a class="dropdown-item" style="padding-top: 0; padding-bottom: 0;">
-                                <i class="bi bi-person-circle"></i> {{ Auth::user()->role }}
+                                <i class="bi bi-person-circle"></i> {{ Auth::user()->role == 'OPD' ? 'Unit Kerja' : Auth::user()->role }}
                             </a>
                             <a class="dropdown-item" href="{{ url('logout') }}">
                                 <i class="ti-power-off text-primary"></i>

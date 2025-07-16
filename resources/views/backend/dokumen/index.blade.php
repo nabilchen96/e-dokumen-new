@@ -1,10 +1,6 @@
 @extends('backend.app')
 @push('style')
     <style>
-        td,
-        th {
-            text-wrap: nowrap !important;
-        }
 
         .dataTables_wrapper {
             overflow-x: auto;
@@ -39,7 +35,8 @@
                                     <th>Jenis / No. Dokumen</th>
                                     <th>Tanggal Berlaku</th>
                                     <th>Tanggal Upload</th>
-                                    <th>Unor Induk / Unor</th>
+                                    <th>Unor Induk / Unor
+                                    </th>
                                     <th>Status</th>
                                     <th>Alasan Ditolak / Arahan </th>
                                     <th width="5%">PDF</th>
@@ -180,7 +177,8 @@
                             @php
                                 $skpd = DB::table('skpds')->get();
                             @endphp
-                            <select name="id_skpd" id="id_skpd" class="form-control" required>
+                            <select name="id_skpd" id="id_skpd" class="form-control"
+                                {{ Auth::user()->role == 'Admin' ? '' : 'required' }}>
                                 <option value="">PILIH UNIT ORGANISASI INDUK</option>
                                 @foreach ($skpd as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_skpd }}</option>
@@ -189,7 +187,8 @@
                         </div>
                         <div class="form-group">
                             <label>Unit Organisasi <sup class="text-danger">*</sup></label>
-                            <select name="id_unit_kerja" id="id_unit_kerja" class="form-control" required>
+                            <select name="id_unit_kerja" id="id_unit_kerja" class="form-control"
+                                {{ Auth::user()->role == 'Admin' ? '' : 'required' }}>
                                 <option value="">PILIH UNIT ORGANISASI</option>
                             </select>
                         </div>
@@ -272,7 +271,9 @@
                         }
                     },
                     {
-                        data: "name"
+                        render: function(data, type, row, meta) {
+                            return `${row.name}<br><b>${row.nip}</b>`
+                        }
                     },
                     {
                         render: function(data, type, row, meta) {
@@ -283,23 +284,30 @@
                     },
                     {
                         render: function(data, type, row, meta) {
-                            return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ??
-    '-'}`
+                            return `<b>Tanggal Awal:</b><br> ${row.tanggal_dokumen} <br> <b>Tanggal Akhir:</b><br> ${row.tanggal_akhir_dokumen ?? '-'}`
                         }
                     },
                     {
                         data: "created_at"
                     },
                     {
+                        width: '300px',
+                        targets: 5,
                         render: function(data, type, row, meta) {
-                            return `Unor Induk: ${row.nama_skpd} <br> Unor : ${row.unit_kerja ?? `-`}`
+                            return `
+                                <div style="white-space: normal; width: 300px; overflow-wrap: break-word;">
+                                    <strong>Unor Induk:</strong> ${row.nama_skpd}
+                                </div>
+                                <div style="white-space: normal; width: 300px; overflow-wrap: break-word;">
+                                    <strong>Unor:</strong> ${row.unit_kerja ?? `-`}
+                                </div>
+                            `
                         }
                     },
                     {
                         render: function(data, type, row, meta) {
                             return `${row.status ?? 'Belum Diperiksa'}
-    <br> <span style="display: none;">${row.dokumen}</span>
-    `
+                            <br> <span style="display: none;">${row.dokumen}</span>`
                         }
                     },
                     {
@@ -397,7 +405,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching unit kerja:', error);
-                        unitKerjaSelect.innerHTML = '<option value="">GAGAL MEMUAT DATA</option>';
+                        unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT ORGANISASI</option>';
                     });
 
 

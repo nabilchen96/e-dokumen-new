@@ -90,7 +90,7 @@
                                                     <i class="bi bi-file-earmark-fill"></i> Lihat File
                                                 </a>
                                             </div><br>
-                                            <b>User OPD: </b><br>
+                                            <b>User Pengupload: </b><br>
                                             {{ $item->name_0 }}
                                         </td>
                                         <td>

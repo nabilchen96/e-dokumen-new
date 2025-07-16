@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' )
+            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' )
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -139,7 +139,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (Auth::user()->role != 'SKPD' && Auth::user()->role != 'Pegawai')
+                    @if (Auth::user()->role != 'Pegawai')
                         <li class="nav-item">
                             <a style="white-space: normal; line-height: 1.5;" class="nav-link"
                                 href="{{ url('proses-kenaikan-gaji') }}">

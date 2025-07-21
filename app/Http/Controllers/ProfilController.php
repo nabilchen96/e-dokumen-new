@@ -15,6 +15,8 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class ProfilController extends Controller
 {
@@ -232,6 +234,10 @@ class ProfilController extends Controller
     public function detail()
     {
 
+        if(Request('profil') == '4'){
+             return $this->detailApiSiasn();
+        }
+
         $data = $profil = DB::table('users')
             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
             ->leftJoin('districts', 'districts.id', '=', 'profils.district_id')
@@ -444,5 +450,44 @@ class ProfilController extends Controller
 
         // Berikan respon file kepada pengguna
         return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function getAuthorizationToken()
+    {
+        $username = 't9FAxeuvRvFhh4OTARTBkmQjOfQa'; // Ganti sesuai yang kamu dapat
+        $password = 'UwxWRfypponkptfJOB1QRnCtkHca'; // Ganti dengan yang asli
+
+        $response = Http::asForm()->withBasicAuth($username, $password)->post('https://apimws.bkn.go.id/oauth2/token', [
+            'grant_type' => 'client_credentials',
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return $data['access_token']; // ini adalah token Authorization (Bearer)
+        }
+
+        return response()->json([
+            'error' => 'Gagal mendapatkan token',
+            'message' => $response->body()
+        ], $response->status());
+    }
+
+    public function detailApiSiasn()
+    {
+        $token = Cache::remember('bkn_token', 36000, function () {
+            return $this->getAuthorizationToken();
+        });
+
+        $profil = DB::table('profils')->where('id', Request('id'))->first();
+
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Auth' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBUWNPM0V3MVBmQV9MQ0FtY2J6YnRLUEhtcWhLS1dRbnZ1VDl0RUs3akc4In0.eyJleHAiOjE3NTIyNDY3NjgsImlhdCI6MTc1MjIwMzU2OCwianRpIjoiN2RjNjAyY2EtYTU2Yi00NzhlLWI1NDYtNmM3NzM3ZjlmMzJjIiwiaXNzIjoiaHR0cHM6Ly9zc28tc2lhc24uYmtuLmdvLmlkL2F1dGgvcmVhbG1zL3B1YmxpYy1zaWFzbiIsImF1ZCI6WyJpZGlzIiwiYWNjb3VudCJdLCJzdWIiOiI5OTliNGE1OS05ZDJjLTQyODUtODlhOS0yNjAzZjY5NjZlZWYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJiZW5na3VsdXV0YXJhYXBpIiwic2Vzc2lvbl9zdGF0ZSI6IjFhZjA5NzMyLWVhYTQtNDA1ZS1hZTI0LWM4Yjc0ZDNhZTU5YSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsicm9sZTpzaWFzbi1pbnN0YW5zaTpwZXJlbWFqYWFuOm9wZXJhdG9yIiwicm9sZTpzaWFzbi1pbnN0YW5zaTpza2s6b3BlcmF0b3IiLCJyb2xlOnNpYXNuLWluc3RhbnNpOmlwYXNuOm1vbml0b3JpbmciLCJyb2xlOm1hbmFqZW1lbi13czpkZXZlbG9wZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwicm9sZTpzaWFzbi1pbnN0YW5zaTpwcm9maWxhc246dmlld3Byb2ZpbCJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImlkaXMiOnsicm9sZXMiOlsiYWdlbmN5LWFkbWluIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJGSVJBUyBTRU5BIEhBSVRTQU0iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiIxOTk2MDkwODIwMjUwNDEwMDUiLCJnaXZlbl9uYW1lIjoiRklSQVMiLCJmYW1pbHlfbmFtZSI6IlNFTkEgSEFJVFNBTSIsImVtYWlsIjoic2VuYWhhaXRzYW0wOEBnbWFpbC5jb20ifQ.S1JFFe5-9JuRQEfuAJ5Op4ttm4SRvQa9zNg_yiGGpvIal9_pn8AIqbG9elNZi9Nk8pGUoWKuolknpMZo4fMdkgw4QiCn-b5qQwMlw4XAGdpJrg5vKU27ejMdu7IrR6Z2DgC974c-W-zM0S5nmu1wtQFeUeni3rzkuOutq5FXyH7VNziKEgtwpsVnpZ1u2Ptmy-Y1Y8GL0pG7yBPr1uMXDhHOUkz3XtmvwF9ZcxOaPk_3nftxDFEt5qZpK07xqdRnkuU_lx8_uEhfHAud3O4BJfGxy3JMyPLdnB5U8z_dntC7h1iF9DtEBebWWHwxk-1OeiAkTXIzfYLxCy3hyb7TYg', // token statis dari BKN
+            'Authorization' => 'Bearer ' . $token,
+        ])->get("https://apimws.bkn.go.id:8243/apisiasn/1.0/pns/data-utama/".$profil->nip);
+
+        return view('backend.api_siasn.profile.detail', [
+            'response' => $response->json()
+        ]);
     }
 }

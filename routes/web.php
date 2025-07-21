@@ -197,7 +197,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');
     Route::get('/export-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@export');
 
-    //USER
+    //PROFIL
     Route::get('/profil', 'App\Http\Controllers\ProfilController@index');
     Route::get('/data-profil', 'App\Http\Controllers\ProfilController@data');
     Route::get('/detail-profil', 'App\Http\Controllers\ProfilController@detail');
@@ -207,6 +207,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-profil-pegawai', 'App\Http\Controllers\ProfilController@updateProfilPegawai');
     Route::post('/delete-profil', 'App\Http\Controllers\ProfilController@delete');
     Route::get('/export-excel-profil', 'App\Http\Controllers\ProfilController@exportExcel');
+
+    Route::get('/detail-siasn-profil', 'App\Http\Controllers\ProfilController@detailApiSiasn');
 
     //DETAIL STATISTIK PEGAWAI
     Route::get('/detail-statistik-pendidikan', 'App\Http\Controllers\StatistikController@detailPendidikan');
@@ -231,12 +233,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/verifikasi-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@verifikasi');
     Route::post('/delete-proses-kenaikan-gaji', 'App\Http\Controllers\ProsesKenaikanGajiController@delete');
     
-    //LAPORA MASALAH
+    //LAPOR MASALAH
     Route::get('/lapor-masalah', 'App\Http\Controllers\LaporMasalahController@index');
     Route::get('/data-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@data');
     Route::post('/store-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@store');
     Route::post('/update-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@update');
     Route::post('/delete-lapor-masalah', 'App\Http\Controllers\LaporMasalahController@delete');
+
+    // Route::get('/siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@index');
+    // Route::get('/data-siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@data');
+    // Route::get('/detail-siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@detail');
 });
 
 //STATISTIK PEGAWAI

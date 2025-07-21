@@ -47,6 +47,12 @@
                             Dokumen
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ url('detail-profil') }}?id={{ Request('id') }}&profil=4"
+                            class="nav-link {{ Request('profil') == '4' ? 'active' : '' }}">
+                            Profil SIASN
+                            </a>
+                        </li>
 
                     </ul>
                     <div class="tab-content" id="myTabContent">
@@ -58,6 +64,8 @@
                                 @include('backend.components.profile.pegawai')
                             @elseif(Request('profil') == 3)
                                 @include('backend.components.profile.dokumen')
+                            @elseif(Request('profil') == 4)
+                                @include('backend.components.profile.profil_siasn')
                             @endif
                         </div>
                     </div>

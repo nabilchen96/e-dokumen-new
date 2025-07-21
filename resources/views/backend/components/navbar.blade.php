@@ -100,7 +100,7 @@
                                         $query
                                             ->where('jenis_pegawai', 'like', '%Honorer%')
                                             ->orWhere('jenis_pegawai', 'Semua');
-                                    } 
+                                    }
                                 })
                                 ->get();
                         @endphp
@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role == 'Admin' )
+            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD')
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -166,6 +166,21 @@
                 </a>
             </li>
         @endif
+        {{-- <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-api-siasn" aria-expanded="false"
+                aria-controls="ui-basic">
+                <i class="bi bi-arrow-left-right menu-icon"></i>
+                <span class="menu-title">API SIASN</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-api-siasn">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('siasn-profil') }}">Data Profil</a>
+                    </li>
+                </ul>
+            </div>
+        </li> --}}
         <li class="nav-item">
             <a class="nav-link" href="{{ url('lapor-masalah') }}">
                 <i class="bi bi-headset menu-icon"></i>

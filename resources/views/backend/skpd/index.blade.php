@@ -33,7 +33,7 @@
                         <thead class="bg-info text-white">
                             <tr>
                                 <th width="5%">No</th>
-                                <th>Nama SKPD</th>
+                                <th>Nama Unit Organisasi Induk</th>
                                 <th>Latitude</th>
                                 <th>Longitude</th>
                                 <th width="10%">Alamat</th>
@@ -55,7 +55,7 @@
         <div class="modal-content">
             <form id="form">
                 <div class="modal-header">
-                    <h5 class="modal-title">SKPD Form</h5>
+                    <h5 class="modal-title">Unit Organisasi Induk Form</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -66,8 +66,8 @@
                             <div id="respon_error" class="text-danger mb-4"></div>
                             <input type="hidden" name="id" id="id">
                             <div class="form-group">
-                                <label>Nama SKPD <sup class="text-danger">*</sup></label>
-                                <input name="nama_skpd" id="nama_skpd" type="text" placeholder="Nama SKPD"
+                                <label>Nama Unit Organisasi Induk <sup class="text-danger">*</sup></label>
+                                <input name="nama_skpd" id="nama_skpd" type="text" placeholder="Nama Unit Organisasi Induk"
                                     class="form-control form-control-sm" required>
                             </div>
                             <div class="form-group">
@@ -119,14 +119,14 @@
             <form id="importForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header p-3">
-                    <h5 class="modal-title m-2">SKPD Import Form</h5>
+                    <h5 class="modal-title m-2">Unit Organisasi Induk Import Form</h5>
                 </div>
                 <div id="responseMessage"></div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Import Excel <sup class="text-danger">*</sup> </label>
                         <input name="file" id="file" type="file" class="form-control form-control-sm mb-2" required>
-                        <span>*Unduh format import SKPD <a href="{{ url('template_skpd_import.xlsx') }}">Template
+                        <span>*Unduh format import Unit Organisasi Induk <a href="{{ url('template_skpd_import.xlsx') }}">Template
                                 Import SKPD</a></span>
                     </div>
                 </div>

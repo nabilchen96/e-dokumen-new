@@ -29,7 +29,7 @@
                                     <th width="5%">No</th>
                                     <th>Nama/Role/Status/Gol</th>
                                     <th>NIP/NIK/Email/Jabatan</th>
-                                    <th>SKPD / Unit Kerja</th>
+                                    <th>Unor Induk / Unor</th>
                                     <th>JK/Tempat, Tgl Lahir/WA</th>
                                     <th>Peta</th>
                                     <th width="5%">Detail</th>
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Unit Kerja / SKPD</label>
+                            <label>Unit Organisasi / Unit Organisasi Induk</label>
                             @php
 
                                 $skpd = DB::table('skpds')
@@ -150,13 +150,13 @@
                             @endphp
                             <select id="id_unit_kerja" style="height: 58px !important; width: 100%;" name="id_unit_kerja"
                                 class="form-control">
-                                <option value="">CARI SKPD / UNIT</option>
+                                <option value="">CARI Unit Organisasi Induk / Unit Organisasi</option>
                                 @foreach ($skpd as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_skpd }} / {{ $item->unit_kerja }}
                                     </option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" style="font-size: 12px;">*SKPD / Unit Kerja yang dipilih sebelumnya
+                            <span class="text-danger" style="font-size: 12px;">*Unit Organisasi Induk / Unit Organisasi yang dipilih sebelumnya
                                 adalah
                                 <b id="skpd_unit_kerja"></b>
                             </span>

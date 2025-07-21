@@ -4,7 +4,7 @@
     <div class="col-md-12 text-white">
         <div class="row">
             <div class="col-12 col-xl-8 mb-xl-0">
-                <h3 class="font-weight-bold">Data Unit Kerja</h3>
+                <h3 class="font-weight-bold">Data Unit Organisasi</h3>
             </div>
         </div>
     </div>
@@ -32,8 +32,8 @@
                         <thead class="bg-info text-white">
                             <tr>
                                 <th width="5%">No</th>
-                                <th>Unit Kerja</th>
-                                <th>SKPD</th>
+                                <th>Unit Organisasi</th>
+                                <th>Unit Organisasi Induk</th>
                                 @if (Auth::user()->role == 'Admin')
                                     <th width="5%"></th>
                                     <th width="5%"></th>
@@ -58,20 +58,20 @@
                     <div id="respon_error" class="text-danger mb-4"></div>
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
-                        <label>SKPD<sup class="text-danger">*</sup></label>
+                        <label>Unit Organisasi Induk<sup class="text-danger">*</sup></label>
                         @php
                             $skpd = DB::table('skpds')->get();
                         @endphp
                         <select name="id_skpd" id="id_skpd" class="form-control" required>
-                            <option value="">PILIH SKPD</option>
+                            <option value="">PILIH Unit Organisasi Induk</option>
                             @foreach ($skpd as $p)
                                 <option value="{{ $p->id }}">{{ $p->nama_skpd }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Unit Kerja <sup class="text-danger">*</sup></label>
-                        <input type="text" placeholder="Unit Kerja" class="form-control" required name="unit_kerja"
+                        <label>Unit Organisasi <sup class="text-danger">*</sup></label>
+                        <input type="text" placeholder="Unit Organisasi" class="form-control" required name="unit_kerja"
                             id="unit_kerja">
                     </div>
                 </div>

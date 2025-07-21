@@ -304,13 +304,13 @@
         <div class="col-lg-12 mt-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h3 class="mt-4">Distribusi SKPD</h3>
-                    <p class="mb-4">Total Pegawai ASN Berdasarkan SKPD</p>
+                    <h3 class="mt-4">Distribusi Unit Organisasi Induk dan Unit Organisasi</h3>
+                    <p class="mb-4">Total Pegawai ASN Berdasarkan Unit Organisasi Induk dan Unit Organisasi</p>
                     <table id="myTable" class="table table-striped display" style="width:100%">
                         <thead class="bg-info text-white">
                             <tr>
                                 <th>No</th>
-                                <th>SKPD</th>
+                                <th>Unit Organisasi Induk</th>
                                 <th>Laki-laki</th>
                                 <th>Perempuan</th>
                                 <th>Total</th>

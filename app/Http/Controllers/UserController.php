@@ -231,8 +231,8 @@ class UserController extends Controller
             'K1' => 'STATUS PEGAWAI',
             'L1' => 'PANGKAT',
             'M1' => 'JABATAN',
-            'N1' => 'SKPD',
-            'O1' => 'UNIT KERJA',
+            'N1' => 'UNIT ORGANISASI INDUK',
+            'O1' => 'UNIT ORGANISASI',
             'P1' => 'TGL DIBUAT'
         ];
         foreach ($headerColumns as $cell => $text) {

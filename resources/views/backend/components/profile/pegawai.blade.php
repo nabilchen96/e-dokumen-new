@@ -18,6 +18,7 @@
     <div class="row">
         <input type="hidden" name="id" value="{{ Request('id') }}">
         <input type="hidden" name="id_user" value="{{ @$profil->id_user }}">
+        <!--
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Status Pegawai <sup class="text-danger">*</sup></label>
@@ -29,6 +30,26 @@
                 </select>
             </div>
         </div>
+        -->
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Status ASN <sup class="text-danger">*</sup></label>
+                <select name="status_cpns" class="form-control" id="status_cpns" required>
+                    <option value="">--STATUS ASN--</option>
+                    <option {{ @$profil->status_cpns == 'PPPK' ? 'selected' : '' }}>PPPK</option>
+                    <option {{ @$profil->status_cpns == 'PNS' ? 'selected' : '' }}>PNS</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">NIP <sup class="text-danger">*</sup></label>
+                <input name="nip" id="nip" value="{{ @$profil->nip }}" type="text" placeholder="NIP"
+                    class="form-control form-control-sm" required>
+            </div>
+        </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>
@@ -81,6 +102,25 @@
                     <small class="text-danger">*TMT Golongan terbaru</small>
             </div>
         </div>
+        
+         <div class="col-lg-6">
+            Masa Kerja Golongan </br>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Tahun <sup class="text-danger">*</sup></label>
+                <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"
+                    placeholder="Masa Kerja Tahun" class="form-control form-control-sm" required>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            </br>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Bulan <sup class="text-danger">*</sup></label>
+                <input name="mk_bulan" id="mk_bulan" value="{{ @$profil->mk_bulan }}" type="number"
+                    placeholder="Masa Kerja bulan" class="form-control form-control-sm" required>
+            </div>
+        </div>
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Jabatan <sup class="text-danger">*</sup></label>
@@ -88,11 +128,19 @@
                     placeholder="Jabatan" class="form-control form-control-sm" required>
             </div>
         </div>
-        <div class="col-lg-6">
+        
+         <div class="col-lg-6">
             <div class="form-group">
-                <label for="exampleInputEmail1">NIP <sup class="text-danger">*</sup></label>
-                <input name="nip" id="nip" value="{{ @$profil->nip }}" type="text" placeholder="NIP"
-                    class="form-control form-control-sm" required>
+                <label>Jenis Jabatan <sup class="text-danger">*</sup></label>
+                <select name="jenis_jabatan" class="form-control" id="jenis_jabatan" required>
+                    <option value="">--PILIH JENIS JABATAN--</option>
+                    <option {{ @$profil->jenis_jabatan == 'Jabatan Fungsional' ? 'selected' : '' }}>Jabatan Fungsional
+                    </option>
+                    <option {{ @$profil->jenis_jabatan == 'Jabatan Pelaksana' ? 'selected' : '' }}>Jabatan Pelaksana
+                    </option>
+                    <option {{ @$profil->jenis_jabatan == 'Jabatan Struktural' ? 'selected' : '' }}>Jabatan Struktural
+                    </option>
+                </select>
             </div>
         </div>
         
@@ -134,16 +182,8 @@
                 </select>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label>Status ASN <sup class="text-danger">*</sup></label>
-                <select name="status_cpns" class="form-control" id="status_cpns" required>
-                    <option value="">--STATUS ASN--</option>
-                    <option {{ @$profil->status_cpns == 'PPPK' ? 'selected' : '' }}>PPPK</option>
-                    <option {{ @$profil->status_cpns == 'PNS' ? 'selected' : '' }}>PNS</option>
-                </select>
-            </div>
-        </div>
+        
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="exampleInputPassword1">Kartu ASN Virtual <sup class="text-danger">*</sup></label>
@@ -201,38 +241,9 @@
         </div>
         
         
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label>Jenis Jabatan <sup class="text-danger">*</sup></label>
-                <select name="jenis_jabatan" class="form-control" id="jenis_jabatan" required>
-                    <option value="">--PILIH JENIS JABATAN--</option>
-                    <option {{ @$profil->jenis_jabatan == 'Jabatan Fungsional' ? 'selected' : '' }}>Jabatan Fungsional
-                    </option>
-                    <option {{ @$profil->jenis_jabatan == 'Jabatan Pelaksana' ? 'selected' : '' }}>Jabatan Pelaksana
-                    </option>
-                    <option {{ @$profil->jenis_jabatan == 'Jabatan Struktural' ? 'selected' : '' }}>Jabatan Struktural
-                    </option>
-                </select>
-            </div>
-        </div>
+       
         
-        <div class="col-lg-6">
-            Masa Kerja Golongan </br>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Tahun <sup class="text-danger">*</sup></label>
-                <input name="mk_tahun" id="mk_tahun" value="{{ @$profil->mk_tahun }}" type="number"
-                    placeholder="Masa Kerja Tahun" class="form-control form-control-sm" required>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            </br>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Bulan <sup class="text-danger">*</sup></label>
-                <input name="mk_bulan" id="mk_bulan" value="{{ @$profil->mk_bulan }}" type="number"
-                    placeholder="Masa Kerja bulan" class="form-control form-control-sm" required>
-            </div>
-        </div>
-        
+       
         <div class="col-lg-6">
             <div class="form-group">
                 <label>KPPN <sup class="text-danger">*</sup></label>
@@ -243,14 +254,14 @@
         
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Lokasi Kerja <sup class="text-danger">*</sup></label>
+                <label>Alamat Tempat Kerja <sup class="text-danger">*</sup></label>
                 <!-- <input name="lokasi_kerja" id="lokasi_kerja" value="{{ @@$profil->lokasi_kerja }}" type="text"
                     placeholder="Lokasi Kerja" class="form-control form-control-sm"> -->
                 @php
                     $lokasi = DB::table('districts')->get();
                 @endphp
                 <select name="lokasi_kerja" id="lokasi_kerja" required>
-                    <option value="">PILIH LOKASI KERJA</option>
+                    <option value="">PILIH AlAMAT TEMPAT KERJA</option>
                     @foreach ($lokasi as $item)
                         <option {{ $item->name == $profil->lokasi_kerja ? 'selected' : ''}} >{{ $item->name }}</option>
                     @endforeach
@@ -280,6 +291,9 @@
                         <option {{ $item->nama_skpd == $profil->instansi_kerja ? 'selected' : ''}} >{{ $item->nama_skpd }}</option>
                     @endforeach
                 </select>
+                
+                <small class="text-danger">*Untuk Sekolah Pilih Dinas Pendidikan</small> <br>
+                <small class="text-danger">*Untuk Rumah Sakit, Puskesmas dan Sejenisnya Pilih Dinas Kesehatan</small>
             </div>
         </div>
         
@@ -288,15 +302,17 @@
                 <label>Unit Organisasi <sup class="text-danger">*</sup></label>
                 <!-- <input name="satuan_kerja" id="satuan_kerja" value="{{ @@$profil->satuan_kerja }}" type="text"
                     placeholder="Satuan Kerja" class="form-control form-control-sm"> -->
+                @php 
+                    $unit_kerja = DB::table('unit_kerjas')->get();
+                @endphp 
                 <select name="satuan_kerja" id="satuan_kerja" required>
                     <option value="">PILIH UNIT ORGANISASI</option>
-                    @php 
-                        $unit_kerja = DB::table('unit_kerjas')->get();
-                    @endphp 
+                    
                     @foreach( $unit_kerja as $u)
                         <option {{ $u->unit_kerja == $profil->satuan_kerja ? 'selected' : ''}}>{{ $u->unit_kerja }}</option>
                     @endforeach
                 </select>
+                <small class="text-danger">*Pilih Tempat Bekerja Sekarang</small>
             </div>
         </div>
         

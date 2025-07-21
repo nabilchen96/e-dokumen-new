@@ -23,9 +23,11 @@
         <div class="col-12 mt-4">
             <div class="card w-100">
                 <div class="card-body">
+                
                     <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal" data-target="#modal">
                         Tambah
                     </button>
+                    
                     <div class="table-responsive" style="overflow-x:auto;">
                         <table id="myTable" class="display nowrap table table-striped" style="width: 100%;">
                             <thead class="bg-info text-white">
@@ -316,23 +318,29 @@
                     {
                         render: function(data, type, row, meta) {
                             return `<a target="_blank" href="/convert-to-pdf/${row.dokumen}">
-        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
-    </a>`
+                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
+                        </a>`
                         }
                     },
+                    
                     {
                         render: function(data, type, row, meta) {
                             return `<a data-toggle="modal" data-target="#modal" data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-    </a>`
+                        @if (Auth::user()->role != 'Pegawai')  
+                         <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                        @endif
+                        </a>`
                         }
                     },
+                   
                     {
                         render: function(data, type, row, meta) {
                             return `<a href="javascript:void(0)" onclick="hapusData(` + (row
                                 .id) + `)">
-        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-    </a>`
+                        @if (Auth::user()->role != 'Pegawai')        
+                            <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                        @endif
+                            </a>` 
                         }
                     },
                 ]

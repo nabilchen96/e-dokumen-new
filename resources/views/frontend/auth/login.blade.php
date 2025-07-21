@@ -87,7 +87,7 @@
         </svg>
         Loading...
       </button>
-
+<!--
       <p class="text-sm text-center mt-4">
         Belum punya akun?
         <a href="{{ url('register') }}" class="text-red-500 font-semibold hover:underline">Registrasi</a>
@@ -95,7 +95,7 @@
       
     </form>
   </div>
-
+-->
   <!-- Script Login -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>

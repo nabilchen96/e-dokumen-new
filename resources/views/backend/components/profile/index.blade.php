@@ -90,10 +90,10 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group">
-                <label>Status Kawin <sup class="text-danger">*</sup></label>
+                <label>Status Pernikahan <sup class="text-danger">*</sup></label>
                 <select name="status_kawin" id="status_kawin" class="form-control" required>
-                    <option value="">--PILIH STATUS KAWIN--</option>
-                    <option {{ @@$profil->status_kawin == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
+                    <option value="">--PILIH STATUS PERNIKAHAN--</option>
+                    <option {{ @@$profil->status_kawin == 'Belum Menikah' ? 'selected' : '' }}>Belum Menikah</option>
                     <option {{ @@$profil->status_kawin == 'Menikah' ? 'selected' : '' }}>Menikah</option>
                     <option {{ @@$profil->status_kawin == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
                     <option {{ @@$profil->status_kawin == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>

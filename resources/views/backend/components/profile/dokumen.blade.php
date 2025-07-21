@@ -6,7 +6,7 @@
                 <th>Pemilik</th>
                 <th>Jenis / Nomor Dokumen</th>
                 <th>Tanggal Berlaku</th>
-                <th>SKPD / Unit Kerja</th>
+                <th>Unor Induk / Unor</th>
                 <th>Tanggal Upload</th>
                 <th>Status</th>
                 <th width="5%">PDF</th>
@@ -49,8 +49,8 @@
                         {{ $d->tanggal_akhir_dokumen ?? '-' }}
                     </td>
                     <td>
-                        SKPD: {{ $d->nama_skpd }} <br> 
-                        UNIT KERJA: {{ $d->unit_kerja ?? '-' }}
+                        Unit Organisasi Induk: {{ $d->nama_skpd }} <br> 
+                        Unit Organisasi: {{ $d->unit_kerja ?? '-' }}
                     </td>
                     <td>
                         {{ $d->created_at }}

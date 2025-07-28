@@ -454,8 +454,8 @@ class ProfilController extends Controller
 
     public function getAuthorizationToken()
     {
-        $username = 't9FAxeuvRvFhh4OTARTBkmQjOfQa'; // Ganti sesuai yang kamu dapat
-        $password = 'UwxWRfypponkptfJOB1QRnCtkHca'; // Ganti dengan yang asli
+        $username = 't9FAxeuvRvFhh4OTARTBkmQjOfQa';
+        $password = 'UwxWRfypponkptfJOB1QRnCtkHca';
 
         $response = Http::asForm()->withBasicAuth($username, $password)->post('https://apimws.bkn.go.id/oauth2/token', [
             'grant_type' => 'client_credentials',
@@ -463,7 +463,7 @@ class ProfilController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
-            return $data['access_token']; // ini adalah token Authorization (Bearer)
+            return $data['access_token'];
         }
 
         return response()->json([

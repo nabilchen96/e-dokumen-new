@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD')
+            @if (Auth::user()->role == 'Admin')
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->

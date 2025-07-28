@@ -181,7 +181,7 @@
             const value = passwordInput.value;
     
             const isValid =
-                
+                value.length >= 8 &&
                 /[a-z]/.test(value) &&
                 /[A-Z]/.test(value) &&
                 /\d/.test(value);
@@ -197,15 +197,17 @@
         function getPasswordValidationMessage(password) {
             let messages = [];
     
-            
+            if (password.length < 8) {
+                messages.push("*minimal 8 karakter");
+            }
             if (!/[A-Z]/.test(password)) {
-                messages.push("huruf besar");
+                messages.push("*huruf besar");
             }
             if (!/[a-z]/.test(password)) {
-                messages.push("huruf kecil");
+                messages.push("*huruf kecil");
             }
             if (!/\d/.test(password)) {
-                messages.push("angka");
+                messages.push("*angka");
             }
     
             return messages;
@@ -221,12 +223,14 @@
             const missing = getPasswordValidationMessage(password);
     
             if (missing.length > 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Password tidak valid',
-                    html: `Password harus mengandung:<br> <b>Huruf Kapital, Huruf Kecil dan Angka</b>.`,
-                });
-                return;
+            const messageList = `<ul style="text-align: center;">${missing.map(msg => `<li>${msg}</li>`).join('')}</ul>`;
+    
+            Swal.fire({
+                icon: 'warning',
+                title: 'Password tidak valid',
+                html: `Password harus mengandung:${messageList}`,
+            });
+            return;
             }
     
             const formData = new FormData(formRegister);

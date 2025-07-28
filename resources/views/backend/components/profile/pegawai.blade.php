@@ -18,19 +18,7 @@
     <div class="row">
         <input type="hidden" name="id" value="{{ Request('id') }}">
         <input type="hidden" name="id_user" value="{{ @$profil->id_user }}">
-        <!--
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label>Status Pegawai <sup class="text-danger">*</sup></label>
-                <select readonly class="form-control" id="status_pegawai" required>
-                    <option value="">--PILIH STATUS PEGAWAI--</option>
-                    <option {{ @$profil->status_pegawai == 'PNS' ? 'selected' : '' }}>PNS</option>
-                    <option {{ @$profil->status_pegawai == 'P3K' ? 'selected' : '' }}>P3K</option>
-                    <option value="Honorer" {{ @$profil->status_pegawai == 'Honorer' ? 'selected' : '' }}>Non ASN</option>
-                </select>
-            </div>
-        </div>
-        -->
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Status ASN <sup class="text-danger">*</sup></label>
@@ -248,7 +236,7 @@
             <div class="form-group">
                 <label>KPPN <sup class="text-danger">*</sup></label>
                 <input name="kpkn" id="kpkn" value="Badan Keuangan dan Aset Daerah (BKAD)" type="text" placeholder="KPPN"
-                    class="form-control form-control-sm" required>
+                    class="form-control form-control-sm" required readonly>
             </div>
         </div>
         
@@ -273,7 +261,8 @@
             <div class="form-group">
                 <label>Instansi Induk <sup class="text-danger">*</sup></label>
                 <input name="instansi_induk" id="instansi_induk" value="Pemerintah Kab. Bengkulu Utara"
-                    type="text" placeholder="Instansi Induk" class="form-control form-control-sm" required>
+                    type="text" placeholder="Instansi Induk" class="form-control form-control-sm" required readonly>
+                
             </div>
         </div>
         
@@ -324,6 +313,22 @@
                     
             </div>
         </div>
+        
+        
+        
+        @if (Auth::user()->role == 'Admin')
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Status Pegawai <sup class="text-danger">*</sup></label>
+                <select readonly class="form-control" id="status_pegawai" required>
+                    <option value="">--PILIH STATUS PEGAWAI--</option>
+                    <option {{ @$profil->status_pegawai == 'PNS' ? 'selected' : '' }}>PNS</option>
+                    <option {{ @$profil->status_pegawai == 'P3K' ? 'selected' : '' }}>P3K</option>
+                    <option value="Honorer" {{ @$profil->status_pegawai == 'Honorer' ? 'selected' : '' }}>Non ASN</option>
+                </select>
+            </div>
+        </div>
+        @endif
         
     
         <div class="col-lg-12">

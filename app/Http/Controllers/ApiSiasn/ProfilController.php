@@ -27,7 +27,7 @@ class ProfilController extends Controller
                 'users.email',
                 'users.no_wa',
                 'users.role',
-                'profils.*',
+                'profils.*'
             );
 
         if (in_array(Auth::user()->role, ['Admin','Staff BKPSDM','Kabid BKPSDM','Sekretaris BKPSDM','Kepala BKPSDM','Inspektorat'])) {

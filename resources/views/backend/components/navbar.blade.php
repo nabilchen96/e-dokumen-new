@@ -28,7 +28,7 @@
                                 <a class="nav-link" href="{{ url('district') }}">Daerah</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('skpd') }}">Unit Organisasi Induk</a>
+                                <a style="white-space: normal; line-height: 1;" class="nav-link" href="{{ url('skpd') }}">Unit Organisasi Induk</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Organisasi</a>

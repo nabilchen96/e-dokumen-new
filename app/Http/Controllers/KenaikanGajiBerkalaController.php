@@ -113,9 +113,17 @@ class KenaikanGajiBerkalaController extends Controller
 
         }
 
-        if (Auth::user()->role == 'Admin' || 
-            Auth::user()->role == 'SKPD' || 
-            Auth::user()->role == 'OPD' || 
+        //jenis dokumen
+        $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+
+        //total dokumen
+        $total_dokumen = DB::table('dokumens')->count();
+
+        //sebaran pegawai
+        $total_asal_pegawai = DB::table('skpds')
+            ->count(); // Hitung jumlah `district_id` yang unik
+
+        if (Auth::user()->role == 'Admin' ||
             Auth::user()->role == 'Staff BKPSDM' ||
             Auth::user()->role == 'Kabid BKPSDM' ||
             Auth::user()->role == 'Sekretaris BKPSDM' ||
@@ -127,17 +135,32 @@ class KenaikanGajiBerkalaController extends Controller
                             ->leftjoin('users', 'users.id', '=', 'profils.id_user')
                             ->where('users.role', 'Pegawai')
                             ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
                             ->count();
 
-            //jenis dokumen
-            $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+        }elseif(Auth::user()->role == 'SKPD'){
 
-            //total dokumen
-            $total_dokumen = DB::table('dokumens')->count();
+            //total pegawai
+            $total_pegawai = DB::table('profils')
+                            ->leftjoin('users', 'users.id', '=', 'profils.id_user')
+                            ->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('users.role', 'Pegawai')
+                            ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
+                            ->where('uk_filter.id', Auth::user()->id_skpd)
+                            ->count();
 
-            //sebaran pegawai
-            $total_asal_pegawai = DB::table('skpds')
-                ->count(); // Hitung jumlah `district_id` yang unik
+        }elseif(Auth::user()->role == 'OPD'){
+
+            //total pegawai
+            $total_pegawai = DB::table('profils')
+                            ->leftjoin('users', 'users.id', '=', 'profils.id_user')
+                            ->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('users.role', 'Pegawai')
+                            ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)
+                            ->count();
         }
 
         $today = now()->toDateString();

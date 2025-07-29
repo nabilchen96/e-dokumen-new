@@ -69,16 +69,8 @@ class DashboardController extends Controller
         }
 
         $id_user = Auth::id();
-
         $profil = DB::table('profils')->where('id_user', $id_user)->first();
-
-        $userId = Auth::id(); // ID user yang akan dicek
-
-        // Nama tabel profil
-        $table = 'profils';
-
-        // Ambil data user berdasarkan ID
-        $userProfile = DB::table($table)->where('id_user', $userId)->first();
+        $userProfile = $profil;
 
         if (!$userProfile) {
             // Jika profil tidak ditemukan
@@ -129,19 +121,15 @@ class DashboardController extends Controller
             $isiProfil = empty($emptyColumns) ? 0 : implode(', ', $emptyColumns);
         }
 
-        // dd(Auth::user()->role);
 
 
         if (Auth::user()->role == 'Pegawai') {
-            // dd('tes');
             // Ambil daftar jenis dokumen yang aktif
             $jenisDokumenAktif = DB::table('jenis_dokumens')
                 ->where('status', 'Aktif')
                 ->where('jenis_pegawai', 'like', '%' . (@$profil->status_pegawai ?? '') . '%')
                 ->orwhere('jenis_pegawai', 'Semua')
                 ->get(['id', 'jenis_dokumen']); // Ambil ID dan nama jenis dokumen yang aktif
-
-                // dd($jenisDokumenAktif);
 
             // Ambil dokumen yang sudah diupload oleh pengguna
             $dokumenUploaded = DB::table('dokumens')
@@ -156,8 +144,6 @@ class DashboardController extends Controller
             // Jika tidak ada dokumen yang belum diupload
             if ($belumDiupload->isEmpty()) {
 
-                // dd($isiProfil);
-
                 return view('backend.dashboard', [
                     'dokumenBelumDiupload' => null,
                     'isiProfil' => $isiProfil
@@ -165,38 +151,68 @@ class DashboardController extends Controller
             } else {
                 // Ambil nama-nama dokumen yang belum diupload
                 $dokumenBelumDiupload = $belumDiupload->pluck('jenis_dokumen')->implode(', ');
-                // dd($dokumenBelumDiupload);
 
             }
 
         }
 
-        if (
-            Auth::user()->role == 'Admin' || 
-            Auth::user()->role == 'SKPD' || 
-            Auth::user()->role == 'OPD' || 
-            Auth::user()->role == 'Staff BKPSDM' ||
-            Auth::user()->role == 'Kabid BKPSDM' ||
-            Auth::user()->role == 'Sekretaris BKPSDM' ||
-            Auth::user()->role == 'Kepala BKPSDM' ||
-            Auth::user()->role == 'Inspektorat') {
+        //jenis dokumen
+        $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+
+        //sebaran pegawai
+        $total_asal_pegawai = DB::table('skpds')
+            ->count(); // Hitung jumlah `district_id` yang unik
+
+        if (in_array(Auth::user()->role, [
+            'Admin', 
+            'Staff BKPSDM', 
+            'Kabid BKPSDM', 
+            'Sekretaris BKPSDM', 
+            'Kepala BKPSDM', 
+            'Inspektorat'
+        ])){
 
             //total pegawai
             $total_pegawai = DB::table('profils')
                             ->leftjoin('users', 'users.id', '=', 'profils.id_user')
                             ->where('users.role', 'Pegawai')
                             ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
                             ->count();
 
-            //jenis dokumen
-            $total_jenis_dokumen = DB::table('jenis_dokumens')->where('status', 'Aktif')->count();
+        }elseif(Auth::user()->role == 'SKPD'){
+
+            //total pegawai
+            $total_pegawai = DB::table('profils')
+                            ->leftjoin('users', 'users.id', '=', 'profils.id_user')
+                            ->join('skpds as uk_filter', 'uk_filter.nama_skpd', '=', 'profils.instansi_kerja')
+                            ->where('users.role', 'Pegawai')
+                            ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
+                            ->where('uk_filter.id', Auth::user()->id_skpd)
+                            ->count();
+
+        //total dokumen
+        $total_dokumen = DB::table('dokumens')
+                            ->where('dokumens.id_skpd', Auth::user()->id_skpd)
+                            ->count();
+
+        }elseif(Auth::user()->role == 'OPD'){
+
+            //total pegawai
+            $total_pegawai = DB::table('profils')
+                            ->leftjoin('users', 'users.id', '=', 'profils.id_user')
+                            ->join('unit_kerjas as uk_filter', 'uk_filter.unit_kerja', '=', 'profils.satuan_kerja')
+                            ->where('users.role', 'Pegawai')
+                            ->where('profils.status_input', NULL)
+                            ->where('profils.status_pegawai',  ['PNS', 'P3K'])
+                            ->where('uk_filter.id', Auth::user()->id_unit_kerja)
+                            ->count();
 
             //total dokumen
-            $total_dokumen = DB::table('dokumens')->count();
-
-            //sebaran pegawai
-            $total_asal_pegawai = DB::table('skpds')
-                ->count(); // Hitung jumlah `district_id` yang unik
+            $total_dokumen = DB::table('dokumens')
+                                ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
+                                ->count();
         }
 
         $today = now()->toDateString();

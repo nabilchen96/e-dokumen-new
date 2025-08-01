@@ -165,6 +165,12 @@
                     <span class="menu-title">Statistik SIASN</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('rekap-unor') }}">
+                    <i class="bi bi-person-circle menu-icon"></i>
+                    <span class="menu-title">Rekapitulasi Pegawai</span>
+                </a>
+            </li>
         @endif
         {{-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-api-siasn" aria-expanded="false"

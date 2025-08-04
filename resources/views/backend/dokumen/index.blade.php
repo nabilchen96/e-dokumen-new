@@ -226,20 +226,20 @@
             // new TomSelect('#id_user');
             tomSelectUser = new TomSelect('#id_user');
 
-            const statusSelect = document.getElementById('status');
-            const alasanWrapper = document.getElementById('alasan_wrapper');
-            const alasanTextarea = document.getElementById('alasan_ditolak');
+            //const statusSelect = document.getElementById('status');
+            //const alasanWrapper = document.getElementById('alasan_wrapper');
+            //const alasanTextarea = document.getElementById('alasan_ditolak');
 
-            statusSelect.addEventListener('change', function() {
-                if (this.value === 'Perlu Diperbaiki') {
-                    alasanWrapper.style.display = 'block';
-                    alasanTextarea.setAttribute('required', 'required');
-                } else {
-                    alasanWrapper.style.display = 'none';
-                    alasanTextarea.removeAttribute('required');
-                    alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
-                }
-            });
+            // statusSelect.addEventListener('change', function() {
+            //     if (this.value === 'Perlu Diperbaiki') {
+            //         alasanWrapper.style.display = 'block';
+            //         alasanTextarea.setAttribute('required', 'required');
+            //     } else {
+            //         alasanWrapper.style.display = 'none';
+            //         alasanTextarea.removeAttribute('required');
+            //         alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
+            //     }
+            // });
         })
 
 
@@ -339,79 +339,78 @@
             })
         }
 
-        $('#modal').on('show.bs.modal', function(event) {
+$('#modal').on('show.bs.modal', function(event) {
+    const statusSelect = document.getElementById('status');
+    const alasanWrapper = document.getElementById('alasan_wrapper');
+    const alasanTextarea = document.getElementById('alasan_ditolak');
 
-            const statusSelect = document.getElementById('status');
-            const alasanWrapper = document.getElementById('alasan_wrapper');
-            const alasanTextarea = document.getElementById('alasan_ditolak');
+    var button = $(event.relatedTarget); // Tombol yang memicu modal
+    var recipient = button.data('bs-id'); // Ambil ID dari data-bs-id
+    var cok = $("#myTable").DataTable().rows().data().toArray();
 
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('bs-id') // Extract info from data-* attributes
-            var cok = $("#myTable").DataTable().rows().data().toArray()
+    let cokData = cok.find((dt) => dt.id == recipient);
 
-            let cokData = cok.filter((dt) => {
-                return dt.id == recipient;
-            })
+    // Reset form dan error
+    const form = document.getElementById("form");
+    if (form) form.reset();
 
-            document.getElementById("form").reset();
-            document.getElementById('id').value = ''
-            $('.error').empty();
+    $('#id').val('');
+    $('.error').empty();
 
-            if (recipient) {
-                var modal = $(this)
-                modal.find('#id').val(cokData[0].id)
-                modal.find('#id_user').val(cokData[0].id_user)
-                modal.find('#jenis_dokumen').val(cokData[0].jenis_dokumen)
-                modal.find('#status').val(cokData[0].status)
-                modal.find('#tanggal_dokumen').val(cokData[0].tanggal_dokumen)
-                modal.find('#tanggal_akhir_dokumen').val(cokData[0].tanggal_akhir_dokumen)
-                // modal.find('#id_user').val(cokData[0].id_user)
-                // modal.find('#id_user').val(cokData[0].id_user).trigger('change');
-                tomSelectUser.setValue(cokData[0].id_user);
-                modal.find('#id_skpd').val(cokData[0].id_skpd)
+    if (recipient && cokData) {
+        var modal = $(this);
 
-                if (cokData[0].status === 'Perlu Diperbaiki') {
-                    alasanWrapper.style.display = 'block';
-                    alasanTextarea.setAttribute('required', 'required');
-                } else {
-                    alasanWrapper.style.display = 'none';
-                    alasanTextarea.removeAttribute('required');
-                    alasanTextarea.value = ''; // Kosongkan kalau tidak dipakai
-                }
+        modal.find('#id').val(cokData.id);
+        modal.find('#id_user').val(cokData.id_user);
+        modal.find('#jenis_dokumen').val(cokData.jenis_dokumen);
+        modal.find('#status').val(cokData.status);
+        modal.find('#tanggal_dokumen').val(cokData.tanggal_dokumen);
+        modal.find('#tanggal_akhir_dokumen').val(cokData.tanggal_akhir_dokumen);
+        tomSelectUser.setValue(cokData.id_user);
+        modal.find('#id_skpd').val(cokData.id_skpd);
 
-                modal.find('#alasan_ditolak').val(cokData[0].alasan_ditolak)
+        // Tampilkan alasan jika perlu
+        if (alasanWrapper && alasanTextarea) {
+            if (cokData.status === 'Perlu Diperbaiki') {
+                alasanWrapper.style.display = 'block';
+                alasanTextarea.setAttribute('required', 'required');
+            } else {
+                alasanWrapper.style.display = 'none';
+                alasanTextarea.removeAttribute('required');
+                alasanTextarea.value = '';
+            }
 
+            modal.find('#alasan_ditolak').val(cokData.alasan_ditolak);
+        }
 
-                const skpdId = document.getElementById('id_skpd').value
-                const unitKerjaSelect = document.getElementById('id_unit_kerja');
-                unitKerjaSelect.innerHTML = '<option value="">Memuat data...</option>';
+        // Isi unit kerja berdasarkan skpd
+        const skpdId = cokData.id_skpd;
+        const unitKerjaSelect = document.getElementById('id_unit_kerja');
+        if (unitKerjaSelect) {
+            unitKerjaSelect.innerHTML = '<option value="">Memuat data...</option>';
 
-                // Panggil data unit kerja dengan Axios
-                axios.get(`/data-unit-kerja/${skpdId}`)
-                    .then(response => {
-                        const data = response.data;
-                        unitKerjaSelect.innerHTML =
-                            '<option value="">PILIH UNIT KERJA</option>'; // Reset pilihan
+            axios.get(`/data-unit-kerja/${skpdId}`)
+                .then(response => {
+                    const data = response.data;
+                    unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT KERJA</option>';
 
-                        // Tambahkan setiap unit kerja ke dalam dropdown
-                        data.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = item.unit_kerja;
-                            unitKerjaSelect.appendChild(option);
-                        });
-
-                        modal.find('#id_unit_kerja').val(cokData[0].id_unit_kerja)
-                    })
-                    .catch(error => {
-                        console.error('Error fetching unit kerja:', error);
-                        unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT ORGANISASI</option>';
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.unit_kerja;
+                        unitKerjaSelect.appendChild(option);
                     });
 
+                    modal.find('#id_unit_kerja').val(cokData.id_unit_kerja);
+                })
+                .catch(error => {
+                    console.error('Error fetching unit kerja:', error);
+                    unitKerjaSelect.innerHTML = '<option value="">PILIH UNIT ORGANISASI</option>';
+                });
+        }
+    }
+});
 
-
-            }
-        })
 
         form.onsubmit = (e) => {
 

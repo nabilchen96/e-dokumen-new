@@ -198,9 +198,9 @@ class KenaikanGajiBerkalaController extends Controller
             ->join('jenis_dokumens', 'jenis_dokumens.id', '=', 'dokumens.id_dokumen')
             ->join('users', 'users.id', '=', 'dokumens.id_user')
             ->join('profils', 'profils.id_user', '=', 'users.id')
-            ->leftjoin('kenaikan_gajis', 'kenaikan_gajis.id_dokumen', '=', 'dokumens.id')
+            ->leftJoin('kenaikan_gajis', 'kenaikan_gajis.id_dokumen', '=', 'dokumens.id')
             ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
-            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')                
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
             ->select(
                 'dokumens.tanggal_akhir_dokumen',
                 'users.name',
@@ -213,15 +213,16 @@ class KenaikanGajiBerkalaController extends Controller
                 DB::raw("DATEDIFF(dokumens.tanggal_akhir_dokumen, '$today') as total_hari")
             )
             ->where('dokumens.status', 'Dokumen Diterima')
+            ->whereIn('profils.status_pegawai', ['PNS', 'P3K'])
             ->where(function ($query) {
-                // $query->where('kenaikan_gajis.status', 'Draft')
-                //     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
                 $query->where('kenaikan_gajis.status', '!=', 'Draft')
-                        ->orWhereNull('kenaikan_gajis.status');
+                    ->orWhereNull('kenaikan_gajis.status');
             })
-            ->limit(30)
             ->where('jenis_dokumen_berkala', 'Kenaikan Gaji')
-            ->orderByRaw('total_hari ASC');
+            ->whereRaw("DATEDIFF(dokumens.tanggal_akhir_dokumen, ?) <= 100", [$today])
+            ->limit(30)
+            ->orderByRaw('total_hari DESC');
+
 
         if(Auth::user()->role == 'Admin'){
 
@@ -264,12 +265,13 @@ class KenaikanGajiBerkalaController extends Controller
                                 'users.name',
                                 'profils.nip'
                             )
-                        ->where(function($query) {
+                            ->where(function($query) {
                                 $query->whereNull('dokumens.status')
                                     ->orWhere('dokumens.status', 'Sedang Dalam Pengecekan')
                                     ->orWhere('dokumens.status', 'Perlu Diperbaiki')
                                     ->orWhere('dokumens.status', 'Belum Diperiksa');
                             })
+                            ->whereIn('profils.status_pegawai', ['PNS', 'P3K'])
                             ->limit(30)
                             ->orderBy('dokumens.created_at', 'asc');
 

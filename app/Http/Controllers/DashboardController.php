@@ -270,9 +270,11 @@ class DashboardController extends Controller
                 $query->where('kenaikan_gajis.status', 'Draft')
                     ->orWhereNull('kenaikan_gajis.status'); // Periksa NULL secara eksplisit
             })
-            ->limit(50)
+            ->whereIn('profils.status_pegawai', ['PNS', 'P3K'])
+            ->limit(30)
             ->where('jenis_dokumen_berkala', 'Kenaikan Gaji')
-            ->orderByRaw('total_hari ASC');
+            ->whereRaw("DATEDIFF(dokumens.tanggal_akhir_dokumen, ?) <= 100", [$today])
+            ->orderByRaw('total_hari DESC');
 
         if(Auth::user()->role == 'Admin'){
 

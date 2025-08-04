@@ -243,6 +243,15 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@index');
     // Route::get('/data-siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@data');
     // Route::get('/detail-siasn-profil', 'App\Http\Controllers\ApiSiasn\ProfilController@detail');
+
+    //REKAP UNOR
+    Route::get('/rekap-unor', 'App\Http\Controllers\RekapUnorController@index');
+    Route::get('/data-rekap-unor', 'App\Http\Controllers\RekapUnorController@data');
+
+    Route::get('/kirim-pesan', 'App\Http\Controllers\KirimPesanController@index');
+    Route::get('/data-kirim-pesan', 'App\Http\Controllers\KirimPesanController@data');
+    Route::post('/store-kirim-pesan', 'App\Http\Controllers\KirimPesanController@store');
+    Route::get('/history-kirim-pesan', 'App\Http\Controllers\KirimPesanController@history');
 });
 
 //STATISTIK PEGAWAI

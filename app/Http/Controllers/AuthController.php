@@ -110,12 +110,6 @@ class AuthController extends Controller
         // Simulasi pengiriman OTP (6 digit acak)
         $otp = rand(100000, 999999);
 
-        // Simpan ke database
-        // Otp::create([
-        //     'no_wa' => $noWa,
-        //     'otp' => $otp,
-        // ]);
-
         $data = [
             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
             'target' => $noWa, // Nomor tujuan

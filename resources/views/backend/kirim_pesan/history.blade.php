@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-12 col-xl-8 mb-xl-0">
                     <h3 class="font-weight-bold">Kirim Pesan</h3>
-                    <h4>{{ @$skpd->nama_skpd ? 'Unor ' . $skpd->nama_skpd : '' }}</h4>
+                    <h4>{{ $skpd ? 'Unor ' . $skpd->nama_skpd : '' }}</h4>
                 </div>
             </div>
         </div>
@@ -18,12 +18,12 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs mb-4">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('kirim-pesan') }}/?id_skpd={{ $skpd->id }}">
+                            <a class="nav-link" href="{{ url('kirim-pesan') }}/?id_skpd={{ @$skpd->id }}">
                                 Kirim Pesan
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url('history-kirim-pesan') }}/?id_skpd={{ $skpd->id }}">
+                            <a class="nav-link active" href="{{ url('history-kirim-pesan') }}/?id_skpd={{ @$skpd->id }}">
                                 History Pesan
                             </a>
                         </li>

@@ -165,18 +165,18 @@
                     <span class="menu-title">Statistik SIASN</span>
                 </a>
             </li>
-        @endif
-        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kepala BKPSDM')
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('rekap-unor') }}">
-                    <i class="bi bi-person-circle menu-icon"></i>
-                    <span class="menu-title">Rekapitulasi Pegawai</span>
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('kirim-pesan') }}">
                     <i class="bi bi-whatsapp menu-icon"></i>
                     <span class="menu-title">Kirim Pesan</span>
+                </a>
+            </li>
+        @endif
+        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'Kepala BKPSDM')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('rekap-unor') }}">
+                    <i class="bi bi-person-circle menu-icon"></i>
+                    <span class="menu-title">Rekapitulasi Pegawai</span>
                 </a>
             </li>
         @endif

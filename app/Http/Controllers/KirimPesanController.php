@@ -19,7 +19,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use App\Jobs\KirimPesanJob;
+use App\Jobs\StorePesanJob;
 
 
 class KirimPesanController extends Controller
@@ -27,7 +27,9 @@ class KirimPesanController extends Controller
     public function index(){
 
         $id = Request('id_skpd');
-        $skpd = DB::table('skpds')->where('id', $id)->first();
+        if($id){
+            $skpd = DB::table('skpds')->where('id', $id)->first();
+        }
         $data = DB::table('profils')
                 ->leftjoin('users', 'users.id', '=', 'profils.id_user')
                 ->select(
@@ -38,13 +40,19 @@ class KirimPesanController extends Controller
                     'profils.satuan_kerja',
                     'users.id'
                 )
-                ->whereIn('status_pegawai', ['PNS', 'P3K'])
-                ->where('instansi_kerja', $skpd->nama_skpd)
-                ->get();
+                ->whereIn('status_pegawai', ['PNS', 'P3K']);
+
+        if(@$skpd){
+            $data =  $data->where('instansi_kerja', $skpd->nama_skpd)->get();
+        }else{
+            $data =  $data->whereNotNull('users.name')->get();
+        }
+
+        // return response()->json($data);
 
         return view('backend.kirim_pesan.index', [
             'data'  => $data, 
-            'skpd'  => $skpd
+            'skpd'  => $skpd ?? ''
         ]);
     }
 
@@ -55,44 +63,39 @@ class KirimPesanController extends Controller
             'pesan' => 'required|string'
         ]);
 
-        $pesanText = $request->pesan;
+        // Dispatch ke background queue
+        StorePesanJob::dispatch(
+            $request->id_user,
+            $request->pesan,
+            Auth::id()
+        );
 
-        foreach ($request->id_user as $index => $id) {
-            $user = User::find($id);
-
-            if ($user) {
-                $pesan = KirimPesan::create([
-                    'nomor_pesan' => strtoupper(Str::random(10)),
-                    'pesan' => $pesanText,
-                    'nomor_tujuan' => $user->no_wa,
-                    'id_user' => $user->id,
-                    'id_pengirim' => Auth::id(),
-                    'status' => 'pending',
-                ]);
-
-                // Dispatch job dengan delay per 10 detik
-                KirimPesanJob::dispatch()->delay(now()->addSeconds(10));
-            }
-        }
-
-        return back()->with('success', 'Pesan sedang dikirim bertahap.');
+        return back()->with('success', 'Pesan sedang dikirim secara bertahap di background.');
     }
 
     public function history(){
 
         $id = Request('id_skpd');
-        $skpd = DB::table('skpds')->where('id', $id)->first();
+        if($id){
+            $skpd = DB::table('skpds')->where('id', $id)->first();
+        }
         $data = DB::table('kirim_pesans')
                 ->leftjoin('users', 'users.id', '=', 'kirim_pesans.id_user')
                 ->select(
                     'kirim_pesans.*',
                     'users.name', 
                     'users.no_wa'
-                )->get();
+                );
+
+        if(@$skpd){
+            $data =  $data->where('instansi_kerja', $skpd->nama_skpd)->get();
+        }else{
+            $data =  $data->whereNotNull('users.name')->get();
+        }
 
         return view('backend.kirim_pesan.history', [
             'data'  => $data,
-            'skpd' => $skpd
+            'skpd' => $skpd ?? ''
         ]);
     }
 }

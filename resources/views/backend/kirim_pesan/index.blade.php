@@ -14,8 +14,9 @@
         <div class="col-12 mt-2">
             <!-- Wrapper untuk membuat scroll khusus tabel -->
 
-            <form action="{{ url('store-kirim-pesan') }}" method="POST">
+            <form action="{{ url('store-kirim-pesan') }}" id="myForm" method="POST">
                 @csrf
+                <input type="hidden" name="selected_ids" id="selected_ids">
                 <div class="card">
                     <div class="card-body" style="max-height: 55vh; overflow-y: auto;">
                         <ul class="nav nav-tabs mb-4">
@@ -55,7 +56,7 @@
                             <tbody>
                                 @foreach ($data as $item)
                                     <tr>
-                                        <td><input type="checkbox" name="id_user[]" value="{{ $item->id }}"></td>
+                                        <td><input type="checkbox" class="row-checkbox" data-id="{{ $item->id }}"></td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->nip }}</td>
                                         <td>{{ $item->no_wa }}</td>
@@ -82,17 +83,57 @@
     </div>
 @endsection
 @push('script')
-    <script>
-        $("#myTable").DataTable({})
+<script>
+let selectedIds = new Set();
 
+// Inisialisasi DataTable
+var table = $('#myTable').DataTable({
+    // Tambahkan ini supaya "Select All" bisa ambil semua yang difilter
+    deferRender: true,
+    paging: true
+});
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAll = document.getElementById('select-all');
-            const checkboxes = document.querySelectorAll('input[name="id_user[]"]');
+// Select All
+$('#select-all').on('click', function () {
+    // Ambil semua row yang sedang ada di hasil pencarian, bukan cuma halaman aktif
+    var allRows = table.rows({ search: 'applied' }).nodes();
 
-            selectAll.addEventListener('change', function() {
-                checkboxes.forEach(cb => cb.checked = selectAll.checked);
-            });
-        });
-    </script>
+    $('input[type="checkbox"].row-checkbox', allRows).prop('checked', this.checked);
+
+    // Update Set untuk semua yang di hasil pencarian
+    $('input[type="checkbox"].row-checkbox', allRows).each(function () {
+        const id = $(this).data('id');
+        if ($('#select-all').is(':checked')) {
+            selectedIds.add(id);
+        } else {
+            selectedIds.delete(id);
+        }
+    });
+});
+
+// Event checkbox baris (akan dipanggil setiap pindah halaman juga)
+$('#myTable').on('change', '.row-checkbox', function () {
+    const id = $(this).data('id');
+    if ($(this).is(':checked')) {
+        selectedIds.add(id);
+    } else {
+        selectedIds.delete(id);
+    }
+});
+
+// Saat pindah halaman, centang kembali yang sudah dipilih sebelumnya
+table.on('draw', function () {
+    table.rows().nodes().each(function (row) {
+        const checkbox = $(row).find('.row-checkbox');
+        const id = checkbox.data('id');
+        checkbox.prop('checked', selectedIds.has(id));
+    });
+});
+
+// Saat submit form, masukkan semua selectedIds ke hidden input
+$('#myForm').on('submit', function () {
+    $('#selected_ids').val(Array.from(selectedIds).join(','));
+});
+</script>
 @endpush
+

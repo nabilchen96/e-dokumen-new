@@ -58,16 +58,20 @@ class KirimPesanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'id_user' => 'required|array',
-            'pesan' => 'required|string'
-        ]);
+        
 
-        // Dispatch ke background queue
+        // Ambil ID user dari hidden input yang dikirim JS
+        $ids = array_filter(explode(',', $request->selected_ids));
+
+        if (empty($ids)) {
+            return back()->withErrors(['msg' => 'Tidak ada penerima yang dipilih.']);
+        }
+
+         // Dispatch job sekali saja, karena job sudah melakukan looping di handle()
         StorePesanJob::dispatch(
-            $request->id_user,
-            $request->pesan,
-            Auth::id()
+            $ids,             // array user IDs
+            $request->pesan,  // pesan yang dikirim
+            Auth::id()        // ID pengirim
         );
 
         return back()->with('success', 'Pesan sedang dikirim secara bertahap di background.');

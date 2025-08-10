@@ -85,6 +85,7 @@ class KirimPesanController extends Controller
         }
         $data = DB::table('kirim_pesans')
                 ->leftjoin('users', 'users.id', '=', 'kirim_pesans.id_user')
+                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
                 ->select(
                     'kirim_pesans.*',
                     'users.name', 
@@ -92,7 +93,7 @@ class KirimPesanController extends Controller
                 );
 
         if(@$skpd){
-            $data =  $data->where('instansi_kerja', $skpd->nama_skpd)->get();
+            $data =  $data->where('profils.instansi_kerja', $skpd->nama_skpd)->get();
         }else{
             $data =  $data->whereNotNull('users.name')->get();
         }

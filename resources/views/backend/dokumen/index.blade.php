@@ -144,31 +144,39 @@
                             <label>Pemilik <sup class="text-danger">*</sup></label>
                             @php
                                 if (Auth::user()->role == 'Admin') {
-                                    $users = DB::table('users')->get();
+                                    $users = DB::table('users')
+                                            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                                            ->select('users.id', 'users.name', 'profils.nip')
+                                            ->get();
+
                                 } elseif (Auth::user()->role == 'SKPD') {
                                     $users = DB::table('dokumens')
-                                        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
-                                        ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
-                                        ->select('users.id', 'users.name')
-                                        ->where('dokumens.id_skpd', Auth::user()->id_skpd)
-                                        ->groupBy('users.id')
-                                        ->get();
+                                            ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+                                            ->leftJoin('skpds', 'skpds.id', '=', 'dokumens.id_skpd')
+                                            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                                            ->select('users.id', 'users.name', 'profils.nip')
+                                            ->where('dokumens.id_skpd', Auth::user()->id_skpd)
+                                            ->groupBy('users.id')
+                                            ->get();
                                 } elseif (Auth::user()->role == 'OPD') {
                                     $users = DB::table('dokumens')
-                                        ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
-                                        ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
-                                        ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
-                                        ->select('users.id', 'users.name', 'profils.nip')
-                                        ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
-                                        ->groupBy('users.id')
-                                        ->get();
+                                            ->leftJoin('users', 'users.id', '=', 'dokumens.id_user')
+                                            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'dokumens.id_unit_kerja')
+                                            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                                            ->select('users.id', 'users.name', 'profils.nip')
+                                            ->where('dokumens.id_unit_kerja', Auth::user()->id_unit_kerja)
+                                            ->groupBy('users.id')
+                                            ->get();
                                 } else {
-                                    $users = DB::table('users')->where('id', Auth::id())->get();
+                                    $users = DB::table('users')
+                                            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                                            ->select('users.id', 'users.name', 'profils.nip')
+                                            ->where('id', Auth::id())->get();
                                 }
                             @endphp
                             <select name="id_user" id="id_user" required>
                                 @foreach ($users as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }} [NIP: {{ $item->nip }}]</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }} NIP: {{ $item->nip }}</option>
                                 @endforeach
                             </select>
                         </div>

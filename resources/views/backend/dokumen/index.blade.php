@@ -168,7 +168,7 @@
                             @endphp
                             <select name="id_user" id="id_user" required>
                                 @foreach ($users as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }} [NIP: {{ $item->nip }}]</option>
                                 @endforeach
                             </select>
                         </div>

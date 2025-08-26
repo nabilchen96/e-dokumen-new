@@ -171,7 +171,8 @@
                                     $users = DB::table('users')
                                             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
                                             ->select('users.id', 'users.name', 'profils.nip')
-                                            ->where('id', Auth::id())->get();
+                                            ->where('users.id', Auth::id())
+                                            ->get();
                                 }
                             @endphp
                             <select name="id_user" id="id_user" required>

@@ -64,7 +64,7 @@ function getData() {
             render: function (data, type, row, meta) {
                 if (row.status != 'Draft') {
                     return `<a href="/export-kenaikan-gaji?data=${row.id}">
-                                        <i style="font-size: 1.5rem;" class="text-info bi bi-file-earmark-word"></i>
+                                        <i style="font-size: 1.5rem;" class="text-danger bi bi-file-earmark-pdf"></i>
                                     </a>`
                 } else {
                     return ``
@@ -72,23 +72,21 @@ function getData() {
             }
         },
 
-        ...(window.userRole === 'Admin' ? [
-            {
-                render: function (data, type, row, meta) {
-                    return `<a href="/edit-kenaikan-gaji?data=${row.id}">
-                        <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                    </a>`
-                }
-            },
-            {
-                render: function (data, type, row, meta) {
-                    return `<a href="javascript:void(0)" onclick="hapusData(` + (row
-                        .id) + `)">
-                        <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                    </a>`
-                }
+        {
+            render: function (data, type, row, meta) {
+                return `<a href="/edit-kenaikan-gaji?data=${row.id}">
+                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                </a>`
             }
-        ] : [])
+        },
+        {
+            render: function (data, type, row, meta) {
+                return `<a href="javascript:void(0)" onclick="hapusData(` + (row
+                    .id) + `)">
+                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                </a>`
+            }
+        }
         ]
     })
 }

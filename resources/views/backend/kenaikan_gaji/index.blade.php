@@ -28,10 +28,8 @@
                                     <th>Gaji Lama</th>
                                     <th>Gaji Baru</th>
                                     <th width="5%">File</th>
-                                    @if(Auth::user()->role == 'Admin')
-                                        <th width="5%">Edit</th>
-                                        <th width="5%">Hapus</th>
-                                    @endif
+                                    <th width="5%">Edit</th>
+                                    <th width="5%">Hapus</th>
                                 </tr>
                             </thead>
                         </table>

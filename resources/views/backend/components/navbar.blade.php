@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD')
+            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' || Auth::user()->id == $id_kepala)
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -132,7 +132,7 @@
             @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
-                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']))
+                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']) || Auth::user()->id == $id_kepala)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
                                 Kenaikan Gaji

@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PANDU Pengelolaan Kepegawaian Terpadu</title>
     <link rel="stylesheet" href="{{ asset('skydash/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('skydash/vendors/ti-icons/css/themify-icons.css') }}">
@@ -64,6 +65,13 @@
 
 <body>
     <div class="container-scroller">
+        @php
+            $id_kepala = DB::table('instansis')
+                ->join('profils', 'profils.id', '=', 'instansis.id_profil')
+                ->join('users', 'users.id', '=', 'profils.id_user')
+                ->where('users.id', Auth::id())
+                ->value('users.id');
+        @endphp
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
@@ -96,7 +104,9 @@
                                 {{ Auth::user()->email }}
                             </a>
                             <a class="dropdown-item" style="padding-top: 0; padding-bottom: 0;">
-                                <i class="bi bi-person-circle"></i> {{ Auth::user()->role == 'OPD' ? 'Unit Kerja' : Auth::user()->role }}
+                                <i class="bi bi-person-circle"></i>
+                                {{ Auth::user()->id == $id_kepala ? 'Kepala BKPSDM | ' : '' }}
+                                {{ Auth::user()->role == 'OPD' ? 'Unit Kerja' : Auth::user()->role }}
                             </a>
                             <a class="dropdown-item" href="{{ url('logout') }}">
                                 <i class="ti-power-off text-primary"></i>
@@ -126,7 +136,8 @@
             <!-- partial -->
             <div class="main-panel">
 
-                <div style="
+                <div
+                    style="
                     background: #4b49ac;
                     background-image:  
                     url('{{ asset('bundaran.jpeg') }}'); 

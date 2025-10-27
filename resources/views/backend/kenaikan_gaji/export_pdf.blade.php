@@ -315,7 +315,7 @@
                     KEPALA BADAN KEPEGAWAIAN DAN <br>
                     PENGEMBANGAN SUMBER DAYA MANUSIA <br>
                     KABUPATEN BENGKULU UTARA
-                    <br><br><br><br><br>
+                    <br><br><br><br>
 
                     <b><u>{{ @$data->nama_kepala }}</u></b><br>
                     {{ @$kepala[2] }}<br>
@@ -325,7 +325,7 @@
         </tr>
         <tr>
             <td style="font-size: 14px;" colspan="5">
-                <br><br>
+                <br>
                 <u>Tembusan disampaikan kepada Yth:</u><br>
                 1. Bupati Bengkulu Utara <br>
                 2. Kepala BKN Regional VII Palembang <br>
@@ -333,6 +333,15 @@
                 4. Kepala Cabang PT. Taspen (Persero) Bengkulu di Bengkulu <br>
                 5. Bendaharawan Gaji PNS yang bersangkutan <br>
                 6. Pegawai yang bersangkutan <br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5" class="text-center mt-4" style="text-align: center; font-size: 9px;">
+                <br><br><br>
+                @if(@$data->status_ttd == 1)
+                    Dokumen ini telah ditandatangani secara elektronik menggunakan sertifikat elektronik
+                    yang telah diterbitkan oleh Balai Sertifikat Elektronik (BsrE). Badan Siber dan Sandi Negara
+                @endif
             </td>
         </tr>
     </table>

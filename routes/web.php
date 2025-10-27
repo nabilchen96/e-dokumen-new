@@ -192,6 +192,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@index');
     Route::get('/data-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@data');
     Route::post('/store-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@store');
+    Route::post('/buat-tanda-tangan', 'App\Http\Controllers\KenaikanGajiController@buatTandaTangan');
     Route::get('/edit-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@edit')->name('edit-kenaikan-gaji');
     Route::post('/update-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@update');
     Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');

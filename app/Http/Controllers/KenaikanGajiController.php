@@ -22,7 +22,6 @@ class KenaikanGajiController extends Controller
 
     public function data()
     {
-
         $data = DB::table('kenaikan_gajis')
             ->leftjoin('profils', 'profils.id', '=', 'kenaikan_gajis.id_profil')
             ->leftjoin('profils as k', 'k.id', '=', 'kenaikan_gajis.id_profil_kepala')
@@ -36,11 +35,18 @@ class KenaikanGajiController extends Controller
                 'profils.nip',
             );
 
+        $id_kepala
+            = DB::table('instansis')
+                ->join('profils', 'profils.id', '=', 'instansis.id_profil')
+                ->join('users', 'users.id', '=', 'profils.id_user')
+                ->where('users.id', Auth::id())
+                ->value('users.id');
+
         if(Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD'){
 
             $data = $data->get();
 
-        }elseif (Auth::user()->role == 'SKPD'){
+        }elseif(Auth::user()->role == 'SKPD'){
 
             $data = $data->where('users.id_creator', Auth::id())->get();
 
@@ -74,6 +80,8 @@ class KenaikanGajiController extends Controller
                     ->get();
             }
 
+        }elseif(Auth::user()->id == $id_kepala){
+            $data = $data->get();
         }else{
             
             $data = $data->where('users.id', Auth::id())->get();
@@ -82,10 +90,18 @@ class KenaikanGajiController extends Controller
         return response()->json(['data' => $data]);
     }
 
+
     public function edit(Request $request)
     {
+        $id_kepala = DB::table('instansis')
+            ->join('profils', 'profils.id', '=', 'instansis.id_profil')
+            ->join('users', 'users.id', '=', 'profils.id_user')
+            ->where('users.id', Auth::id())
+            ->value('users.id');
 
-        return view('backend.kenaikan_gaji.edit');
+        return view('backend.kenaikan_gaji.edit', [
+            'id_kepala' => $id_kepala
+        ]);
     }
 
     public function store(Request $request)
@@ -254,22 +270,111 @@ class KenaikanGajiController extends Controller
         $templateProcessor->setValue('nip_kepala', @$data->nip_kepala);
 
 
-        // $pdf = PDF::loadview('backend.kenaikan_gaji.export_pdf', [
-        //     'data' => @$data, 
-        //     'kepala' => @$kepala, 
-        //     'instansi' => @$instansi,
-        // ]);
+        $pdf = PDF::loadview('backend.kenaikan_gaji.export_pdf', [
+            'data' => @$data, 
+            'kepala' => @$kepala, 
+            'instansi' => @$instansi,
+        ]);
 
-        // $pdf->setPaper('legal', 'portrait');
-        // return $pdf->stream('document.pdf');
+        $pdf->setPaper('legal', 'portrait');
+        return $pdf->stream('document.pdf');
 
         // Path untuk menyimpan hasil
-        $outputPath = storage_path('app/public/dokumen_kenaikan_gaji_'.@$data->nip_pegawai.'_'.@$data->nama_pegawai.'.docx');
+        // $outputPath = storage_path('app/public/dokumen_kenaikan_gaji_'.@$data->nip_pegawai.'_'.@$data->nama_pegawai.'.docx');
 
         // Simpan file hasil
-        $templateProcessor->saveAs($outputPath);
+        // $templateProcessor->saveAs($outputPath);
 
         // Kembalikan file sebagai respons download
-        return response()->download($outputPath)->deleteFileAfterSend(true);
+        // return response()->download($outputPath)->deleteFileAfterSend(true);
+    }
+
+    public function buatTandaTangan(Request $request)
+    {
+        $request->validate([
+            'sandi' => 'required|string',
+            'id_profil_kepala' => 'required|integer',
+            'dataId' => 'required|integer',
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            // 🔐 Verifikasi password login
+            if (!Hash::check($request->sandi, $user->password)) {
+                // Simpan log gagal
+                DB::table('status_ttd')->insert([
+                    'message' => "User {$user->name} gagal TTE: password salah.",
+                    'status' => 'error',
+                    'remote_addr' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                return response()->json([
+                    'message' => 'Password yang dimasukkan salah.'
+                ], 401);
+            }
+
+            // 🔍 Cari data kenaikan gaji berdasarkan ID
+            $kenaikan = KenaikanGaji::find($request->dataId);
+
+            if (!$kenaikan) {
+                // Simpan log error
+                DB::table('status_ttd')->insert([
+                    'message' => "User {$user->name} gagal TTE: data kenaikan gaji tidak ditemukan (ID {$request->dataId}).",
+                    'status' => 'error',
+                    'remote_addr' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                return response()->json([
+                    'message' => 'Data kenaikan gaji tidak ditemukan.'
+                ], 404);
+            }
+
+            // 🔁 Update kolom status_ttd
+            $kenaikan->status_ttd = 1;
+            $kenaikan->id_profil_kepala = $request->id_profil_kepala;
+            $kenaikan->save();
+
+            // ✅ Simpan log sukses
+            DB::table('status_ttd')->insert([
+                'message' => "User {$user->name} berhasil melakukan TTE pada data kenaikan gaji ID {$kenaikan->id}.",
+                'status' => 'success',
+                'remote_addr' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Tanda tangan berhasil diverifikasi dan disimpan!',
+                'data' => [
+                    'user' => $user->name,
+                    'id_profil_kepala' => $request->id_profil_kepala,
+                    'id_kenaikan' => $kenaikan->id,
+                    'status_ttd' => $kenaikan->status_ttd
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            // Simpan log jika terjadi error tak terduga
+            DB::table('status_ttd')->insert([
+                'message' => "User {$user->name} gagal melakukan TTE. Error internal: " . $e->getMessage(),
+                'status' => 'error',
+                'remote_addr' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Terjadi kesalahan internal pada server.'
+            ], 500);
+        }
     }
 }

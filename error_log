@@ -14,3 +14,5 @@
 [26-Apr-2025 17:09:37 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 528384 bytes) in /home/kepegaw3/dokumen.desapintar.org/e-dokumen/vendor/nunomaduro/collision/src/Highlighter.php on line 138
 [26-Apr-2025 17:10:41 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 8192 bytes) in /home/kepegaw3/dokumen.desapintar.org/e-dokumen/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/Worksheet.php on line 2584
 [26-Apr-2025 17:10:41 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 528384 bytes) in /home/kepegaw3/dokumen.desapintar.org/e-dokumen/vendor/nunomaduro/collision/src/Highlighter.php on line 138
+[11-Oct-2025 13:27:38 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
+[11-Oct-2025 13:27:38 UTC] PHP Warning:  copy(https://getcomposer.org/installer): Failed to open stream: no suitable wrapper could be found in Command line code on line 1

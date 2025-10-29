@@ -605,7 +605,28 @@
                                 <tr>
                                     <td width="50%"></td>
                                     <td width="50%" class="text-center" style="font-size: 16px;">
-                                        <br><br><br><br>
+                                        <div class="d-flex justify-content-center">
+                                            @if(@$kenaikan_gaji->status_ttd == 1)
+                                                <span class="text-success mt-4"><i>*Dokumen ini telah ditandatangani secara elektronik</i></span>
+                                            @else
+                                                @if(Auth::user()->id == $id_kepala)
+                                                    <div class="input-group mt-4" style="width: 350px !important;">
+                                                        <input autocomplete="off" type="password"
+                                                            class="form-control border-danger" placeholder="Sandi" id="sandi"
+                                                            name="sandi">
+                                                        <button type="button" id="btnTTE" style="height: 38px;"
+                                                            class="bg-info text-white input-group-text border-danger">
+                                                            TTE
+                                                        </button>
+                                                    </div>
+                                                @else 
+                                                    <span class="text-danger mt-4"><i>*Buat tanda tangan untuk merilis dokumen. 
+                                                        <br>Tanda tangan dibuat oleh Kepala BKPSDM</i></span>
+                                                    
+                                                @endif
+                                            @endif
+                                        </div>
+                                        <br>
                                     </td>
                                 </tr>
                                 <tr>
@@ -647,8 +668,12 @@
                                                 class="border-danger form-control">
                                                 <option {{ $kenaikan_gaji->status == 'Draft' ? 'selected' : '' }}>Draft
                                                 </option>
-                                                <option {{ $kenaikan_gaji->status == 'Rilis' ? 'selected' : '' }}>Rilis
+                                                <option {{ $kenaikan_gaji->status == 'Proses' ? 'selected' : '' }}>Proses
                                                 </option>
+                                                @if(@$kenaikan_gaji->status_ttd == 1)
+                                                    <option {{ $kenaikan_gaji->status == 'Rilis' ? 'selected' : '' }}>Rilis
+                                                    </option>
+                                                @endif
                                             </select>
                                         @endif
                                     </td>
@@ -683,4 +708,69 @@
 @endsection
 @push('script')
     <script src="{{ asset('js/backend/kenaikan_gaji/edit.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('btnTTE').addEventListener('click', function() {
+            const sandi = document.getElementById('sandi').value.trim();
+            const idProfil = document.getElementById('id_profil_kepala').value;
+            // Ambil URL saat ini
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Ambil parameter 'data'
+            const dataId = urlParams.get('data');
+
+            if (sandi === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Kolom sandi tidak boleh kosong!',
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Konfirmasi TTE?',
+                text: 'Pastikan sandi yang dimasukkan benar.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, kirim!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    axios.post('/buat-tanda-tangan', {
+                            sandi: sandi,
+                            id_profil_kepala: idProfil,
+                            dataId: dataId
+                        }, {
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(response => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: response.data.message || 'Tanda tangan berhasil dibuat!',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            // Jika perlu reload:
+                            // location.reload();
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: error.response?.data?.message ||
+                                    'Password salah atau terjadi kesalahan.',
+                            });
+                        });
+                }
+            });
+        });
+    </script>
 @endpush

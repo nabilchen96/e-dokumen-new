@@ -121,7 +121,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role == 'Admin')
+            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' || Auth::user()->id == $id_kepala)
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -132,7 +132,7 @@
             @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
-                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']))
+                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']) || Auth::user()->id == $id_kepala)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
                                 Kenaikan Gaji
@@ -165,12 +165,12 @@
                     <span class="menu-title">Statistik SIASN</span>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" href="{{ url('kirim-pesan') }}">
                     <i class="bi bi-whatsapp menu-icon"></i>
                     <span class="menu-title">Kirim Pesan</span>
                 </a>
-            </li>
+            </li> --}}
         @endif
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'Kepala BKPSDM')
             <li class="nav-item">

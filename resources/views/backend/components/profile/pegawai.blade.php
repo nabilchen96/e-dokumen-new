@@ -71,13 +71,17 @@
                         Madya</option>
                     <option {{ @$profil->pangkat == 'IV/e - Pembina Utama' ? 'selected' : '' }}>IV/e - Pembina Utama
                     </option>
-                    <option {{ @$profil->pangkat == 'VII' ? 'selected' : '' }}>VII
+                    <option {{ @$profil->pangkat == 'V' ? 'selected' : '' }}>Golongan V
                     </option>
-                    <option {{ @$profil->pangkat == 'IX' ? 'selected' : '' }}>IX
+                    <option {{ @$profil->pangkat == 'VI' ? 'selected' : '' }}>Golongan VI
                     </option>
-                    <option {{ @$profil->pangkat == 'X' ? 'selected' : '' }}>X
+                    <option {{ @$profil->pangkat == 'VII' ? 'selected' : '' }}>Golongan VII
                     </option>
-                    <option {{ @$profil->pangkat == 'XI' ? 'selected' : '' }}>XI
+                    <option {{ @$profil->pangkat == 'IX' ? 'selected' : '' }}>Golongan IX
+                    </option>
+                    <option {{ @$profil->pangkat == 'X' ? 'selected' : '' }}>Golongan X
+                    </option>
+                    <option {{ @$profil->pangkat == 'XI' ? 'selected' : '' }}>Golongan XI
                     </option>
                 </select>
             </div>

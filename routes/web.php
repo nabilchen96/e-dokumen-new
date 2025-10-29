@@ -4,6 +4,8 @@ use App\Http\Controllers\PenilaianProposalController;
 use Illuminate\Support\Facades\Route;
 // use Barryvdh\DomPDF\Facade as PDF; // Import namespace penuh
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\OtpMail;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,12 @@ Route::post('/reset-password-proses', 'App\Http\Controllers\AuthController@reset
 
 //PETA SEBARAN PEGAWAI
 Route::get('/data-peta', 'App\Http\Controllers\DashboardController@dataPeta');
+
+// Route::get('/send-email', function () {
+//     $data = ['name' => 'Pengguna'];
+//     Mail::to('escendol900@gmail.com')->send(new OtpMail($data));
+//     return 'Email berhasil dikirim!';
+// });
 
 
 //BACKEND
@@ -192,6 +200,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@index');
     Route::get('/data-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@data');
     Route::post('/store-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@store');
+    Route::post('/buat-tanda-tangan', 'App\Http\Controllers\KenaikanGajiController@buatTandaTangan');
     Route::get('/edit-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@edit')->name('edit-kenaikan-gaji');
     Route::post('/update-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@update');
     Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');

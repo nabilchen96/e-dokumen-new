@@ -62,6 +62,10 @@
                         Madya</option>
                     <option {{ @$profil->pangkat == 'IV/e - Pembina Utama' ? 'selected' : '' }}>IV/e - Pembina Utama
                     </option>
+                    <option {{ @$profil->pangkat == 'V' ? 'selected' : '' }}>V
+                    </option>
+                    <option {{ @$profil->pangkat == 'VI' ? 'selected' : '' }}>VI
+                    </option>
                     <option {{ @$profil->pangkat == 'VII' ? 'selected' : '' }}>VII
                     </option>
                     <option {{ @$profil->pangkat == 'IX' ? 'selected' : '' }}>IX

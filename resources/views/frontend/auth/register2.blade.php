@@ -64,7 +64,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+                        <input type="email" value="{{ session('user_otp')->no_wa }}" readonly name="email" id="email" class="form-control" placeholder="Email" required>
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">Tempat Lahir <span class="text-red-500">*</span></label>
@@ -84,7 +84,7 @@
                             <option value="">PILIH STATUS</option>
                             <option>PNS</option>
                             <option>PPPK</option>
-                            <option value="Honorer">Non ASN</option>
+                            {{-- <option value="Honorer">Non ASN</option> --}}
                         </select>
                     </div>
                 </div>
@@ -124,10 +124,17 @@
                         <label class="font-semibold text-gray-700">Tanggal Lahir <span class="text-red-500">*</span></label>
                         <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" required>
                     </div>
-                    <div>
+                    {{-- OLD SCRIPT  --}}
+                    {{-- <div>
                         <label class="font-semibold text-gray-700">No WA <span class="text-red-500">*</span></label>
                         <input type="number" name="no_wa" id="no_wa" class="form-control bg-gray-100" placeholder="No Whatsapp"
                             readonly value="{{ session('user_otp')->no_wa }}" required>
+                    </div> --}}
+
+                    {{-- NEW SCRIPT  --}}
+                    <div>
+                        <label class="font-semibold text-gray-700">No WA <span class="text-red-500">*</span></label>
+                        <input type="number" name="no_wa" id="no_wa" class="form-control bg-gray-100" placeholder="No Whatsapp" required>
                     </div>
                     <div id="nip_form"></div>
                 </div>

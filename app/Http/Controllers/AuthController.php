@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Client;
 use DB;
 use Illuminate\Support\Carbon;
+use App\Mail\OtpMail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -86,72 +88,124 @@ class AuthController extends Controller
         return view('frontend.auth.register');
     }
 
-    public function registerOtp(Request $request)
-    {
-        $noWa = $request->no_wa;
+//     public function registerOtp(Request $request)
+//     {
+//         $noWa = $request->no_wa;
 
-        //validasi apakah nomor sudah terdaftar dengan status aktif
-        $cekWa = DB::table('users')->where('no_wa', $noWa)->where('status', 'Aktif')->first();
-        if ($cekWa) {
+//         //validasi apakah nomor sudah terdaftar dengan status aktif
+//         $cekWa = DB::table('users')->where('no_wa', $noWa)->where('status', 'Aktif')->first();
+//         if ($cekWa) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'respon' => 'Nomor WhatsApp sudah digunakan user lain. Harap mengubungi admin.'
+//             ]);
+//         }
+
+//         // Validasi input
+//         if (!$noWa) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'respon' => 'Nomor WhatsApp tidak boleh kosong.'
+//             ]);
+//         }
+
+//         // Simulasi pengiriman OTP (6 digit acak)
+//         $otp = rand(100000, 999999);
+
+//         $data = [
+//             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
+//             'target' => $noWa, // Nomor tujuan
+//             'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
+            
+// 📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan
+//             'delay' => '5'
+//         ];
+
+//         // Mengirim request POST menggunakan Guzzle
+//         try {
+//             $response = Http::withHeaders([
+//                 'Authorization' => 'Q6YBrZNnsuaMewvjVueW',
+//                 'Content-Type' => 'application/x-www-form-urlencoded',
+//             ])->asForm()->post('https://api.fonnte.com/send', $data);
+
+//             // Menangani respons
+//             if ($response->successful()) {
+
+//                 Otp::create([
+//                     'no_wa' => $noWa,
+//                     'otp' => $otp,
+//                 ]);
+
+//                 $result = $response->json(); // Mendapatkan respons sebagai array
+//                 return response()->json([
+//                     'status' => 'success',
+//                     'message' => 'Pesan berhasil dikirim.',
+//                     'data' => $result,
+//                 ]);
+//             } else {
+//                 return response()->json([
+//                     'status' => 'error',
+//                     'message' => 'Gagal mengirim pesan.',
+//                     'error' => $response->body(), // Menampilkan pesan error
+//                 ]);
+//             }
+//         } catch (\Exception $e) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Terjadi kesalahan saat mengirim pesan.',
+//                 'error' => $e->getMessage(),
+//             ]);
+//         }
+//     }
+
+
+    public function registerOtp(Request $request){
+
+        $email = $request->email;
+        $name  = $request->email ?? 'Pengguna';
+
+        if (!$email) {
             return response()->json([
                 'status' => 'error',
-                'respon' => 'Nomor WhatsApp sudah digunakan user lain. Harap mengubungi admin.'
+                'respon' => 'Email tidak boleh kosong.'
             ]);
         }
 
-        // Validasi input
-        if (!$noWa) {
+        // Cek apakah email sudah terdaftar
+        $cekEmail = DB::table('users')->where('email', $email)->where('status', 'Aktif')->first();
+        if ($cekEmail) {
             return response()->json([
                 'status' => 'error',
-                'respon' => 'Nomor WhatsApp tidak boleh kosong.'
+                'respon' => 'Email sudah digunakan user lain. Harap menghubungi admin.'
             ]);
         }
 
-        // Simulasi pengiriman OTP (6 digit acak)
+        // Generate OTP 6 digit
         $otp = rand(100000, 999999);
 
-        $data = [
-            'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
-            'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
-            
-📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan
-            'delay' => '5'
-        ];
+        // Simpan ke database
+        Otp::updateOrCreate(
+            ['no_wa' => $email],
+            [
+                'otp' => $otp,
+                // 'expires_at' => Carbon::now()->addMinutes(1)
+            ]
+        );
 
-        // Mengirim request POST menggunakan Guzzle
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Q6YBrZNnsuaMewvjVueW',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ])->asForm()->post('https://api.fonnte.com/send', $data);
+            // Kirim Email
+            Mail::to($email)->send(new OtpMail($name, $otp));
 
-            // Menangani respons
-            if ($response->successful()) {
-
-                Otp::create([
-                    'no_wa' => $noWa,
-                    'otp' => $otp,
-                ]);
-
-                $result = $response->json(); // Mendapatkan respons sebagai array
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Pesan berhasil dikirim.',
-                    'data' => $result,
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Gagal mengirim pesan.',
-                    'error' => $response->body(), // Menampilkan pesan error
-                ]);
-            }
+            return response()->json([
+                'status' => 'success',
+                'respon' => 'Kode OTP berhasil dikirim ke email.',
+                'email' => $email
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat mengirim pesan.',
-                'error' => $e->getMessage(),
+                'respon' => 'Gagal mengirim email OTP.',
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -159,13 +213,13 @@ class AuthController extends Controller
     public function registerOtpCek(Request $request)
     {
         $cekOtp = DB::table('otps')
-            ->where('no_wa', $request->no_wa)
+            ->where('no_wa', $request->email)
             ->where('otp', $request->otp)
             ->first();
 
         if ($cekOtp) {
             // Bandingkan waktu saat ini dengan created_at
-            $otpCreatedAt = Carbon::parse($cekOtp->created_at);
+            $otpCreatedAt = Carbon::parse($cekOtp->updated_at);
             $currentTime = Carbon::now();
 
             if ($otpCreatedAt->diffInMinutes($currentTime) <= 1) {
@@ -265,72 +319,109 @@ class AuthController extends Controller
         return response()->json($data);
     }
 
-    public function resetOtp(Request $request)
-    {
-        $noWa = $request->no_wa;
+//     public function resetOtp(Request $request)
+//     {
+//         $noWa = $request->no_wa;
 
-        // Validasi input
-        if (!$noWa) {
+//         // Validasi input
+//         if (!$noWa) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'respon' => 'Nomor WhatsApp tidak boleh kosong.'
+//             ]);
+//         }
+
+//         // Simulasi pengiriman OTP (6 digit acak)
+//         $otp = rand(100000, 999999);
+
+//         $data = [
+//             'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
+//             'target' => $noWa, // Nomor tujuan
+//             'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
+            
+// 📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
+//             'delay' => '5'
+//         ];
+
+//         // Mengirim request POST menggunakan Guzzle
+//         try {
+            
+//             $response = Http::withHeaders([
+//                 'Authorization' => 'Q6YBrZNnsuaMewvjVueW',
+//                 'Content-Type' => 'application/x-www-form-urlencoded',
+//             ])->asForm()->post('https://api.fonnte.com/send', $data);
+
+//             // Menangani respons
+//             if ($response->successful()) {
+
+//                 // Simpan OTP hanya jika pengiriman sukses
+//                 Otp::create([
+//                     'no_wa' => $noWa,
+//                     'otp' => $otp,
+//                 ]);
+
+//                 $result = $response->json(); // Mendapatkan respons sebagai array
+//                 return response()->json([
+//                     'status' => 'success',
+//                     'message' => 'Pesan berhasil dikirim.',
+//                     'data' => $result,
+//                 ]);
+
+//             } else {
+//                 return response()->json([
+//                     'status' => 'error',
+//                     'message' => 'Gagal mengirim pesan.',
+//                     'error' => $response->body(), // Menampilkan pesan error
+//                 ]);
+//             }
+//         } catch (\Exception $e) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Terjadi kesalahan saat mengirim pesan.',
+//                 'error' => $e->getMessage(),
+//             ]);
+//         }
+//     }
+
+
+    public function resetOtp(Request $request){
+
+        $email = $request->no_wa;
+        $name  = $request->no_wa ?? 'Pengguna';
+
+        if (!$email) {
             return response()->json([
                 'status' => 'error',
-                'respon' => 'Nomor WhatsApp tidak boleh kosong.'
+                'respon' => 'Email tidak boleh kosong.'
             ]);
         }
 
-        // Simulasi pengiriman OTP (6 digit acak)
+        // Generate OTP 6 digit
         $otp = rand(100000, 999999);
 
         // Simpan ke database
-        // Otp::create([
-        //     'no_wa' => $noWa,
-        //     'otp' => $otp,
-        // ]);
+        Otp::updateOrCreate(
+            ['no_wa' => $email],
+            [
+                'otp' => $otp,
+                // 'expires_at' => Carbon::now()->addMinutes(1)
+            ]
+        );
 
-        $data = [
-            'Authorization' => 'Q6YBrZNnsuaMewvjVueW', // Ganti dengan token Anda
-            'target' => $noWa, // Nomor tujuan
-            'message' => 'Kode OTP Anda: *' . $otp . '*. Kode ini hanya dapat digunakan selama satu menit, dan jangan berikan kode ini kepada siapapun. 
-            
-📌 Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id. Jangan lupa simpan nomor ini dengan nama *Pandu App*', // Isi pesan Pesan ini dikirim dari aplikasi https://pandu.bengkuluutarakab.go.id', // Isi pesan
-            'delay' => '5'
-        ];
-
-        // Mengirim request POST menggunakan Guzzle
         try {
-            
-            $response = Http::withHeaders([
-                'Authorization' => 'Q6YBrZNnsuaMewvjVueW',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ])->asForm()->post('https://api.fonnte.com/send', $data);
+            // Kirim Email
+            Mail::to($email)->send(new OtpMail($name, $otp));
 
-            // Menangani respons
-            if ($response->successful()) {
-
-                // Simpan OTP hanya jika pengiriman sukses
-                Otp::create([
-                    'no_wa' => $noWa,
-                    'otp' => $otp,
-                ]);
-
-                $result = $response->json(); // Mendapatkan respons sebagai array
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Pesan berhasil dikirim.',
-                    'data' => $result,
-                ]);
-
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Gagal mengirim pesan.',
-                    'error' => $response->body(), // Menampilkan pesan error
-                ]);
-            }
+            return response()->json([
+                'status' => 'success',
+                'respon' => 'Kode OTP berhasil dikirim ke email.',
+                'email' => $email
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat mengirim pesan.',
-                'error' => $e->getMessage(),
+                'respon' => 'Gagal mengirim email OTP.',
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -344,13 +435,13 @@ class AuthController extends Controller
 
         if ($cekOtp) {
             // Bandingkan waktu saat ini dengan created_at
-            $otpCreatedAt = Carbon::parse($cekOtp->created_at);
+            $otpCreatedAt = Carbon::parse($cekOtp->updated_at);
             $currentTime = Carbon::now();
 
             if ($otpCreatedAt->diffInMinutes($currentTime) <= 1) {
                 // Cari user berdasarkan no_wa
                 $user = DB::table('users')
-                    ->where('no_wa', $request->no_wa)
+                    ->where('email', $request->no_wa)
                     ->first();
 
                 if ($user) {

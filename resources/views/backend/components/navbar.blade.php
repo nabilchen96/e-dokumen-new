@@ -165,12 +165,12 @@
                     <span class="menu-title">Statistik SIASN</span>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" href="{{ url('kirim-pesan') }}">
                     <i class="bi bi-whatsapp menu-icon"></i>
                     <span class="menu-title">Kirim Pesan</span>
                 </a>
-            </li>
+            </li> --}}
         @endif
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'Kepala BKPSDM')
             <li class="nav-item">

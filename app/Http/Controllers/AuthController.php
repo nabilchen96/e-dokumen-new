@@ -396,6 +396,18 @@ class AuthController extends Controller
             ]);
         }
 
+        $cekEmail = DB::table('users')
+            ->where('email', $request->no_wa)
+            ->first();
+
+        if(!@$cekEmail->email){
+             return response()->json([
+                'status' => 'error',
+                'respon' => 'Email belum terdaftar.'
+            ]);
+        }
+
+
         // Generate OTP 6 digit
         $otp = rand(100000, 999999);
 

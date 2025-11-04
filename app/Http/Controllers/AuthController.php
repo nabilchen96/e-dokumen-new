@@ -222,7 +222,7 @@ class AuthController extends Controller
             $otpCreatedAt = Carbon::parse($cekOtp->updated_at);
             $currentTime = Carbon::now();
 
-            if ($otpCreatedAt->diffInMinutes($currentTime) <= 1) {
+            if ($otpCreatedAt->diffInMinutes($currentTime) <= 5) {
                 // Jika OTP masih berlaku
                 session(['user_otp' => $cekOtp]);
 
@@ -450,7 +450,7 @@ class AuthController extends Controller
             $otpCreatedAt = Carbon::parse($cekOtp->updated_at);
             $currentTime = Carbon::now();
 
-            if ($otpCreatedAt->diffInMinutes($currentTime) <= 1) {
+            if ($otpCreatedAt->diffInMinutes($currentTime) <= 5) {
                 // Cari user berdasarkan no_wa
                 $user = DB::table('users')
                     ->where('email', $request->no_wa)

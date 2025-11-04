@@ -235,7 +235,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'OTP Dikirim!',
-                            text: 'Kode OTP telah dikirim ke email Anda. Berlaku selama 1 menit.'
+                            text: 'Kode OTP telah dikirim ke email Anda. Berlaku selama 5 menit.'
                         });
                         startCountdown();
                     } else {
@@ -263,7 +263,7 @@
         // === TIMER 60 DETIK ===
         function startCountdown() {
             const btn = document.getElementById('btnSendOtp');
-            let count = 60;
+            let count = 300;
             btn.disabled = true;
             const timer = setInterval(() => {
                 btn.textContent = `⏳ ${count} detik`;

@@ -4,6 +4,7 @@
 /public/dokumen
 /public/file_pengantar
 /public/lapor_masalah
+/public/tanda_jasa
 /storage/*.key
 /vendor
 .env

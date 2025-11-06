@@ -80,7 +80,6 @@ class LaporMasalahController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'masalah' => 'required',
-            'gambar' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         if ($validator->fails()) {

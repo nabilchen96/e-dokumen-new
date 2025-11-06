@@ -50,7 +50,7 @@
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
                         <label>Gambar</label>
-                        <input  name="gambar" id="gambar" type="file" placeholder="Gambar"
+                        <input name="gambar" id="gambar" type="file" placeholder="Gambar"
                             class="form-control form-control-sm">
                     </div>
                     <div class="form-group">

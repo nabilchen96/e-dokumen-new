@@ -19,7 +19,7 @@ function getData() {
         },
         columnDefs: [{
             orderable: false,
-            targets: [5]
+            // targets: [5]
         } // Kolom ke-0 dan ke-2 tidak bisa di-sort
         ],
         columns: [{
@@ -86,18 +86,20 @@ function getData() {
                 <b>Unit Kerja</b>: ${row.unit_kerja}`
             }
         },
-        {
-            render: function (data, type, row, meta) {
-                return `<a href="javascript:void(0)" class="d-flex justify-content-center" 
-                        data-nama="${row.name}"
-                        data-nip="${row.nip}"
-                        data-masa_kerja="${row.masa_kerja}"
-                        data-id_profil="${row.id_profil}"
-                        data-toggle="modal" data-target="#modal">
-                    <i style="font-size: 1.5rem;" class="text-center text-success bi bi-grid"></i>
-                </a>`
+        ...(window.userRole === 'Admin' ? [
+            {
+                render: function (data, type, row, meta) {
+                    return `<a href="javascript:void(0)" class="d-flex justify-content-center" 
+                            data-nama="${row.name}"
+                            data-nip="${row.nip}"
+                            data-masa_kerja="${row.masa_kerja}"
+                            data-id_profil="${row.id_profil}"
+                            data-toggle="modal" data-target="#modal">
+                        <i style="font-size: 1.5rem;" class="text-center text-success bi bi-grid"></i>
+                    </a>`;
+                }
             }
-        },
+        ] : [])
         ]
     })
 }

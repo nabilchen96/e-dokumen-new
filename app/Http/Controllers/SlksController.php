@@ -46,7 +46,7 @@ class SlksController extends Controller
 
             } elseif (Auth::user()->role == 'Pegawai') {
 
-                $profils = $profils->where('dokumens.id_user', Auth::id())->get();
+                $profils = $profils->where('profils.id_user', Auth::id())->get();
 
             } elseif (Auth::user()->role == 'SKPD'){
 

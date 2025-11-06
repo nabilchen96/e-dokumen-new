@@ -206,6 +206,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');
     Route::get('/export-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@export');
 
+    //SLKS
+    Route::get('/slks', 'App\Http\Controllers\SlksController@index');
+    Route::get('/data-slks', 'App\Http\Controllers\SlksController@data');
+    Route::post('/store-slks', 'App\Http\Controllers\SlksController@store');
+
     //PROFIL
     Route::get('/profil', 'App\Http\Controllers\ProfilController@index');
     Route::get('/data-profil', 'App\Http\Controllers\ProfilController@data');

@@ -28,7 +28,8 @@
                                 <a class="nav-link" href="{{ url('district') }}">Daerah</a>
                             </li>
                             <li class="nav-item">
-                                <a style="white-space: normal; line-height: 1;" class="nav-link" href="{{ url('skpd') }}">Unit Organisasi Induk</a>
+                                <a style="white-space: normal; line-height: 1;" class="nav-link"
+                                    href="{{ url('skpd') }}">Unit Organisasi Induk</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('unit-kerja') }}">Unit Organisasi</a>
@@ -121,7 +122,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if (Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' || Auth::user()->id == $id_kepala)
+            @if ((Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD') || Auth::user()->id == $id_kepala)
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -149,6 +150,12 @@
                     @endif
                 </ul>
             </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('slks') }}">
+                <i class="bi bi-stars menu-icon"></i>
+                <span class="menu-title">E-SLKS</span>
+            </a>
         </li>
         @if (Auth::user()->role != 'Bendahara Gaji DPKAD')
             <li class="nav-item">

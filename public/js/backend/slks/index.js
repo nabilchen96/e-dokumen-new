@@ -10,7 +10,7 @@ function getData() {
 
     $("#myTable").DataTable({
         "ordering": true,
-        ajax: '/data-slks?param='+param,
+        ajax: '/data-slks?param=' + param,
         processing: true,
         scrollX: true,
         'language': {
@@ -86,20 +86,18 @@ function getData() {
                 <b>Unit Kerja</b>: ${row.unit_kerja}`
             }
         },
-        ...(window.userRole === 'Admin' ? [
-            {
-                render: function (data, type, row, meta) {
-                    return `<a href="javascript:void(0)" class="d-flex justify-content-center" 
-                            data-nama="${row.name}"
-                            data-nip="${row.nip}"
-                            data-masa_kerja="${row.masa_kerja}"
-                            data-id_profil="${row.id_profil}"
-                            data-toggle="modal" data-target="#modal">
-                        <i style="font-size: 1.5rem;" class="text-center text-success bi bi-grid"></i>
-                    </a>`;
-                }
+        {
+            render: function (data, type, row, meta) {
+                return `<a href="javascript:void(0)" class="d-flex justify-content-center" 
+                        data-nama="${row.name}"
+                        data-nip="${row.nip}"
+                        data-masa_kerja="${row.masa_kerja}"
+                        data-id_profil="${row.id_profil}"
+                        data-toggle="modal" data-target="#modal">
+                    <i style="font-size: 1.5rem;" class="text-center text-success bi bi-grid"></i>
+                </a>`;
             }
-        ] : [])
+        }
         ]
     })
 }

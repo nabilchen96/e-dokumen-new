@@ -37,6 +37,33 @@
                         </li>
                     </ul>
                     <div class="table-responsive mt-4">
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <strong>Upload gagal!</strong><br>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+                        @if (Auth::user()->role == 'Admin')
+                            <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal"
+                                data-target="#modal2">
+                                Upload Template
+                            </button>
+                        @endif
                         <table id="myTable" class="table table-striped" style="width: 100%;">
                             <thead class="bg-info text-white">
                                 <tr>
@@ -45,9 +72,7 @@
                                     <th width="25%">Nama / NIP</th>
                                     <th width="20%">Lencana / Dokuman</th>
                                     <th width="30%">SKPD / Unit Kerja</th>
-                                    @if (Auth::user()->role == 'Admin')
-                                        <th width="5%">Upload</th>
-                                    @endif
+                                    <th width="5%">Upload</th>
                                 </tr>
                             </thead>
                         </table>
@@ -72,17 +97,64 @@
                             <input id="nama" placeholder="Nama" readonly class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
-                            <label>NIP</label>
-                            <input id="nip" placeholder="NIP" readonly class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label>Masa Kerja</label>
-                            <input id="masa_kerja" placeholder="Masa Kerja" readonly class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
                             <label>Dokumen <sup class="text-danger">*</sup></label>
                             <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
-                                class="form-control form-control-sm" accept=".pdf, image/*">
+                                class="form-control form-control-sm mb-2" accept=".pdf, image/*">
+                            @php
+                                // Folder tempat menyimpan file
+                                $folder = public_path('template_slks');
+
+                                // Cek file berdasarkan ekstensi yang diizinkan
+                                $fileExtensions = ['pdf', 'doc', 'docx'];
+                                $existingFile = null;
+
+                                foreach ($fileExtensions as $ext) {
+                                    $path = $folder . '/template_slks.' . $ext;
+                                    if (File::exists($path)) {
+                                        $existingFile = 'template_slks/template_slks.' . $ext;
+                                        break;
+                                    }
+                                }
+                            @endphp
+                            @if ($existingFile)
+                                <a href="{{ asset($existingFile) }}" target="_blank">
+                                    <i class="bi bi-file-earmark-text"></i> Download Template
+                                </a>
+                            @else
+                                <a href="#">Belum ada template yang diupload.</a>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer p-3">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                        <button id="tombol_kirim" class="btn btn-primary btn-sm">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ url('upload-template-slks') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header p-3">
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Upload Template</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="respon_error" class="text-danger mb-4"></div>
+                        <div class="form-group">
+                            <label>Template <sup class="text-danger">*</sup></label>
+                            <input name="file" id="file" type="file" placeholder="Dokumen"
+                                class="form-control form-control-sm mb-2">
+                                @if ($existingFile)
+                                    <a href="{{ asset($existingFile) }}" target="_blank">
+                                        <i class="bi bi-file-earmark-text"></i> Download Template
+                                    </a>
+                                @else
+                                    <a href="#">Belum ada template yang diupload.</a>
+                                @endif
                         </div>
                     </div>
                     <div class="modal-footer p-3">

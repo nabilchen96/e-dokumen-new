@@ -66,6 +66,13 @@
             </li>
         @else
         @endif
+        @php
+            // Ambil data profil user
+            $profil = DB::table('users')
+                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
+                ->where('users.id', Auth::id())
+                ->first();
+        @endphp
         @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM', 'Pegawai']))
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false"
@@ -77,12 +84,6 @@
                 <div class="collapse" id="tahap1">
                     <ul class="nav flex-column sub-menu">
                         @php
-                            // Ambil data profil user
-                            $profil = DB::table('users')
-                                ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-                                ->where('users.id', Auth::id())
-                                ->first();
-
                             // Ambil jenis dokumen yang sesuai
                             $jenis_dokumen = DB::table('jenis_dokumens')
                                 ->where('status', 'Aktif')
@@ -151,12 +152,21 @@
                 </ul>
             </div>
         </li>
+        @php
+            $masaKerja10Tahun = false;
+            $tmt_cpns = $profil?->tmt_cpns;
+            if ($tmt_cpns) {
+                $masaKerja10Tahun = \Carbon\Carbon::parse($tmt_cpns)->addYears(10)->lessThanOrEqualTo(\Carbon\Carbon::today());
+            }
+        @endphp 
+        @if(in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) || Auth::user()->role == 'Pegawai' && $masaKerja10Tahun)
         <li class="nav-item">
             <a class="nav-link" href="{{ url('slks') }}">
                 <i class="bi bi-stars menu-icon"></i>
                 <span class="menu-title">E-SLKS</span>
             </a>
         </li>
+        @endif
         @if (Auth::user()->role != 'Bendahara Gaji DPKAD')
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('profil') }}">

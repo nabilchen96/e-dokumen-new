@@ -210,6 +210,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/slks', 'App\Http\Controllers\SlksController@index');
     Route::get('/data-slks', 'App\Http\Controllers\SlksController@data');
     Route::post('/store-slks', 'App\Http\Controllers\SlksController@store');
+    Route::post('/upload-template-slks', 'App\Http\Controllers\SlksController@uploadTemplate');
 
     //PROFIL
     Route::get('/profil', 'App\Http\Controllers\ProfilController@index');

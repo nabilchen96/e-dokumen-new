@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Profil;
 use Illuminate\Support\Str;
 use Auth;
+use Illuminate\Support\Facades\File;
 
 class SlksController extends Controller
 {
@@ -202,5 +203,34 @@ class SlksController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function uploadTemplate(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:doc,docx|max:10240', // hanya PDF dan Word
+        ]);
+
+        // dd($request->all());
+
+        $file = $request->file('file');
+        $fileName = 'template_slks.'.$file->getClientOriginalExtension(); // gunakan nama asli
+
+        $destinationPath = public_path('template_slks');
+
+        // Buat folder jika belum ada
+        if (!File::exists($destinationPath)) {
+            File::makeDirectory($destinationPath, 0777, true);
+        }
+
+        // Hapus file lama jika sudah ada dengan nama sama
+        if (File::exists($destinationPath . '/' . $fileName)) {
+            File::delete($destinationPath . '/' . $fileName);
+        }
+
+        // Pindahkan file baru
+        $file->move($destinationPath, $fileName);
+
+        return back()->with('success', 'File Template berhasil diupload');
     }
 }

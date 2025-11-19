@@ -41,14 +41,16 @@ function getData() {
                 }
             }
         },
+        
         {
             render: function (data, type, row, meta) {
                 return `<b>Nama</b>: ${row.name} <br> 
-                <b>NIP</b>: ${row.status_pegawai == `Honorer` ? `-` : row.nip ?? `-`} <br>
-                <div class="mt-1 badge bg-info text-white" style="border-radius: 8px;">${row.masa_kerja == 10 ? `Perunggu` : row.masa_kerja == 20 ? `Perak` : `Emas`}</div> <br>
+                <b>NIP</b>: ${row.status_pegawai == `PNS` ? `-` : row.nip ?? `-`} <br>
+                <div class="mt-1 badge bg-info text-white" style="border-radius: 8px;">${row.masa_kerja == 10 ? `Perunggu` : row.masa_kerja == 20 ? `Perak` :  `Emas`}</div> <br>
                 `;
             }
         },
+        
         {
             render: function (data, type, row, meta) {
                 let badge = "";
@@ -57,18 +59,18 @@ function getData() {
                 if (row.masa_kerja >= 30) {
                     dokumen = row.tanda_jasa_30
                         ? `<a href="/tanda_jasa/30_tahun/${row.tanda_jasa_30}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS
                             </a>`
                         : `<span class="text-danger">Belum Ada Dokumen</span>`;
                 } else if (row.masa_kerja >= 20) {
                     dokumen = row.tanda_jasa_20
                         ? `<a href="/tanda_jasa/20_tahun/${row.tanda_jasa_20}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup</a>`
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS</a>`
                         : `<span class="text-danger">Belum Ada Dokumen</span>`;
                 } else if (row.masa_kerja >= 10) {
                     dokumen = row.tanda_jasa_10
                         ? `<a href="/tanda_jasa/10_tahun/${row.tanda_jasa_10}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup</a>`
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS</a>`
                         : `<span class="text-danger">Belum Ada Dokumen</span>`;
                 } else {
                     dokumen = `<span class="text-muted">Belum Memenuhi 10 Tahun</span>`;

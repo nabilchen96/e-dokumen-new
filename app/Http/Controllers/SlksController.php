@@ -37,7 +37,7 @@ class SlksController extends Controller
                 'profils.id as id_profil',
                 'profils.tanda_jasa_10',
                 'profils.tanda_jasa_20',
-                'profils.tanda_jasa_30',
+                'profils.tanda_jasa_30'
             )
             ->whereNotNull('profils.tmt_cpns');
 
@@ -182,6 +182,7 @@ class SlksController extends Controller
 
                 // Path folder tujuan di dalam public/
                 $destinationPath = public_path("tanda_jasa/{$level}_tahun");
+               
 
                 // Buat folder kalau belum ada
                 if (!file_exists($destinationPath)) {
@@ -198,7 +199,7 @@ class SlksController extends Controller
 
             return response()->json([
                 'responCode' => 1,
-                'respon' => "Dokumen tanda jasa {$level} tahun berhasil diunggah!"
+                'respon' => "Dokumen Persyaratan SLKS {$level} tahun berhasil diunggah!"
             ]);
         }
 
@@ -214,7 +215,7 @@ class SlksController extends Controller
         // dd($request->all());
 
         $file = $request->file('file');
-        $fileName = 'template_slks.'.$file->getClientOriginalExtension(); // gunakan nama asli
+        $fileName = 'Persyaratan_dan_Format_DRH.'.$file->getClientOriginalExtension(); // gunakan nama asli
 
         $destinationPath = public_path('template_slks');
 
@@ -231,6 +232,6 @@ class SlksController extends Controller
         // Pindahkan file baru
         $file->move($destinationPath, $fileName);
 
-        return back()->with('success', 'File Template berhasil diupload');
+        return back()->with('success', 'File Persyaratan SLKS dan Format DRH berhasil diupload');
     }
 }

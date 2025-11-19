@@ -123,6 +123,8 @@
                             @else
                                 <a href="#">Belum ada template yang diupload.</a>
                             @endif
+                            <input name="masa_kerja" id="masa_kerja" type="text" placeholder="Masa Kerja"
+                                class="form-control form-control-sm mt-4" required readonly>
                         </div>
                     </div>
                     <div class="modal-footer p-3">

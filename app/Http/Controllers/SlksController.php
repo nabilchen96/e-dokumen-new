@@ -135,6 +135,7 @@ class SlksController extends Controller
         $validator = Validator::make($request->all(), [
             'id_profil' => 'required',
             'dokumen' => 'nullable|file|mimes:pdf,jpg,png',
+            'masa_kerja' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -156,16 +157,16 @@ class SlksController extends Controller
             }
 
             // Hitung masa kerja (dalam tahun)
-            $masaKerja = Carbon::parse($profil->tmt_cpns)->diffInYears(Carbon::now());
+            // $masaKerja = Carbon::parse($profil->tmt_cpns)->diffInYears(Carbon::now());
             
             // Tentukan level dokumen
-            if ($masaKerja >= 30) {
+            if ($masaKerja >= '30 Tahun') {
                 $level = 30;
                 $kolom = 'tanda_jasa_30';
-            } elseif ($masaKerja >= 20) {
+            } elseif ($masaKerja >= '20 Tahun') {
                 $level = 20;
                 $kolom = 'tanda_jasa_20';
-            } elseif ($masaKerja >= 10) {
+            } elseif ($masaKerja >= '10 Tahun') {
                 $level = 10;
                 $kolom = 'tanda_jasa_10';
             } else {

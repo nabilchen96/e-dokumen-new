@@ -51,27 +51,25 @@ function getData() {
         },
         {
             render: function (data, type, row, meta) {
-                let badge = "";
-                let dokumen = "";
+
+                let dokumen = ""
 
                 if (row.masa_kerja >= 30) {
-                    dokumen = row.tanda_jasa_30
-                        ? `<a href="/tanda_jasa/30_tahun/${row.tanda_jasa_30}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup
+                    dokumen = row.sertifikat_slks_30
+                        ? `<a href="/sertifikat_slks/30_tahun/${row.sertifikat_slks_30}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana
                             </a>`
-                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
+                        : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 } else if (row.masa_kerja >= 20) {
-                    dokumen = row.tanda_jasa_20
-                        ? `<a href="/tanda_jasa/20_tahun/${row.tanda_jasa_20}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup</a>`
-                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
+                    dokumen = row.sertifikat_slks_20
+                        ? `<a href="/sertifikat_slks/20_tahun/${row.sertifikat_slks_20}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana</a>`
+                        : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 } else if (row.masa_kerja >= 10) {
-                    dokumen = row.tanda_jasa_10
-                        ? `<a href="/tanda_jasa/10_tahun/${row.tanda_jasa_10}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Dok. Riwayat Hidup</a>`
-                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
-                } else {
-                    dokumen = `<span class="text-muted">Belum Memenuhi 10 Tahun</span>`;
+                    dokumen = row.sertifikat_slks_10
+                        ? `<a href="/sertifikat_slks/10_tahun/${row.sertifikat_slks_10}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana</a>`
+                        : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 }
 
                 return `
@@ -88,14 +86,59 @@ function getData() {
         },
         {
             render: function (data, type, row, meta) {
-                return `<a href="javascript:void(0)" class="d-flex justify-content-center" 
-                        data-nama="${row.name}"
-                        data-nip="${row.nip}"
-                        data-masa_kerja="${row.masa_kerja}"
-                        data-id_profil="${row.id_profil}"
-                        data-toggle="modal" data-target="#modal">
-                    <i style="font-size: 1.5rem;" class="text-center text-success bi bi-grid"></i>
-                </a>`;
+                let badge = "";
+                let dokumen = "";
+
+                if (row.masa_kerja >= 30) {
+                    dokumen = row.tanda_jasa_30
+                        ? `<a href="/tanda_jasa/30_tahun/${row.tanda_jasa_30}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS
+                            </a>`
+                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
+                } else if (row.masa_kerja >= 20) {
+                    dokumen = row.tanda_jasa_20
+                        ? `<a href="/tanda_jasa/20_tahun/${row.tanda_jasa_20}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS</a>`
+                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
+                } else if (row.masa_kerja >= 10) {
+                    dokumen = row.tanda_jasa_10
+                        ? `<a href="/tanda_jasa/10_tahun/${row.tanda_jasa_10}" target="_blank">
+                            <i class="bi bi-cloud-arrow-down"></i> Dok. Persyaratan SLKS</a>`
+                        : `<span class="text-danger">Belum Ada Dokumen</span>`;
+                } else {
+                    dokumen = ``;
+                }
+
+                return `
+                ${dokumen}`;
+            }
+        },
+        {
+            render: function (data, type, row, meta) {
+                return `
+                <div class="dropdown d-flex justify-content-center">
+                    <i style="font-size: 1.5rem;" type="button" class="text-success bi bi-three-dots" data-toggle="dropdown"></i>
+                    <div class="dropdown-menu">
+                        <a href="javascript:void(0)" class="dropdown-item d-flex" 
+                                data-nama="${row.name}"
+                                data-nip="${row.nip}"
+                                data-masa_kerja="${row.masa_kerja}"
+                                data-id_profil="${row.id_profil}"
+                                data-type="persyaratan"
+                                data-toggle="modal" data-target="#modal">
+                            Upload Dokumen Persyaratan
+                        </a>
+                        <a href="javascript:void(0)" class="dropdown-item" 
+                                data-nama="${row.name}"
+                                data-nip="${row.nip}"
+                                data-masa_kerja="${row.masa_kerja}"
+                                data-id_profil="${row.id_profil}"
+                                data-type="sertifikat"
+                                data-toggle="modal" data-target="#modal">
+                            Upload Sertifikat Lencana
+                        </a>
+                    </div>
+                </div>`;
             }
         }
         ]
@@ -121,6 +164,7 @@ $('#modal').on('show.bs.modal', function (event) {
         modal.find('#id_profil').val(button.data('id_profil'))
         modal.find('#nama').val(button.data('nama'))
         modal.find('#nip').val(button.data('nip'))
+        modal.find('#type').val(button.data('type'))
         modal.find('#masa_kerja').val(button.data('masa_kerja') + ' Tahun')
     }
 })

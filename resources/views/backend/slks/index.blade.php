@@ -61,7 +61,7 @@
                         @if (Auth::user()->role == 'Admin')
                             <button type="button" class="btn btn-primary btn-sm mb-4" data-toggle="modal"
                                 data-target="#modal2">
-                                Upload Template
+                                Upload Persyaratan dan Format DRH
                             </button>
                         @endif
                         <table id="myTable" class="table table-striped" style="width: 100%;">
@@ -70,8 +70,9 @@
                                     <th width="5%">No</th>
                                     <th class="text-center">Lencana</th>
                                     <th width="25%">Nama / NIP</th>
-                                    <th width="20%">Lencana / Dokuman</th>
+                                    <th width="20%">Lencana</th>
                                     <th width="30%">SKPD / Unit Kerja</th>
+                                    <th>Dokumen Persyaratan</th>
                                     <th width="5%">Upload</th>
                                 </tr>
                             </thead>
@@ -92,6 +93,7 @@
                     <div class="modal-body">
                         <div id="respon_error" class="text-danger mb-4"></div>
                         <input type="hidden" name="id_profil" id="id_profil">
+                        <input type="hidden" name="type" id="type">
                         <div class="form-group">
                             <label>Nama</label>
                             <input id="nama" placeholder="Nama" readonly class="form-control form-control-sm">

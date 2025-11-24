@@ -56,19 +56,19 @@ function getData() {
 
                 if (row.masa_kerja >= 30) {
                     dokumen = row.sertifikat_slks_30
-                        ? `<a href="/sertifikat_slks/30_tahun/${row.sertifikat_slks_30}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana
+                        ? `<a class="text-success" href="/sertifikat_slks/30_tahun/${row.sertifikat_slks_30}" target="_blank">
+                            <i class="bi bi-file-earmark-text"></i> Satya lencana telah terbit
                             </a>`
                         : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 } else if (row.masa_kerja >= 20) {
                     dokumen = row.sertifikat_slks_20
-                        ? `<a href="/sertifikat_slks/20_tahun/${row.sertifikat_slks_20}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana</a>`
+                        ? `<a class="text-success" href="/sertifikat_slks/20_tahun/${row.sertifikat_slks_20}" target="_blank">
+                            <i class="bi bi-file-earmark-text"></i> Satya lencana telah terbit</a>`
                         : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 } else if (row.masa_kerja >= 10) {
                     dokumen = row.sertifikat_slks_10
-                        ? `<a href="/sertifikat_slks/10_tahun/${row.sertifikat_slks_10}" target="_blank">
-                            <i class="bi bi-cloud-arrow-down"></i> Sertifikat Lencana</a>`
+                        ? `<a class="text-success" href="/sertifikat_slks/10_tahun/${row.sertifikat_slks_10}" target="_blank">
+                            <i class="bi bi-file-earmark-text"></i> Satya lencana telah terbit</a>`
                         : `<span class="text-danger">Belum Ada Sertifikat Lencana</span>`;
                 }
 

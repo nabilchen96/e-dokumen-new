@@ -37,7 +37,14 @@ class SlksController extends Controller
                 'profils.id as id_profil',
                 'profils.tanda_jasa_10',
                 'profils.tanda_jasa_20',
+<<<<<<< HEAD
                 'profils.tanda_jasa_30'
+=======
+                'profils.tanda_jasa_30',
+                'profils.sertifikat_slks_10',
+                'profils.sertifikat_slks_20',
+                'profils.sertifikat_slks_30'
+>>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
             )
             ->whereNotNull('profils.tmt_cpns');
 
@@ -80,6 +87,9 @@ class SlksController extends Controller
                     'tanda_jasa_10' => $p->tanda_jasa_10,
                     'tanda_jasa_20' => $p->tanda_jasa_20,
                     'tanda_jasa_30' => $p->tanda_jasa_30,
+                    'sertifikat_slks_10' => $p->sertifikat_slks_10,
+                    'sertifikat_slks_20' => $p->sertifikat_slks_20,
+                    'sertifikat_slks_30' => $p->sertifikat_slks_30, 
                 ]);
             }
             if ($tahun >= 20) {
@@ -94,6 +104,9 @@ class SlksController extends Controller
                     'tanda_jasa_10' => $p->tanda_jasa_10,
                     'tanda_jasa_20' => $p->tanda_jasa_20,
                     'tanda_jasa_30' => $p->tanda_jasa_30,
+                    'sertifikat_slks_10' => $p->sertifikat_slks_10,
+                    'sertifikat_slks_20' => $p->sertifikat_slks_20,
+                    'sertifikat_slks_30' => $p->sertifikat_slks_30, 
                 ]);
             }
             if ($tahun >= 30) {
@@ -108,6 +121,9 @@ class SlksController extends Controller
                     'tanda_jasa_10' => $p->tanda_jasa_10,
                     'tanda_jasa_20' => $p->tanda_jasa_20,
                     'tanda_jasa_30' => $p->tanda_jasa_30,
+                    'sertifikat_slks_10' => $p->sertifikat_slks_10,
+                    'sertifikat_slks_20' => $p->sertifikat_slks_20,
+                    'sertifikat_slks_30' => $p->sertifikat_slks_30, 
                 ]);
             }
         }
@@ -130,19 +146,20 @@ class SlksController extends Controller
         return response()->json(['data' => $result]);
     }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_profil' => 'required',
             'dokumen' => 'nullable|file|mimes:pdf,jpg,png',
-            'masa_kerja' => 'required'
+            'masa_kerja' => 'required',
+            'type' => 'required|in:persyaratan,sertifikat'
         ]);
 
         if ($validator->fails()) {
-
-            $data = [
+            return response()->json([
                 'responCode' => 0,
                 'respon' => $validator->errors()
+<<<<<<< HEAD
             ];
 
         } else {
@@ -201,10 +218,67 @@ class SlksController extends Controller
             return response()->json([
                 'responCode' => 1,
                 'respon' => "Dokumen Persyaratan SLKS {$level} tahun berhasil diunggah!"
+=======
+>>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
             ]);
         }
 
-        return response()->json($data);
+        // Ambil profil
+        $profil = Profil::find($request->id_profil);
+        if (!$profil || !$profil->tmt_cpns) {
+            return response()->json([
+                'responCode' => 0,
+                'respon' => 'Profil atau tanggal TMT CPNS tidak ditemukan'
+            ]);
+        }
+
+        // ===== Tentukan level masa kerja =====
+        if ($request->masa_kerja >= '30 Tahun') {
+            $level = 30;
+        } elseif ($request->masa_kerja >= '20 Tahun') {
+            $level = 20;
+        } elseif ($request->masa_kerja >= '10 Tahun') {
+            $level = 10;
+        } else {
+            return response()->json([
+                'responCode' => 0,
+                'respon' => 'Masa kerja tidak masuk kategori 10/20/30 tahun'
+            ]);
+        }
+
+        // ===== Tentukan kolom berdasarkan TYPE =====
+        if ($request->type == 'persyaratan') {
+            $kolom = "tanda_jasa_{$level}";
+            $folder = "tanda_jasa/{$level}_tahun";
+        } else {
+            $kolom = "sertifikat_slks_{$level}";
+            $folder = "sertifikat_slks/{$level}_tahun";
+        }
+
+        // ===== Upload File =====
+        if ($request->hasFile('dokumen')) {
+
+            $file = $request->file('dokumen');
+            $filename = $level . "" . time() . "." . $file->getClientOriginalExtension();
+
+            // Buat folder jika belum ada
+            $destinationPath = public_path($folder);
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            // Pindahkan file
+            $file->move($destinationPath, $filename);
+
+            // Simpan ke database
+            $profil->$kolom = $filename;
+            $profil->save();
+        }
+
+        return response()->json([
+            'responCode' => 1,
+            'respon' => "Dokumen {$request->type} level {$level} tahun berhasil diunggah!"
+        ]);
     }
 
     public function uploadTemplate(Request $request)

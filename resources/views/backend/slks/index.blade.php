@@ -70,8 +70,13 @@
                                     <th width="5%">No</th>
                                     <th class="text-center">Lencana</th>
                                     <th width="25%">Nama / NIP</th>
+<<<<<<< HEAD
                                     <th width="20%">Lencana/Dokumen Persyaratan</th>
+=======
+                                    <th width="20%">Lencana</th>
+>>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
                                     <th width="30%">SKPD / Unit Kerja</th>
+                                    <th>Dokumen Persyaratan</th>
                                     <th width="5%">Upload</th>
                                 </tr>
                             </thead>
@@ -92,6 +97,7 @@
                     <div class="modal-body">
                         <div id="respon_error" class="text-danger mb-4"></div>
                         <input type="hidden" name="id_profil" id="id_profil">
+                        <input type="hidden" name="type" id="type">
                         <div class="form-group">
                             <label>Nama</label>
                             <input id="nama" placeholder="Nama" readonly class="form-control form-control-sm">

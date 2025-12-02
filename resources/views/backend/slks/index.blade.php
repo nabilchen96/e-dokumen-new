@@ -70,11 +70,7 @@
                                     <th width="5%">No</th>
                                     <th class="text-center">Lencana</th>
                                     <th width="25%">Nama / NIP</th>
-<<<<<<< HEAD
-                                    <th width="20%">Lencana/Dokumen Persyaratan</th>
-=======
                                     <th width="20%">Lencana</th>
->>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
                                     <th width="30%">SKPD / Unit Kerja</th>
                                     <th>Dokumen Persyaratan</th>
                                     <th width="5%">Upload</th>
@@ -92,7 +88,7 @@
             <div class="modal-content">
                 <form id="form">
                     <div class="modal-header p-3">
-                        <h5 class="modal-title m-2" id="exampleModalLabel">Upload Dokumen Persyaratan SLKS</h5>
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Upload Dokumen</h5>
                     </div>
                     <div class="modal-body">
                         <div id="respon_error" class="text-danger mb-4"></div>
@@ -103,7 +99,7 @@
                             <input id="nama" placeholder="Nama" readonly class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
-                            <label>Dokumen Persyaratan SLKS <sup class="text-danger">*</sup></label>
+                            <label>Dokumen <sup class="text-danger">*</sup></label>
                             <input name="dokumen" id="dokumen" type="file" placeholder="Dokumen"
                                 class="form-control form-control-sm mb-2" accept=".pdf, image/*">
                             @php
@@ -115,16 +111,16 @@
                                 $existingFile = null;
 
                                 foreach ($fileExtensions as $ext) {
-                                    $path = $folder . '/Persyaratan_dan_Format_DRH.' . $ext;
+                                    $path = $folder . '/template_slks.' . $ext;
                                     if (File::exists($path)) {
-                                        $existingFile = 'template_slks/Persyaratan_dan_Format_DRH.' . $ext;
+                                        $existingFile = 'template_slks/template_slks.' . $ext;
                                         break;
                                     }
                                 }
                             @endphp
                             @if ($existingFile)
                                 <a href="{{ asset($existingFile) }}" target="_blank">
-                                    <i class="bi bi-file-earmark-text"></i> Download Perysaratan SLKS dan Format DRH
+                                    <i class="bi bi-file-earmark-text"></i> Download Template
                                 </a>
                             @else
                                 <a href="#">Belum ada template yang diupload.</a>
@@ -148,17 +144,17 @@
                 <form action="{{ url('upload-template-slks') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header p-3">
-                        <h5 class="modal-title m-2" id="exampleModalLabel">Upload Perysaratan SLKS dan Format DRH</h5>
+                        <h5 class="modal-title m-2" id="exampleModalLabel">Upload Template</h5>
                     </div>
                     <div class="modal-body">
                         <div id="respon_error" class="text-danger mb-4"></div>
                         <div class="form-group">
-                            <label>Perysaratan SLKS dan Format DRH <sup class="text-danger">*</sup></label>
+                            <label>Template <sup class="text-danger">*</sup></label>
                             <input name="file" id="file" type="file" placeholder="Dokumen"
                                 class="form-control form-control-sm mb-2">
                                 @if ($existingFile)
                                     <a href="{{ asset($existingFile) }}" target="_blank">
-                                        <i class="bi bi-file-earmark-text"></i> Download Perysaratan SLKS dan Format DRH
+                                        <i class="bi bi-file-earmark-text"></i> Download Template
                                     </a>
                                 @else
                                     <a href="#">Belum ada template yang diupload.</a>

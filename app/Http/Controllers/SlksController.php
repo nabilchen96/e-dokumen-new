@@ -37,14 +37,10 @@ class SlksController extends Controller
                 'profils.id as id_profil',
                 'profils.tanda_jasa_10',
                 'profils.tanda_jasa_20',
-<<<<<<< HEAD
-                'profils.tanda_jasa_30'
-=======
                 'profils.tanda_jasa_30',
                 'profils.sertifikat_slks_10',
                 'profils.sertifikat_slks_20',
                 'profils.sertifikat_slks_30'
->>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
             )
             ->whereNotNull('profils.tmt_cpns');
 
@@ -159,67 +155,6 @@ class SlksController extends Controller
             return response()->json([
                 'responCode' => 0,
                 'respon' => $validator->errors()
-<<<<<<< HEAD
-            ];
-
-        } else {
-
-            // ✅ Ambil profil berdasarkan id_profil
-            $profil = Profil::find($request->id_profil);
-            if (!$profil || !$profil->tmt_cpns) {
-                return response()->json([
-                    'responCode' => 0,
-                    'respon' => 'Profil atau tanggal TMT CPNS tidak ditemukan'
-                ]);
-            }
-
-            // Hitung masa kerja (dalam tahun)
-            // $masaKerja = Carbon::parse($profil->tmt_cpns)->diffInYears(Carbon::now());
-            
-            // Tentukan level dokumen
-            if ($request->masa_kerja >= '30 Tahun') {
-                $level = 30;
-                $kolom = 'tanda_jasa_30';
-            } elseif ($request->masa_kerja >= '20 Tahun') {
-                $level = 20;
-                $kolom = 'tanda_jasa_20';
-            } elseif ($request->masa_kerja >= '10 Tahun') {
-                $level = 10;
-                $kolom = 'tanda_jasa_10';
-            } else {
-                $level = null;
-            }
-
-            // Jika ada file di-upload
-            if ($request->hasFile('dokumen') && $level) {
-
-                $file = $request->file('dokumen');
-
-                // Nama file unik dan rapi
-                $filename = $level .  time() . '.' . $file->getClientOriginalExtension();
-
-                // Path folder tujuan di dalam public/
-                $destinationPath = public_path("tanda_jasa/{$level}_tahun");
-               
-
-                // Buat folder kalau belum ada
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0777, true);
-                }
-
-                // Pindahkan file ke folder public
-                $file->move($destinationPath, $filename);
-
-                // Simpan path relatif ke database
-                $profil->$kolom = "{$filename}";
-                $profil->save();
-            }
-
-            return response()->json([
-                'responCode' => 1,
-                'respon' => "Dokumen Persyaratan SLKS {$level} tahun berhasil diunggah!"
-=======
->>>>>>> 2b7d42f7fa55ec18e49bb17faeb4cb7fedd0eea0
             ]);
         }
 
@@ -290,7 +225,7 @@ class SlksController extends Controller
         // dd($request->all());
 
         $file = $request->file('file');
-        $fileName = 'Persyaratan_dan_Format_DRH.'.$file->getClientOriginalExtension(); // gunakan nama asli
+        $fileName = 'template_slks.'.$file->getClientOriginalExtension(); // gunakan nama asli
 
         $destinationPath = public_path('template_slks');
 
@@ -307,6 +242,6 @@ class SlksController extends Controller
         // Pindahkan file baru
         $file->move($destinationPath, $fileName);
 
-        return back()->with('success', 'File Persyaratan SLKS dan Format DRH berhasil diupload');
+        return back()->with('success', 'File Template berhasil diupload');
     }
 }

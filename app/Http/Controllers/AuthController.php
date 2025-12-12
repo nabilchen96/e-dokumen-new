@@ -266,6 +266,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'password' => 'required|min:8',
             'email' => 'unique:users',
+            'nip' => 'required|unique:profils,nip',
             'name' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
@@ -273,11 +274,14 @@ class AuthController extends Controller
             'alamat' => 'required',
             'no_wa' => 'required',
             'district_id' => 'required'
+        ],[
+            'nip.unique' => 'NIP sudah digunakan',
+            'email.unique' => 'Email sudah digunakan',
         ]);
 
         if ($validator->fails()) {
 
-            $data['respon'] = 'Semua data wajib diisi, silahkan ulangi!';
+            $data['respon'] =  $message = implode("\n", $validator->errors()->all());
 
         } else {
             $data = User::create([

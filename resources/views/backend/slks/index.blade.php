@@ -118,6 +118,8 @@
                                     }
                                 }
                             @endphp
+                            
+                            <small class="text-danger">*Maksimal Ukuran File 1024KB / 1MB</small><br></br>
                             @if ($existingFile)
                                 <a href="{{ asset($existingFile) }}" target="_blank">
                                     <i class="bi bi-file-earmark-text"></i> Download Template

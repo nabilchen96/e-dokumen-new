@@ -159,7 +159,7 @@
                 $masaKerja10Tahun = \Carbon\Carbon::parse($tmt_cpns)->addYears(10)->lessThanOrEqualTo(\Carbon\Carbon::today());
             }
         @endphp 
-        @if(in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD']) || Auth::user()->role == 'Pegawai' && $masaKerja10Tahun)
+        @if(in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kabid BKPSDM']) || Auth::user()->role == 'Pegawai' && $masaKerja10Tahun)
         <li class="nav-item">
             <a class="nav-link" href="{{ url('slks') }}">
                 <i class="bi bi-stars menu-icon"></i>

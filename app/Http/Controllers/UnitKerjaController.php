@@ -57,6 +57,8 @@ class UnitKerjaController extends Controller
             $data = UnitKerja::create([
                 'id_skpd' => $request->id_skpd,
                 'unit_kerja' => $request->unit_kerja,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude
             ]);
 
             $data = [
@@ -88,6 +90,8 @@ class UnitKerjaController extends Controller
             $data = $user->update([
                 'id_skpd' => $request->id_skpd,
                 'unit_kerja' => $request->unit_kerja,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude
             ]);
 
             $data = [

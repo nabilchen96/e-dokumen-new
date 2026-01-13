@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::middleware('auth.token')->get('/data-pegawai', 'App\Http\Controllers\Api\ProfilPegawaiController@index');
+Route::middleware('auth.token')->get('/data-unit-kerja', 'App\Http\Controllers\Api\UnitKerjaController@index');

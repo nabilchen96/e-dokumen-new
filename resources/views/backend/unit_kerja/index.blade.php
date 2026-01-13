@@ -34,6 +34,8 @@
                                 <th width="5%">No</th>
                                 <th>Unit Kerja</th>
                                 <th>SKPD</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
                                 @if (Auth::user()->role == 'Admin')
                                     <th width="5%"></th>
                                     <th width="5%"></th>
@@ -73,6 +75,16 @@
                         <label>Unit Kerja <sup class="text-danger">*</sup></label>
                         <input type="text" placeholder="Unit Kerja" class="form-control" required name="unit_kerja"
                             id="unit_kerja">
+                    </div>
+                    <div class="form-group">
+                        <label>Latitude <sup class="text-danger">*</sup></label>
+                        <input type="text" placeholder="Latitude" class="form-control" required name="latitude"
+                            id="latitude">
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude <sup class="text-danger">*</sup></label>
+                        <input type="text" placeholder="Longitude" class="form-control" required name="longitude"
+                            id="longitude">
                     </div>
                 </div>
                 <div class="modal-footer p-3">

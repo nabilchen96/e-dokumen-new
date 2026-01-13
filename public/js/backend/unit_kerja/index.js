@@ -30,6 +30,16 @@ function getData() {
                 return `${row.nama_skpd}`
             }
         },
+        {
+            render: function (data, type, row, meta) {
+                return `${row.latitude ?? '-'}`
+            }
+        },
+        {
+            render: function (data, type, row, meta) {
+                return `${row.longitude ?? '-'}`
+            }
+        },
         ...(window.userRole === 'Admin' ? [
             {
                 render: function (data, type, row, meta) {

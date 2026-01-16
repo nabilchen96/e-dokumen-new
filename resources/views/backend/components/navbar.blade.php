@@ -169,7 +169,7 @@
                             <a class="nav-link" href="{{ url('shift') }}">Shift</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Jadwal</a>
+                            <a class="nav-link" href="{{ url('schedule') }}">Schedule</a>
                         </li>
                     </ul>
                 </div>

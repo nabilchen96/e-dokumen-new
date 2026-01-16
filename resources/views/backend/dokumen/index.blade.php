@@ -177,6 +177,7 @@
                             @endphp
                             <select name="id_user" id="id_user" required>
                                 @foreach ($users as $item)
+                                    <option value="">PILIH PEMILIK DOKUMEN</option>
                                     <option value="{{ $item->id }}">{{ $item->name }} NIP: {{ $item->nip }}</option>
                                 @endforeach
                             </select>

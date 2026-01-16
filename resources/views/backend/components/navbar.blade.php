@@ -94,13 +94,15 @@
                                         $query
                                             ->where('jenis_pegawai', 'like', '%PNS%')
                                             ->orWhere('jenis_pegawai', 'Semua');
+                                            
                                     } elseif ($profil->status_pegawai == 'P3K') {
                                         $query
                                             ->where('jenis_pegawai', 'like', '%P3K%')
                                             ->orWhere('jenis_pegawai', 'Semua');
-                                    } elseif ($profil->status_pegawai == 'Honorer') {
+                                            
+                                    } elseif ($profil->status_pegawai == 'P3K PW') {
                                         $query
-                                            ->where('jenis_pegawai', 'like', '%Honorer%')
+                                            ->where('jenis_pegawai', 'like', '%P3K PW%')
                                             ->orWhere('jenis_pegawai', 'Semua');
                                     }
                                 })

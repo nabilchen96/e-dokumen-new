@@ -83,8 +83,8 @@
                         <select onchange="pilihStatus()" name="status_pegawai" id="status_pegawai" class="form-control" required>
                             <option value="">PILIH STATUS</option>
                             <option>PNS</option>
-                            <option>PPPK</option>
-                            {{-- <option value="Honorer">Non ASN</option> --}}
+                            <option>P3K</option>
+                            <option>P3K PW</option>
                         </select>
                     </div>
                 </div>

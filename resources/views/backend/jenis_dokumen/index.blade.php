@@ -82,9 +82,8 @@
                             <option>Only Admin</option>
                             <option>PNS</option>
                             <option>P3K</option>
-                            <option>Honorer</option>
                             <option>PNS dan P3K</option>
-                            <option>P3K dan Honorer</option>
+                            <option>P3K PW</option>
                             <option>Semua</option>
                         </select>
                     </div>

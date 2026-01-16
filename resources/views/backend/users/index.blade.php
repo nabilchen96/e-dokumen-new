@@ -118,7 +118,7 @@
                         <select name="status_pegawai" class="form-control" id="status_pegawai">
                             <option>PNS</option>
                             <option>P3K</option>
-                            <option>Honorer</option>
+                            <option>P3K PW</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -25,6 +25,7 @@
                 <select name="status_cpns" class="form-control" id="status_cpns" required>
                     <option value="">--STATUS ASN--</option>
                     <option {{ @$profil->status_cpns == 'PPPK' ? 'selected' : '' }}>PPPK</option>
+                    <option {{ @$profil->status_cpns == 'PPPK PW' ? 'selected' : '' }}>PPPK PW</option>
                     <option {{ @$profil->status_cpns == 'PNS' ? 'selected' : '' }}>PNS</option>
                 </select>
             </div>
@@ -82,6 +83,7 @@
                     <option {{ @$profil->pangkat == 'X' ? 'selected' : '' }}>Golongan X
                     </option>
                     <option {{ @$profil->pangkat == 'XI' ? 'selected' : '' }}>Golongan XI
+                    <option {{ @$profil->status_cpns == 'PPPK PW' ? 'selected' : '' }}>PPPK PW</option>
                     </option>
                 </select>
             </div>
@@ -169,6 +171,8 @@
                         Hukuman Disiplin</option>
                     <option {{ @$profil->kedudukan_hukum == 'PPPK Aktif' ? 'selected' : '' }}>PPPK Aktif</option>
                     <option {{ @$profil->kedudukan_hukum == 'PPPK Tidak Aktif' ? 'selected' : '' }}>PPPK Tidak Aktif
+                    </option><option {{ @$profil->kedudukan_hukum == 'PPPK PW Aktif' ? 'selected' : '' }}>PPPK PW Aktif</option>
+                    <option {{ @$profil->kedudukan_hukum == 'PPPK PW Tidak Aktif' ? 'selected' : '' }}>PPPK PW Tidak Aktif
                     </option>
                     <option {{ @$profil->kedudukan_hukum == 'Tugas Belajar' ? 'selected' : '' }}>Tugas Belajar</option>
                 </select>
@@ -328,6 +332,7 @@
                     <option value="">--PILIH STATUS PEGAWAI--</option>
                     <option {{ @$profil->status_pegawai == 'PNS' ? 'selected' : '' }}>PNS</option>
                     <option {{ @$profil->status_pegawai == 'P3K' ? 'selected' : '' }}>P3K</option>
+                    <option {{ @$profil->status_pegawai == 'P3K PW' ? 'selected' : '' }}>P3K PW</option>
                     <option value="Honorer" {{ @$profil->status_pegawai == 'Honorer' ? 'selected' : '' }}>Non ASN</option>
                 </select>
             </div>

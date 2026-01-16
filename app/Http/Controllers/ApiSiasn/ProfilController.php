@@ -21,7 +21,7 @@ class ProfilController extends Controller
         $profil = DB::table('users')
             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
             ->whereNotIn('users.role', ['Admin'])
-            ->where('profils.status_pegawai', 'PNS')
+            ->where('profils.status_pegawai', 'PNS', 'P3K' , 'P3K PW')
             ->select(
                 'users.name',
                 'users.email',

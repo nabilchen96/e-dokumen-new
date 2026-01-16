@@ -16,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class UnitKerjaController extends Controller
 {
@@ -142,7 +143,9 @@ class UnitKerjaController extends Controller
             'A1' => '#',
             'B1' => 'UNIT KERJA',
             'C1' => 'SKPD',
-            'D1' => 'TGL DIBUAT'
+            'D1' => 'LATITUDE',
+            'E1' => 'LONGITUDE',
+            'F1' => 'TGL DIBUAT'
         ];
         foreach ($headerColumns as $cell => $text) {
             $sheet->setCellValue($cell, $text);
@@ -156,7 +159,7 @@ class UnitKerjaController extends Controller
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN]
             ]
         ];
-        $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
 
         // Tambahkan data dari database ke spreadsheet
         $row = 2;
@@ -165,20 +168,31 @@ class UnitKerjaController extends Controller
             $sheet->setCellValue('A' . $row, $index + 1);
             $sheet->setCellValue('B' . $row, $item->unit_kerja);
             $sheet->setCellValue('C' . $row, $item->nama_skpd);
-            $sheet->setCellValue('D' . $row, $item->created_at);
+            $sheet->setCellValue('D' . $row, $item->latitude);
+            $sheet->setCellValue('E' . $row, $item->longitude);
+            $sheet->setCellValue('F' . $row, $item->created_at);
 
             // Terapkan garis pada setiap baris kecuali baris terakhir
-            $sheet->getStyle("A$row:D$row")->applyFromArray([
+            $sheet->getStyle("A$row:F$row")->applyFromArray([
                 'borders' => [
                     'allBorders' => ['borderStyle' => Border::BORDER_THIN]
                 ]
             ]);
 
+            // Set kolom C & D sebagai TEXT
+            $sheet->getStyle("D$row")
+                ->getNumberFormat()
+                ->setFormatCode(NumberFormat::FORMAT_TEXT);
+
+            $sheet->getStyle("E$row")
+                ->getNumberFormat()
+                ->setFormatCode(NumberFormat::FORMAT_TEXT);
+
             $row++;
         }
 
         // Otomatis menyesuaikan lebar kolom
-        foreach (range('A', 'D') as $col) {
+        foreach (range('A', 'F') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
@@ -223,11 +237,32 @@ class UnitKerjaController extends Controller
             $id_skpd = explode("-", $row['B']);
             
             try {
+
+                // Normalisasi koordinat
+                $latitude  = str_replace(',', '.', trim($row['C']));
+                $longitude = str_replace(',', '.', trim($row['D']));
+
+                // Cast ke float
+                $latitude  = (float) $latitude;
+                $longitude = (float) $longitude;
+
                 // Simpan data baru ke database
-                UnitKerja::create([
-                    'unit_kerja' => trim($row['A']), // Pastikan data dibersihkan dari spasi
-                    'id_skpd' => trim($id_skpd[0]),
-                ]);
+                UnitKerja::updateOrCreate(
+                    [
+                        // Kondisi pencarian (UNIQUE KEY)
+                        'unit_kerja' => trim($row['A']),
+                    ],
+                    [
+                        // Data yang di-update / di-insert
+                        'id_skpd'   => trim($id_skpd[0]),
+                        'unit_kerja' => trim($row['A']),
+                        'latitude'  => trim($row['C']),
+                        'longitude' => trim($row['D']),
+                        // 'latitude'  => $latitude,
+                        // 'longitude' => $longitude,
+                    ]
+                );
+
                 $successCount++;
             } catch (\Exception $e) {
                 $failCount++;
@@ -254,12 +289,12 @@ class UnitKerjaController extends Controller
         // Tambahkan daftar ke kolom tersembunyi
         $categoryRow = 5; // Mulai dari baris ke-5 atau sesuai kebutuhan
         foreach ($categories as $index => $category) {
-            $sheet->setCellValue("D" . ($categoryRow + $index), $category);
+            $sheet->setCellValue("Z" . ($categoryRow + $index), $category);
         }
     
         $highestRow = $categoryRow + count($categories) - 1;
-        $sheet->getParent()->addNamedRange(new \PhpOffice\PhpSpreadsheet\NamedRange('SKPDList', $sheet, "D{$categoryRow}:D{$highestRow}"));
-        $sheet->getColumnDimension('D')->setVisible(false);
+        $sheet->getParent()->addNamedRange(new \PhpOffice\PhpSpreadsheet\NamedRange('SKPDList', $sheet, "Z{$categoryRow}:Z{$highestRow}"));
+        $sheet->getColumnDimension('Z')->setVisible(false);
     
         // Styling header
         $headerStyle = [
@@ -267,13 +302,17 @@ class UnitKerjaController extends Controller
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         ];
-        $sheet->getStyle('A1:B1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
     
         // Set header dan contoh data
         $sheet->setCellValue('A1', 'UNIT KERJA');
         $sheet->setCellValue('B1', 'SKPD');
+        $sheet->setCellValue('C1', 'LATITUDE');
+        $sheet->setCellValue('D1', 'LONGITUDE');
         $sheet->setCellValue('A2', 'DINAS PERHUBUNGAN KOTA');
         $sheet->setCellValue('B2', "PILIH SKPD PADA LIST KOLOM INI");
+        $sheet->setCellValue('C2', "");
+        $sheet->setCellValue('D2', "");
     
         // Tambahkan data validation list ke kolom B2
         $dataValidation = $sheet->getCell('B2')->getDataValidation();
@@ -284,11 +323,22 @@ class UnitKerjaController extends Controller
         $dataValidation->setFormula1('=SKPDList');
     
         // Styling dan auto-size
-        $sheet->getStyle('A1:B2')->applyFromArray([
+        $sheet->getStyle('A1:D2')->applyFromArray([
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         ]);
         $sheet->getColumnDimension('A')->setAutoSize(true);
         $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+
+        // Set kolom C & D sebagai TEXT
+        $sheet->getStyle('C2:C1000')
+            ->getNumberFormat()
+            ->setFormatCode(NumberFormat::FORMAT_TEXT);
+
+        $sheet->getStyle('D2:D1000')
+            ->getNumberFormat()
+            ->setFormatCode(NumberFormat::FORMAT_TEXT);
     
         // Simpan file
         $writer = new Xlsx($spreadsheet);

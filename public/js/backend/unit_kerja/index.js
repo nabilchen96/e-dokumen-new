@@ -80,6 +80,8 @@ $('#modal').on('show.bs.modal', function (event) {
         modal.find('#id').val(cokData[0].id)
         modal.find('#id_skpd').val(cokData[0].id_skpd)
         modal.find('#unit_kerja').val(cokData[0].unit_kerja)
+        modal.find('#latitude').val(cokData[0].latitude)
+        modal.find('#longitude').val(cokData[0].longitude)
     }
 })
 

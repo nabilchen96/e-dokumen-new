@@ -126,6 +126,10 @@
                                 Jangan membuat daftar SKPD secara manual. Karena angka di depan SKD adalah angka unik 
                                 dari database yang berfungsi untuk mengidentifikasi SKPD
                             </li>
+                            <li>
+                                Latitude dan longitude menggunakan tipe data text, agar formatnya sesuai dengan yang dicopy
+                                gunakan kombinasi (Alt + H, V, M)
+                            </li>
                         </ul>
                         <img src="{{ asset('instruksi_1.png') }}" width="100%" alt="">
                     </div>

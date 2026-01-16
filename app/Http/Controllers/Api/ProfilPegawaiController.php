@@ -18,6 +18,7 @@ class ProfilPegawaiController extends Controller
                     'users.id',
                     'users.name', 
                     'users.email',
+                    'users.role',
                     'profils.nip',
                     'profils.jenis_kelamin',
                     'profils.tempat_lahir',

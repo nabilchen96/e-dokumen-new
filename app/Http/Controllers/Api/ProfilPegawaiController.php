@@ -14,6 +14,7 @@ class ProfilPegawaiController extends Controller
 
         $data = DB::table('users')
                 ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+                ->where('users.role', 'Pegawai')
                 ->select(
                     'users.id',
                     'users.name', 

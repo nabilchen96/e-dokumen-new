@@ -213,6 +213,9 @@ Route::group(['middleware' => 'auth'], function () {
     //SCHEDULE
     Route::get('/schedule', 'App\Http\Controllers\ScheduleController@index');
     Route::get('/data-schedule', 'App\Http\Controllers\ScheduleController@data');
+    Route::post('/store-schedule', 'App\Http\Controllers\ScheduleController@store');
+    Route::post('/update-schedule', 'App\Http\Controllers\ScheduleController@update');
+    Route::post('/delete-schedule', 'App\Http\Controllers\ScheduleController@delete');
 
     //SLKS
     Route::get('/slks', 'App\Http\Controllers\SlksController@index');

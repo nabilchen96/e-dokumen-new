@@ -1,20 +1,22 @@
 
-document.addEventListener('DOMContentLoaded', function () {
-    getData()
-})
-
 var table = null;
 let id_user, id_shift, idUserSearch
+
+document.addEventListener('DOMContentLoaded', function () {
+    getData()
+    id_shift = new TomSelect('#id_shift');
+    id_pandu = new TomSelect('#id_pandu');
+})
 
 //SEARCHING DATA
 $("#btnCari").click(function () {
     table.ajax.reload();
 
     // Ambil nilai filter
-    const user = $("#idUserSearch option:selected").text();
-    const idUser = $("#idUserSearch").val();
-    const tglDari = $("#tanggalDari").val();
-    const tglSampai = $("#tanggalSampai").val();
+    // const user = $("#idUserSearch option:selected").text();
+    // const idUser = $("#idUserSearch").val();
+    // const tglDari = $("#tanggalDari").val();
+    // const tglSampai = $("#tanggalSampai").val();
 
     // Buat teks filter
     // let info = [];
@@ -76,10 +78,25 @@ function getData() {
             data: "jam_pulang"
         },
         {
-            render: function (data, type, row, meta) {
-                return `...`
+            render: function (data, type, row) {
+                return `
+                    <div class="dropdown">
+                        <a class="text-success" href="#" data-toggle="dropdown">
+                            <i class="bi bi-three-dots" style="font-size:1.5rem"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item text-success"
+                               data-toggle="modal" data-target="#modal"
+                               href="javascript:void(0)" data-bs-id="${row.id}">
+                               <i class="bi bi-grid"></i> Edit
+                            </a>
+                            <a href="#" class="dropdown-item text-danger" onclick="hapusData(${row.id})">
+                               <i class="bi bi-trash"></i> Hapus
+                            </a>
+                        </div>
+                    </div>`;
             }
-        },
+        }
         ]
     })
 }
@@ -95,13 +112,109 @@ $('#modal').on('show.bs.modal', function (event) {
 
     document.getElementById("form").reset();
     document.getElementById('id').value = ''
+    id_pandu.setValue('');
+    id_shift.setValue('');
     $('.error').empty();
 
     if (recipient) {
-        var modal = $(this)
-        modal.find('#id').val(cokData[0].id)
-        modal.find('#informasi').val(cokData[0].informasi)
-        modal.find('#status').val(cokData[0].status)
+        var modal = $(this);
+        modal.find('#id').val(cokData[0].id);
+        id_pandu.setValue(cokData[0].id_pandu);
+        id_shift.setValue(cokData[0].id_shift);
+        modal.find('#tanggal_dari').val(cokData[0].tanggal);
+        modal.find('#tanggal_ke').val(cokData[0].tanggal);
     }
 })
+
+form.onsubmit = (e) => {
+
+    let formData = new FormData(form);
+
+    e.preventDefault();
+
+    document.getElementById("tombol_kirim").disabled = true;
+
+    axios({
+        method: 'post',
+        url: formData.get('id') == '' ? '/store-schedule' : '/update-schedule',
+        data: formData,
+    })
+        .then(function (res) {
+            //handle success         
+            if (res.data.responCode == 1) {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses',
+                    text: res.data.respon,
+                    timer: 3000,
+                    showConfirmButton: false
+                })
+
+                location.reload('/schedule')
+
+            } else {
+
+                //respon 
+                let respon_error = ``
+                Object.entries(res.data.respon).forEach(([field, messages]) => {
+                    messages.forEach(message => {
+                        respon_error += `<li>${message}</li>`;
+                    });
+                });
+
+                document.getElementById('respon_error').innerHTML = respon_error
+            }
+
+            document.getElementById("tombol_kirim").disabled = false;
+        })
+        .catch(function (res) {
+            document.getElementById("tombol_kirim").disabled = false;
+            //handle error
+            console.log(res);
+        });
+}
+
+hapusData = (id) => {
+    Swal.fire({
+        title: "Yakin hapus data?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonColor: '#3085d6',
+        cancelButtonText: "Batal"
+
+    }).then((result) => {
+
+        if (result.value) {
+            axios.post('/delete-schedule', {
+                id
+            })
+                .then((response) => {
+                    if (response.data.responCode == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            timer: 2000,
+                            showConfirmButton: false
+                        })
+
+                        $('#myTable').DataTable().clear().destroy();
+                        getData();
+
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Gagal...',
+                            text: response.data.respon,
+                        })
+                    }
+                }, (error) => {
+                    console.log(error);
+                });
+        }
+
+    });
+}
 

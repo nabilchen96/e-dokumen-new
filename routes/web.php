@@ -206,6 +206,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/delete-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@delete');
     Route::get('/export-kenaikan-gaji', 'App\Http\Controllers\KenaikanGajiController@export');
 
+    //SHIFT
+    Route::get('/shift', 'App\Http\Controllers\ShiftController@index');
+    Route::get('/data-shift', 'App\Http\Controllers\ShiftController@data');
+
+    //SCHEDULE
+    Route::get('/schedule', 'App\Http\Controllers\ScheduleController@index');
+    Route::get('/data-schedule', 'App\Http\Controllers\ScheduleController@data');
+    Route::post('/store-schedule', 'App\Http\Controllers\ScheduleController@store');
+    Route::post('/update-schedule', 'App\Http\Controllers\ScheduleController@update');
+    Route::post('/delete-schedule', 'App\Http\Controllers\ScheduleController@delete');
+
     //SLKS
     Route::get('/slks', 'App\Http\Controllers\SlksController@index');
     Route::get('/data-slks', 'App\Http\Controllers\SlksController@data');

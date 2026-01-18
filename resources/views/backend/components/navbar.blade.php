@@ -154,20 +154,46 @@
                 </ul>
             </div>
         </li>
+        @if (Auth::user()->role == 'Admin' ||
+                Auth::user()->role == 'SKPD' ||
+                Auth::user()->role == 'OPD' ||
+                Auth::user()->role == 'Kepala BKPSDM')
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#jadwal-kerja" aria-expanded="false"
+                    aria-controls="jadwal-kerja">
+                    <i class="bi bi-calendar3 menu-icon"></i>
+                    <span class="menu-title">Jadwal Kerja</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="jadwal-kerja">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('shift') }}">Shift</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('schedule') }}">Schedule</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
         @php
             $masaKerja10Tahun = false;
             $tmt_cpns = $profil?->tmt_cpns;
             if ($tmt_cpns) {
-                $masaKerja10Tahun = \Carbon\Carbon::parse($tmt_cpns)->addYears(10)->lessThanOrEqualTo(\Carbon\Carbon::today());
+                $masaKerja10Tahun = \Carbon\Carbon::parse($tmt_cpns)
+                    ->addYears(10)
+                    ->lessThanOrEqualTo(\Carbon\Carbon::today());
             }
-        @endphp 
-        @if(in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kabid BKPSDM']) || Auth::user()->role == 'Pegawai' && $masaKerja10Tahun)
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('slks') }}">
-                <i class="bi bi-stars menu-icon"></i>
-                <span class="menu-title">E-SLKS</span>
-            </a>
-        </li>
+        @endphp
+        @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kabid BKPSDM']) ||
+                (Auth::user()->role == 'Pegawai' && $masaKerja10Tahun))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('slks') }}">
+                    <i class="bi bi-stars menu-icon"></i>
+                    <span class="menu-title">E-SLKS</span>
+                </a>
+            </li>
         @endif
         @if (Auth::user()->role != 'Bendahara Gaji DPKAD')
             <li class="nav-item">

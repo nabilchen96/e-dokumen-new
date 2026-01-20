@@ -19,6 +19,7 @@ class NotPegawaiController extends Controller
                     'users.name', 
                     'users.email',
                     'users.role',
+                    'users.id_unit_kerja'
                 )
                 ->simplePaginate($perPage);
 

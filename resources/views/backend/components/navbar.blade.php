@@ -179,7 +179,9 @@
         @endif
         @php
             $masaKerja10Tahun = false;
-            $tmt_cpns = $profil?->tmt_cpns;
+
+            $tmt_cpns = isset($profil) ? $profil->tmt_cpns : null;
+
             if ($tmt_cpns) {
                 $masaKerja10Tahun = \Carbon\Carbon::parse($tmt_cpns)
                     ->addYears(10)

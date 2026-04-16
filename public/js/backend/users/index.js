@@ -67,6 +67,7 @@ function getData() {
         "ordering": true,
         ajax: '/data-user',
         processing: true,
+        serverSide: true,
         'language': {
             'loadingRecords': '&nbsp;',
             'processing': 'Loading...'
@@ -74,46 +75,54 @@ function getData() {
         columnDefs: [
             { orderable: false, targets: [6, 7] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
         ],
-        columns: [{
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        {
-            data: "name"
-        },
-        {
-            render: function (data, type, row, meta) {
-                return `${row.email} <br> WA: ${row.no_wa}`
-            }
-        },
-        {
-            render: function (data, type, row, meta) {
-                return `${row.role == 'OPD' ? 'Unit Kerja' : row.role } <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
-            }
-        },
-        {
-            data: 'status_pegawai'
-        },
-        {
-            data: "created_at"
-        },
+        columns: [
+            // {
+            //     render: function (data, type, row, meta) {
+            //         return meta.row + meta.settings._iDisplayStart + 1;
+            //     }
+            // },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: "name"
+            },
+            {
+                render: function (data, type, row, meta) {
+                    return `${row.email} <br> WA: ${row.no_wa}`
+                }
+            },
+            {
+                render: function (data, type, row, meta) {
+                    return `${row.role == 'OPD' ? 'Unit Kerja' : row.role} <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
+                }
+            },
+            {
+                data: 'status_pegawai',
+                name: 'profils.status_pegawai'
+            },
+            {
+                data: "created_at"
+            },
 
-        {
-            render: function (data, type, row, meta) {
-                return `<a data-toggle="modal" data-target="#modal"
+            {
+                render: function (data, type, row, meta) {
+                    return `<a data-toggle="modal" data-target="#modal"
                                     data-bs-id=` + (row.id) + ` href="javascript:void(0)">
                                     <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
                                 </a>`
-            }
-        },
-        {
-            render: function (data, type, row, meta) {
-                return `<a href="javascript:void(0)" onclick="hapusData(` + (row.id) + `)">
+                }
+            },
+            {
+                render: function (data, type, row, meta) {
+                    return `<a href="javascript:void(0)" onclick="hapusData(` + (row.id) + `)">
                                     <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
                                 </a>`
-            }
-        },
+                }
+            },
         ]
     })
 }

@@ -64,23 +64,21 @@ document.getElementById('role').addEventListener('change', function () {
 
 function getData() {
     $("#myTable").DataTable({
-        "ordering": true,
-        ajax: '/data-user',
         processing: true,
         serverSide: true,
-        'language': {
-            'loadingRecords': '&nbsp;',
-            'processing': 'Loading...'
+        ordering: true,
+        ajax: '/data-user',
+
+        language: {
+            loadingRecords: '&nbsp;',
+            processing: 'Loading...'
         },
+
         columnDefs: [
-            { orderable: false, targets: [6, 7] } // Kolom ke-0 dan ke-2 tidak bisa di-sort
+            { orderable: false, targets: [6, 7] }
         ],
+
         columns: [
-            // {
-            //     render: function (data, type, row, meta) {
-            //         return meta.row + meta.settings._iDisplayStart + 1;
-            //     }
-            // },
             {
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
@@ -88,43 +86,40 @@ function getData() {
                 searchable: false
             },
             {
-                data: "name"
+                data: 'name',
+                name: 'users.name'
             },
             {
-                render: function (data, type, row, meta) {
-                    return `${row.email} <br> WA: ${row.no_wa}`
-                }
+                data: 'email',
+                name: 'users.email'
             },
             {
-                render: function (data, type, row, meta) {
-                    return `${row.role == 'OPD' ? 'Unit Kerja' : row.role} <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
-                }
+                data: 'role',
+                name: 'users.role',
+                searchable: false
             },
             {
                 data: 'status_pegawai',
-                name: 'profils.status_pegawai'
+                name: 'profils.status_pegawai',
+                searchable: false
             },
             {
-                data: "created_at"
-            },
-
-            {
-                render: function (data, type, row, meta) {
-                    return `<a data-toggle="modal" data-target="#modal"
-                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
-                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
-                                </a>`
-                }
+                data: 'created_at',
+                name: 'users.created_at',
+                searchable: false
             },
             {
-                render: function (data, type, row, meta) {
-                    return `<a href="javascript:void(0)" onclick="hapusData(` + (row.id) + `)">
-                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
-                                </a>`
-                }
+                data: 'aksi1',
+                orderable: false,
+                searchable: false
             },
+            {
+                data: 'aksi2',
+                orderable: false,
+                searchable: false
+            }
         ]
-    })
+    });
 }
 
 $('#modal').on('show.bs.modal', function (event) {

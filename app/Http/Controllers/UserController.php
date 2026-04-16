@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class UserController extends Controller
@@ -30,58 +31,73 @@ class UserController extends Controller
 
     public function data()
     {
-
-        $user = DB::table('users')
-            ->leftjoin('profils', 'profils.id_user', '=', 'users.id')
-            ->leftjoin('skpds', 'skpds.id', '=', 'users.id_skpd')
-            ->leftjoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
+        // Base query (jangan pakai get)
+        $query = DB::table('users')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
             ->select(
-                'users.*',
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.no_wa',
+                'users.role',
+                'users.created_at',
                 'profils.status_pegawai',
-                'skpds.nama_skpd', 
+                'skpds.nama_skpd',
                 'unit_kerjas.unit_kerja'
             );
 
-        if (Auth::user()->role == 'Admin') {
-            $user = $user->get();
+        // FILTER ROLE
+        if (Auth::user()->role == 'SKPD') {
 
-        } elseif (Auth::user()->role == 'SKPD') {
-
-            //query untuk mendapatkan skpd yang sama dengan user skpd
-
-            // Ambil ID SKPD dari user yang login
             $skpdId = Auth::user()->id_skpd;
 
-            // Subquery untuk ambil dokumen terbaru tiap user pada SKPD yang sama
+            // Subquery dokumen terbaru
             $latestDokumenSubquery = DB::table('dokumens as d1')
                 ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
                 ->where('d1.id_skpd', $skpdId)
                 ->groupBy('d1.id_user');
 
-            // Join ke dokumen agar bisa difilter berdasarkan SKPD dan ambil updated_at terbaru
-            $user = DB::table('users')
-                ->join('profils', 'profils.id_user', '=', 'users.id')
-                ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
-                ->join('dokumens as d', 'd.id_user', '=', 'users.id')
+            // Join ke dokumen (tanpa get)
+            $query->join('dokumens as d', 'd.id_user', '=', 'users.id')
                 ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
                     $join->on('d.id_user', '=', 'latest.id_user')
                         ->on('d.updated_at', '=', 'latest.latest_update');
                 })
                 ->where('d.id_skpd', $skpdId)
-                ->select(
-                    'users.*',
-                    'profils.status_pegawai',
-                    'skpds.nama_skpd',
-                    'd.updated_at as dokumen_terakhir'
-                )
-                ->get();
-
-            // $user = $user->where('users.id', Auth::id())->get();
-            // $user = $user2->concat($user);
+                ->addSelect('d.updated_at as dokumen_terakhir');
         }
 
+        // ⬇️ INI YANG PALING PENTING (ganti return lama)
+        return DataTables::of($query)
 
-        return response()->json(['data' => $user]);
+            ->addIndexColumn()
+
+            ->editColumn('email', function ($row) {
+                return $row->email . '<br> WA: ' . $row->no_wa;
+            })
+
+            ->editColumn('role', function ($row) {
+                return ($row->role == 'OPD' ? 'Unit Kerja' : $row->role)
+                    . '<br>' . ($row->nama_skpd ?? '') . ' ' . ($row->unit_kerja ?? '');
+            })
+
+            ->addColumn('aksi1', function ($row) {
+                return '<a data-toggle="modal" data-target="#modal" data-bs-id="'.$row->id.'">
+                            <i class="text-success bi bi-grid" style="font-size:1.5rem;"></i>
+                        </a>';
+            })
+
+            ->addColumn('aksi2', function ($row) {
+                return '<a href="javascript:void(0)" onclick="hapusData('.$row->id.')">
+                            <i class="text-danger bi bi-trash" style="font-size:1.5rem;"></i>
+                        </a>';
+            })
+
+            ->rawColumns(['email', 'role', 'aksi1', 'aksi2'])
+
+            ->make(true);
     }
 
     public function store(Request $request)

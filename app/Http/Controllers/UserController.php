@@ -20,13 +20,69 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     if (Auth::user()->role == 'Pegawai') {
+    //         return redirect('dashboard');
+    //     }
+
+    //     return view('backend.users.index');
+    // }
+
+    public function index(Request $request)
     {
         if (Auth::user()->role == 'Pegawai') {
             return redirect('dashboard');
         }
 
-        return view('backend.users.index');
+        $query = DB::table('users')
+            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+            ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
+            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
+            ->select(
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.no_wa',
+                'users.role',
+                'users.created_at',
+                'profils.status_pegawai',
+                'skpds.nama_skpd',
+                'unit_kerjas.unit_kerja'
+            );
+
+        // 🔍 SEARCH
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('users.name', 'like', '%' . $request->search . '%')
+                ->orWhere('users.email', 'like', '%' . $request->search . '%')
+                ->orWhere('users.no_wa', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // FILTER ROLE SKPD
+        if (Auth::user()->role == 'SKPD') {
+
+            $skpdId = Auth::user()->id_skpd;
+
+            $latestDokumenSubquery = DB::table('dokumens as d1')
+                ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
+                ->where('d1.id_skpd', $skpdId)
+                ->groupBy('d1.id_user');
+
+            $query->join('dokumens as d', 'd.id_user', '=', 'users.id')
+                ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
+                    $join->on('d.id_user', '=', 'latest.id_user')
+                        ->on('d.updated_at', '=', 'latest.latest_update');
+                })
+                ->where('d.id_skpd', $skpdId)
+                ->addSelect('d.updated_at as dokumen_terakhir');
+        }
+
+        // PAGINATION
+        $users = $query->paginate(10)->onEachSide(1)->withQueryString();
+
+        return view('backend.users.index', compact('users'));
     }
 
     public function data()

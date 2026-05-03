@@ -103,4 +103,31 @@ class KirimPesanController extends Controller
             'skpd' => $skpd ?? ''
         ]);
     }
+    
+    // Tambahkan di dalam KirimPesanController.php
+public function kirimWaVms(Request $request)
+{
+    $pesan = "Halo, ada tamu atas nama *".$request->nama_tamu."* sedang menunggu Anda di BKPSDM. \n\nKeperluan: ".$request->keperluan;
+
+    // Pastikan nomor berawalan 62
+    $target = $request->no_wa;
+    if (str_starts_with($target, '0')) {
+        $target = '62' . substr($target, 1);
+    }
+
+    // Integrasi ke API Gateway (Contoh menggunakan Fonnte)
+    $response = Http::withHeaders([
+        'Authorization' => 'TOKEN_API_PANDU_ANDA', // Ganti dengan Token PANDU Anda
+    ])->post('https://api.fonnte.com/send', [
+        'target' => $target,
+        'message' => $pesan,
+        'countryCode' => '62',
+    ]);
+
+    if ($response->successful()) {
+        return response()->json(['responCode' => 1, 'respon' => 'Pesan berhasil dikirim melalui Nomor PANDU']);
+    }
+
+    return response()->json(['responCode' => 0, 'respon' => 'Gagal mengirim pesan']);
+}
 }

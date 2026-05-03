@@ -294,3 +294,14 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect('login');
 })->name('logout');
+
+// FITUR VMS BKPSDM
+Route::get('/buku-tamu', 'App\Http\Controllers\BukuTamuController@index');
+Route::get('/data-buku-tamu', 'App\Http\Controllers\BukuTamuController@data');
+Route::post('/store-buku-tamu', 'App\Http\Controllers\BukuTamuController@store');
+Route::post('/update-status-tamu', 'App\Http\Controllers\BukuTamuController@updateStatus');
+Route::post('/delete-buku-tamu', 'App\Http\Controllers\BukuTamuController@delete');
+Route::get('/cari-pegawai/{nip}', 'App\Http\Controllers\BukuTamuController@cariPegawai');
+Route::get('/export-excel-tamu', 'App\Http\Controllers\BukuTamuController@exportExcel');
+Route::get('/export-pdf-tamu', 'App\Http\Controllers\BukuTamuController@exportPdf');
+Route::post('/kirim-wa-langsung', [App\Http\Controllers\BukuTamuController::class, 'kirimWaLangsung'])->middleware('auth');

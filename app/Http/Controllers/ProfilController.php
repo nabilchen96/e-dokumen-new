@@ -53,7 +53,8 @@ class ProfilController extends Controller
             Auth::user()->role == 'Kabid BKPSDM' ||
             Auth::user()->role == 'Sekretaris BKPSDM' ||
             Auth::user()->role == 'Kepala BKPSDM' ||
-            Auth::user()->role == 'Inspektorat'
+            Auth::user()->role == 'Inspektorat' ||
+            Auth::user()->role == 'AdminBerkala'
         ) {
 
             $profil = $profil->get();
@@ -265,7 +266,8 @@ class ProfilController extends Controller
             Auth::user()->role == 'Kepala BKPSDM' ||
             Auth::user()->role == 'Inspektorat' ||
             Auth::user()->role == 'SKPD' ||
-            Auth::user()->role == 'OPD'
+            Auth::user()->role == 'OPD' ||
+            Auth::user()->role == 'AdminBerkala'
         ) {
 
             $profil = $profil->first();

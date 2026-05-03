@@ -17,7 +17,7 @@
                 </a>
                 <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD')
+                        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'SKPD' || Auth::user()->role == 'AdminBerkala')
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('user') }}">User</a>
                             </li>
@@ -73,7 +73,7 @@
                 ->where('users.id', Auth::id())
                 ->first();
         @endphp
-        @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM', 'Pegawai']))
+        @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM', 'Pegawai', 'AdminBerkala']))
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#tahap1" aria-expanded="false"
                     aria-controls="ui-basic">
@@ -88,7 +88,7 @@
                             $jenis_dokumen = DB::table('jenis_dokumens')
                                 ->where('status', 'Aktif')
                                 ->where(function ($query) use ($profil) {
-                                    if (in_array(Auth::user()->role, ['Admin', 'OPD', 'Kepala BKPSDM'])) {
+                                    if (in_array(Auth::user()->role, ['Admin', 'OPD', 'Kepala BKPSDM', 'AdminBerkala'])) {
                                         $query;
                                     } elseif ($profil->status_pegawai == 'PNS') {
                                         $query
@@ -109,7 +109,7 @@
                                 ->get();
                         @endphp
 
-                        @if ($profil->status_pegawai || in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM']))
+                        @if ($profil->status_pegawai || in_array(Auth::user()->role, ['Admin', 'OPD', 'SKPD', 'Kepala BKPSDM', 'AdminBerkala']))
                             @foreach ($jenis_dokumen as $i)
                                 <li class="nav-item">
                                     <a style="white-space: normal; line-height: 1;" class="nav-link"
@@ -125,7 +125,7 @@
             </li>
         @endif
         <li class="nav-item">
-            @if ((Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD') || Auth::user()->id == $id_kepala)
+            @if ((Auth::user()->role != 'Pegawai' && Auth::user()->role != 'OPD' && Auth::user()->role != 'AdminTamu' && Auth::user()->role != 'AdminBerkala' ) || Auth::user()->id == $id_kepala)
                 <a class="nav-link" data-toggle="collapse" href="#dokumen-berkala" aria-expanded="false"
                     aria-controls="ui-basic">
                     <!-- <i class="icon-layout menu-icon"></i> -->
@@ -136,7 +136,7 @@
             @endif
             <div class="collapse" id="dokumen-berkala">
                 <ul class="nav flex-column sub-menu">
-                    @if (in_array(Auth::user()->role, ['Admin', 'OPD']) || Auth::user()->id == $id_kepala)
+                    @if (in_array(Auth::user()->role, ['Admin', 'OPD', 'AdminBerkala']) || Auth::user()->id == $id_kepala)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('kenaikan-gaji') }}">
                                 Kenaikan Gaji
@@ -197,7 +197,7 @@
                 </a>
             </li>
         @endif
-        @if (Auth::user()->role != 'Bendahara Gaji DPKAD')
+        @if (Auth::user()->role != 'Bendahara Gaji DPKAD' && Auth::user()->role != 'AdminTamu')
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('profil') }}">
                     <i class="bi bi-person menu-icon"></i>
@@ -227,6 +227,17 @@
                 </a>
             </li>
         @endif
+        
+    
+
+@if (in_array(Auth::user()->role, ['Admin', 'AdminTamu', 'Pegawai']))
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('buku-tamu') }}">
+            <i class="bi bi-journal-bookmark-fill menu-icon"></i>
+            <span class="menu-title">Buku Tamu</span>
+        </a>
+    </li>
+@endif
         {{-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-api-siasn" aria-expanded="false"
                 aria-controls="ui-basic">

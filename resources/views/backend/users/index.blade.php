@@ -26,10 +26,23 @@
                         data-target="#modalimport">
                         <i class="bi bi-file-earmark-excel"></i> Import
                     </button>
-                    <div class="mt-3">
-                        {{ $users->links() }}
+                    <div id="filter-wrapper">
+                        <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn btn-warning active" data-filter="PNS">
+                            <i class="bi bi-person"></i> PNS
+                        </button>
+
+                        <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn" data-filter="P3K">
+                            <i class="bi bi-person"></i> P3K
+                        </button>
+
+                        <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn" data-filter="NON_PEGAWAI">
+                            <i class="bi bi-person"></i> Admin
+                        </button>
                     </div>
-                    <form method="GET" action="{{ url()->current() }}" class="mb-3">
+                    {{-- <div class="mt-3">
+                        {{ $users->links() }}
+                    </div> --}}
+                    {{-- <form method="GET" action="{{ url()->current() }}" class="mb-3">
                         <div class="d-flex">
                             <input placeholder="Cari Data ....." type="text" name="search" class="form-control form-control-sm"
                                 value="{{ request('search') }}">
@@ -38,9 +51,9 @@
                                 Cari
                             </button>
                         </div>
-                    </form>
+                    </form> --}}
                     <div class="table-responsive">
-                        {{-- <table id="myTable" class="table table-striped" style="width: 100%;">
+                        <table id="myTable" class="table table-striped" style="width: 100%;">
                             <thead class="bg-info text-white">
                                 <tr>
                                     <th width="5%">No</th>
@@ -53,8 +66,8 @@
                                     <th width="5%"></th>
                                 </tr>
                             </thead>
-                        </table> --}}
-                        <table class="table table-striped">
+                        </table>
+                        {{-- <table class="table table-striped">
                             <thead class="bg-info text-white">
                                 <tr>
                                     <th>No</th>
@@ -83,7 +96,8 @@
                                         <td>{{ $user->status_pegawai }}</td>
                                         <td>{{ $user->created_at }}</td>
                                         <td>
-                                            <a data-toggle="modal" data-target="#modal" data-bs-id="{{ $user->id }}">
+                                            <a data-toggle="modal" data-target="#modal" 
+                                                data-bs-id="{{ $user->id }}">
                                                 <i class="text-success bi bi-grid" style="font-size:1.5rem;"></i>
                                             </a>
                                         </td>
@@ -98,7 +112,7 @@
                         </table>
                         <div class="mt-3">
                             {{ $users->links() }}
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -147,7 +161,7 @@
                                     <option>Bendahara Gaji DPKAD</option>
                                     <option>Inspektorat</option>
                                 @endif
-                                <option value="Pegawai">Pegawai</option>
+                                <option>Pegawai</option>
                                 <option value="OPD">Unit Kerja</option>
                             </select>
                         </div>

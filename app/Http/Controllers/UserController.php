@@ -31,62 +31,67 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        if (Auth::user()->role == 'Pegawai') {
-            return redirect('dashboard');
-        }
+        // if (Auth::user()->role == 'Pegawai') {
+        //     return redirect('dashboard');
+        // }
 
-        $query = DB::table('users')
-            ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
-            ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
-            ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
-            ->select(
-                'users.id',
-                'users.name',
-                'users.email',
-                'users.no_wa',
-                'users.role',
-                'users.created_at',
-                'profils.status_pegawai',
-                'skpds.nama_skpd',
-                'unit_kerjas.unit_kerja'
-            );
+        // $query = DB::table('users')
+        //     ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
+        //     ->leftJoin('skpds', 'skpds.id', '=', 'users.id_skpd')
+        //     ->leftJoin('unit_kerjas', 'unit_kerjas.id', '=', 'users.id_unit_kerja')
+        //     ->select(
+        //         'users.id',
+        //         'users.name',
+        //         'users.email',
+        //         'users.no_wa',
+        //         'users.role',
+        //         'users.created_at',
+        //         'profils.status_pegawai',
+        //         'skpds.nama_skpd',
+        //         'unit_kerjas.unit_kerja'
+        //     );
 
-        // 🔍 SEARCH
-        if ($request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('users.name', 'like', '%' . $request->search . '%')
-                ->orWhere('users.email', 'like', '%' . $request->search . '%')
-                ->orWhere('users.no_wa', 'like', '%' . $request->search . '%');
-            });
-        }
+        // // 🔍 SEARCH
+        // if ($request->search) {
+        //     $query->where(function ($q) use ($request) {
+        //         $q->where('users.name', 'like', '%' . $request->search . '%')
+        //         ->orWhere('users.email', 'like', '%' . $request->search . '%')
+        //         ->orWhere('users.no_wa', 'like', '%' . $request->search . '%');
+        //     });
+        // }
 
-        // FILTER ROLE SKPD
-        if (Auth::user()->role == 'SKPD') {
+        // // FILTER ROLE SKPD
+        // if (Auth::user()->role == 'SKPD') {
 
-            $skpdId = Auth::user()->id_skpd;
+        //     $skpdId = Auth::user()->id_skpd;
 
-            $latestDokumenSubquery = DB::table('dokumens as d1')
-                ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
-                ->where('d1.id_skpd', $skpdId)
-                ->groupBy('d1.id_user');
+        //     $latestDokumenSubquery = DB::table('dokumens as d1')
+        //         ->select('d1.id_user', DB::raw('MAX(d1.updated_at) as latest_update'))
+        //         ->where('d1.id_skpd', $skpdId)
+        //         ->groupBy('d1.id_user');
 
-            $query->join('dokumens as d', 'd.id_user', '=', 'users.id')
-                ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
-                    $join->on('d.id_user', '=', 'latest.id_user')
-                        ->on('d.updated_at', '=', 'latest.latest_update');
-                })
-                ->where('d.id_skpd', $skpdId)
-                ->addSelect('d.updated_at as dokumen_terakhir');
-        }
+        //     $query->join('dokumens as d', 'd.id_user', '=', 'users.id')
+        //         ->joinSub($latestDokumenSubquery, 'latest', function ($join) {
+        //             $join->on('d.id_user', '=', 'latest.id_user')
+        //                 ->on('d.updated_at', '=', 'latest.latest_update');
+        //         })
+        //         ->where('d.id_skpd', $skpdId)
+        //         ->addSelect('d.updated_at as dokumen_terakhir');
+        // }
 
-        // PAGINATION
-        $users = $query->paginate(10)->onEachSide(1)->withQueryString();
+        // // PAGINATION
+        // $users = $query->paginate(10)->onEachSide(1)->withQueryString();
 
-        return view('backend.users.index', compact('users'));
+        // return view('backend.users.index', compact('users'));
+
+        return view('backend.users.index');
     }
 
     public function data()
     {
+
+        $filter = request('filter');
+
         // Base query (jangan pakai get)
         $query = DB::table('users')
             ->leftJoin('profils', 'profils.id_user', '=', 'users.id')
@@ -103,6 +108,21 @@ class UserController extends Controller
                 'skpds.nama_skpd',
                 'unit_kerjas.unit_kerja'
             );
+
+
+        if ($filter == 'PNS') {
+            $query->where('users.role', 'Pegawai')
+                ->where('profils.status_pegawai', 'PNS');
+        }
+
+        elseif ($filter == 'P3K') {
+            $query->where('users.role', 'Pegawai')
+                ->where('profils.status_pegawai', 'P3K'); // hati-hati ini P3K di DB
+        }
+
+        elseif ($filter == 'NON_PEGAWAI') {
+            $query->where('users.role', '!=', 'Pegawai');
+        }
 
         // FILTER ROLE
         if (Auth::user()->role == 'SKPD') {
@@ -127,32 +147,6 @@ class UserController extends Controller
 
         // ⬇️ INI YANG PALING PENTING (ganti return lama)
         return DataTables::of($query)
-
-            ->addIndexColumn()
-
-            ->editColumn('email', function ($row) {
-                return $row->email . '<br> WA: ' . $row->no_wa;
-            })
-
-            ->editColumn('role', function ($row) {
-                return ($row->role == 'OPD' ? 'Unit Kerja' : $row->role)
-                    . '<br>' . ($row->nama_skpd ?? '') . ' ' . ($row->unit_kerja ?? '');
-            })
-
-            ->addColumn('aksi1', function ($row) {
-                return '<a data-toggle="modal" data-target="#modal" data-bs-id="'.$row->id.'">
-                            <i class="text-success bi bi-grid" style="font-size:1.5rem;"></i>
-                        </a>';
-            })
-
-            ->addColumn('aksi2', function ($row) {
-                return '<a href="javascript:void(0)" onclick="hapusData('.$row->id.')">
-                            <i class="text-danger bi bi-trash" style="font-size:1.5rem;"></i>
-                        </a>';
-            })
-
-            ->rawColumns(['email', 'role', 'aksi1', 'aksi2'])
-
             ->make(true);
     }
 

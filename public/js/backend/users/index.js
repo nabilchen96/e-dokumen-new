@@ -30,6 +30,8 @@ document.getElementById('importForm').addEventListener('submit', function (event
 
 let select = ''
 let select2 = ''
+let currentFilter = 'PNS'; // default
+let table;
 
 document.addEventListener('DOMContentLoaded', function () {
     getData()
@@ -62,12 +64,29 @@ document.getElementById('role').addEventListener('change', function () {
     }
 });
 
+$(document).on('click', '.filter-btn', function () {
+    $('.filter-btn').removeClass('active btn-warning').addClass('btn-info');
+
+    $(this)
+        .removeClass('btn-info')
+        .addClass('btn-warning active');
+
+    currentFilter = $(this).data('filter');
+
+    table.ajax.reload();
+});
+
 function getData() {
-    $("#myTable").DataTable({
+    table = $("#myTable").DataTable({
         processing: true,
         serverSide: true,
         ordering: true,
-        ajax: '/data-user',
+        ajax: {
+            url: '/data-user',
+            data: function (d) {
+                d.filter = currentFilter; // kirim ke backend
+            }
+        },
 
         language: {
             loadingRecords: '&nbsp;',
@@ -80,23 +99,23 @@ function getData() {
 
         columns: [
             {
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
-                orderable: false,
-                searchable: false
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
             },
             {
-                data: 'name',
+                data: "name",
                 name: 'users.name'
             },
             {
-                data: 'email',
-                name: 'users.email'
+                render: function (data, type, row, meta) {
+                    return `${row.email} <br> WA: ${row.no_wa}`
+                }
             },
             {
-                data: 'role',
-                name: 'users.role',
-                searchable: false
+                render: function (data, type, row, meta) {
+                    return `${row.role == 'OPD' ? 'Unit Kerja' : row.role} <br> ${row.nama_skpd ?? ''} ${row.unit_kerja ?? ''}`
+                }
             },
             {
                 data: 'status_pegawai',
@@ -104,20 +123,25 @@ function getData() {
                 searchable: false
             },
             {
-                data: 'created_at',
+                data: "created_at",
                 name: 'users.created_at',
                 searchable: false
             },
             {
-                data: 'aksi1',
-                orderable: false,
-                searchable: false
+                render: function (data, type, row, meta) {
+                    return `<a data-toggle="modal" data-target="#modal"
+                                    data-bs-id=` + (row.id) + ` href="javascript:void(0)">
+                                    <i style="font-size: 1.5rem;" class="text-success bi bi-grid"></i>
+                                </a>`
+                }
             },
             {
-                data: 'aksi2',
-                orderable: false,
-                searchable: false
-            }
+                render: function (data, type, row, meta) {
+                    return `<a href="javascript:void(0)" onclick="hapusData(` + (row.id) + `)">
+                                    <i style="font-size: 1.5rem;" class="text-danger bi bi-trash"></i>
+                                </a>`
+                }
+            },
         ]
     });
 }
@@ -141,6 +165,9 @@ $('#modal').on('show.bs.modal', function (event) {
     select2.setValue('');
     $('.error').empty();
 
+    // console.log(cokData[0].role);
+
+
     if (recipient) {
         // Edit Mode
         var modal = $(this);
@@ -156,7 +183,7 @@ $('#modal').on('show.bs.modal', function (event) {
         select2.setValue(cokData[0].id_skpd);
 
         // Tampilkan Status Pegawai jika role adalah Pegawai
-        if (cokData[0].role === 'Pegawai') {
+        if (cokData[0].role == 'Pegawai') {
             statusPegawaiGroup.style.display = 'block';
         } else {
             statusPegawaiGroup.style.display = 'none';

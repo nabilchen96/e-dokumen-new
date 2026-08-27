@@ -119,6 +119,11 @@ class UserController extends Controller
             $query->where('users.role', 'Pegawai')
                 ->where('profils.status_pegawai', 'P3K'); // hati-hati ini P3K di DB
         }
+        
+        elseif ($filter == 'P3K PW') {
+            $query->where('users.role', 'Pegawai')
+                ->where('profils.status_pegawai', 'P3K PW'); // hati-hati ini P3K PW di DB
+        }
 
         elseif ($filter == 'NON_PEGAWAI') {
             $query->where('users.role', '!=', 'Pegawai');

@@ -162,6 +162,20 @@
                     placeholder="BPJS">
             </div>
         </div>
+        @if (Auth::user()->role == 'Admin')
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Status Pegawai <sup class="text-danger">*</sup></label>
+                <select readonly class="form-control" id="status_pegawai" required>
+                    <option value="">--PILIH STATUS PEGAWAI--</option>
+                    <option {{ @$profil->status_pegawai == 'PNS' ? 'selected' : '' }}>PNS</option>
+                    <option {{ @$profil->status_pegawai == 'P3K' ? 'selected' : '' }}>P3K</option>
+                    <option {{ @$profil->status_pegawai == 'P3K PW' ? 'selected' : '' }}>P3K PW</option>
+                    <option value="Honorer" {{ @$profil->status_pegawai == 'Honorer' ? 'selected' : '' }}>Non ASN</option>
+                </select>
+            </div>
+        </div>
+        @endif
         <div class="col-lg-12">
             <button id="tombol_kirim" class="btn btn-primary" style="border-radius: 8px !important;">Submit</button>
         </div>

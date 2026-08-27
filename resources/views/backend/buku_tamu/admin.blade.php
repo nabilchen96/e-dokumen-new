@@ -41,21 +41,21 @@
                         <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                             <table id="t1" class="table table-striped w-100">
                                 <thead class="bg-info text-white">
-                                    <tr><th>No</th><th>NIP/Nama</th><th>Instansi</th><th>Keperluan</th><th>Tujuan</th><th>Status</th><th>Aksi</th></tr>
+                                    <tr><th>No</th><th>NIP/Nama</th><th>Instansi</th><th>Keperluan</th><th>Tujuan</th><th>Tingkat Kepuasan</th><th>Aksi</th></tr>
                                 </thead>
                             </table>
                         </div>
                         <div class="tab-pane fade" id="tab2" role="tabpanel">
                             <table id="t2" class="table table-striped w-100">
                                 <thead class="bg-info text-white">
-                                    <tr><th>No</th><th>NIP/Nama</th><th>Instansi</th><th>Keperluan</th><th>Tujuan</th><th>Status</th><th>Aksi</th></tr>
+                                    <tr><th>No</th><th>NIP/Nama</th><th>Instansi</th><th>Keperluan</th><th>Tujuan</th><th>Tingkat Kepuasan</th><th>Aksi</th></tr>
                                 </thead>
                             </table>
                         </div>
                         <div class="tab-pane fade" id="tab3" role="tabpanel">
                             <table id="t3" class="table table-striped w-100">
                                 <thead class="bg-info text-white">
-                                    <tr><th>No</th><th>Nama</th><th>Asal</th><th>Keperluan</th><th>Tujuan</th><th>Status</th><th>Aksi</th></tr>
+                                    <tr><th>No</th><th>Nama</th><th>Asal</th><th>Keperluan</th><th>Tujuan</th><th>Tingkat Kepuasan</th><th>Aksi</th></tr>
                                 </thead>
                             </table>
                         </div>
@@ -65,7 +65,6 @@
         </div>
     </div>
 
-    <!-- Modal Form -->
     <div class="modal fade" id="m" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -179,7 +178,6 @@
         $(id).DataTable({ 
             ajax: '/data-buku-tamu?jenis=' + j, 
             processing: true,
-            // Fitur ini memungkinkan pengguna memilih "Semua" untuk memunculkan seluruh data di database tanpa halaman
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Semua"]], 
             columns: [
                 { render: (d, t, r, m) => m.row + 1 },
@@ -187,14 +185,22 @@
                 { data: 'instansi_asal' },
                 { data: 'keperluan' },
                 { data: 'nama_tujuan' },
-                { render: (d, t, r) => `<span class="badge badge-${r.status == 'Selesai' ? 'success' : 'warning'}">${r.status}</span>` },
+                { render: (d, t, r) => {
+                    let nilai = r.penilaian || 'Belum Dinilai';
+                    let badgeClass = 'secondary';
+                    if(nilai === 'Memuaskan') badgeClass = 'success';
+                    else if(nilai === 'Sedang') badgeClass = 'warning';
+                    else if(nilai === 'Kurang') badgeClass = 'danger';
+                    
+                    return `<span class="badge badge-${badgeClass}">${nilai}</span>`;
+                }},
                 { render: (d, t, r) => `
                     <div class="d-flex">
-                        <button onclick="kw('${r.wa_tujuan}', '${r.nama}', '${r.keperluan}')" class="btn btn-sm btn-success mr-1" title="Kirim WA PANDU">
+                        <button onclick="kw('${r.wa_tujuan}', '${r.nama}', '${r.keperluan}')" class="btn btn-sm btn-success mr-1" title="Kirim via WA Web">
                             <i class="bi bi-whatsapp"></i>
                         </button>
-                        <button onclick="us(${r.id})" class="btn btn-sm btn-info mr-1" title="Ubah Status">
-                            <i class="bi bi-check2-circle"></i>
+                        <button onclick="us(${r.id})" class="btn btn-sm btn-info mr-1" title="Tingkat Kepuasann">
+                            <i class="bi bi-star"></i>
                         </button>
                         <button onclick="ht(${r.id})" class="btn btn-sm btn-danger" title="Hapus">
                             <i class="bi bi-trash"></i>
@@ -205,33 +211,39 @@
         }); 
     }
 
-   function kw(w, n, k) { 
-    if(w.startsWith('0')) { w = '62' + w.substring(1); }
-    let textMessage = `Halo, ada tamu atas nama *${n}* menunggu Anda. Keperluan: ${k}\n\n📌 Pesan ini dikirim otomatis dari aplikasi Buku Tamu.`; 
-
-    let btn = $(event.currentTarget);
-    let originalIcon = btn.html();
-    btn.html('<i class="spinner-border spinner-border-sm"></i>').attr('disabled', true);
-
-    axios.post('/kirim-wa-langsung', { 
-        nomor: w, 
-        pesan: textMessage,
-        _token: '{{ csrf_token() }}'
-    })
-    .then(response => {
-        if(response.data.responCode == 1) {
-            alert('Notifikasi WhatsApp berhasil dikirim langsung ke Pegawai!');
-        } else {
-            alert('Gagal mengirim WhatsApp: ' + response.data.pesan);
-        }
-    })
-    .catch(error => { alert('Terjadi kesalahan pada server saat mengirim pesan.'); })
-    .finally(() => { btn.html(originalIcon).attr('disabled', false); });
-}
+    function kw(w, n, k) { 
+        if(w.startsWith('0')) { w = '62' + w.substring(1); }
+        let textMessage = `Halo, ada tamu atas nama *${n}* menunggu Anda. Keperluan: ${k}\n\n📌 Pesan ini dikirim otomatis dari aplikasi Buku Tamu.`; 
+        let encodedMessage = encodeURIComponent(textMessage);
+        let waUrl = `https://web.whatsapp.com/send?phone=${w}&text=${encodedMessage}`;
+        window.open(waUrl, '_blank');
+    }
 
     function us(id) { 
-        axios.post('/update-status-tamu', { id: id }).then(() => {
-            $('.table').DataTable().ajax.reload();
+        Swal.fire({
+            title: 'Tingkat Kepuasan',
+            input: 'select',
+            inputOptions: {
+                'Kurang': 'Kurang',
+                'Sedang': 'Sedang',
+                'Memuaskan': 'Memuaskan'
+            },
+            inputPlaceholder: '-- Pilih Tingkat Kepuasan --',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Simpan',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                // Pastikan route backend Anda sudah menyesuaikan
+                axios.post('/update-penilaian-tamu', { id: id, penilaian: result.value }).then((res) => {
+                    Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Tingkat Kepuasan telah disimpan!', timer: 1500, showConfirmButton: false });
+                    $('.table').DataTable().ajax.reload(null, false);
+                }).catch((err) => {
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Gagal menyimpan Tingkat Kepuasan!' });
+                });
+            }
         }); 
     }
 
@@ -241,6 +253,7 @@
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, Hapus!',
             cancelButtonText: "Batal"
         }).then((result) => {
@@ -248,7 +261,7 @@
                 axios.post('/delete-buku-tamu', { id: id }).then((res) => {
                     if (res.data.responCode == 1) {
                         Swal.fire({ icon: 'success', title: 'Berhasil', timer: 1500, showConfirmButton: false });
-                        $('.table').DataTable().ajax.reload();
+                        $('.table').DataTable().ajax.reload(null, false);
                     }
                 });
             }
@@ -262,7 +275,7 @@
             if(res.data.responCode == 1) {
                 Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Data kunjungan disimpan', timer: 2000, showConfirmButton: false });
                 $('#m').modal('hide'); 
-                $('.table').DataTable().ajax.reload(); 
+                $('.table').DataTable().ajax.reload(null, false); 
             }
             $('#s').attr('disabled', false); 
         }).catch(() => {

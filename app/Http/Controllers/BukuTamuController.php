@@ -50,9 +50,11 @@ class BukuTamuController extends Controller {
         return response()->json(['responCode' => 1]);
     }
 
-    public function updateStatus(Request $request) {
+    // Fungsi updateStatus diganti menjadi updatePenilaian
+    public function updatePenilaian(Request $request) {
         $tamu = BukuTamu::find($request->id);
-        $tamu->status = $tamu->status == 'Selesai' ? 'Belum Selesai' : 'Selesai';
+        // Menyimpan data penilaian yang dikirim dari SweetAlert di frontend
+        $tamu->penilaian = $request->penilaian; 
         $tamu->save();
         return response()->json(['responCode' => 1]);
     }
@@ -83,7 +85,8 @@ class BukuTamuController extends Controller {
         $sheet->setCellValue('E1', 'ASAL'); 
         $sheet->setCellValue('F1', 'KEPERLUAN'); 
         $sheet->setCellValue('G1', 'PEGAWAI DITUJU'); 
-        $sheet->setCellValue('H1', 'STATUS');
+        // Mengubah header dari STATUS menjadi PENILAIAN
+        $sheet->setCellValue('H1', 'PENILAIAN');
         
         $row = 2;
         foreach($data as $i => $d) {
@@ -94,7 +97,8 @@ class BukuTamuController extends Controller {
             $sheet->setCellValue('E'.$row, $d->instansi_asal); 
             $sheet->setCellValue('F'.$row, $d->keperluan);
             $sheet->setCellValue('G'.$row, $d->nama_tujuan); 
-            $sheet->setCellValue('H'.$row, $d->status); 
+            // Memasukkan data penilaian
+            $sheet->setCellValue('H'.$row, $d->penilaian ?? 'Belum Dinilai'); 
             $row++;
         }
         

@@ -305,3 +305,4 @@ Route::get('/cari-pegawai/{nip}', 'App\Http\Controllers\BukuTamuController@cariP
 Route::get('/export-excel-tamu', 'App\Http\Controllers\BukuTamuController@exportExcel');
 Route::get('/export-pdf-tamu', 'App\Http\Controllers\BukuTamuController@exportPdf');
 Route::post('/kirim-wa-langsung', [App\Http\Controllers\BukuTamuController::class, 'kirimWaLangsung'])->middleware('auth');
+Route::post('/update-penilaian-tamu', [\App\Http\Controllers\BukuTamuController::class, 'updatePenilaian']);

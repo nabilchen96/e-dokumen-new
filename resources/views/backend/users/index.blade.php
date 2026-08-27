@@ -34,6 +34,10 @@
                         <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn" data-filter="P3K">
                             <i class="bi bi-person"></i> P3K
                         </button>
+                        
+                        <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn" data-filter="P3K PW">
+                            <i class="bi bi-person"></i> P3K PW
+                        </button>
 
                         <button style="border-radius: 8px !important;" class="btn btn-info btn-sm mb-4 filter-btn" data-filter="NON_PEGAWAI">
                             <i class="bi bi-person"></i> Admin
@@ -194,7 +198,7 @@
                             <select name="status_pegawai" class="form-control" id="status_pegawai">
                                 <option>PNS</option>
                                 <option>P3K</option>
-                                <option>Honorer</option>
+                                <option>P3K PW</option>
                             </select>
                         </div>
                         <div class="form-group">

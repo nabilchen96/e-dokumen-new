@@ -39,6 +39,7 @@
             </div>
         </div>
         
+        
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Golongan/Pangkat <sup class="text-danger">*</sup></label>

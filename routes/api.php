@@ -22,5 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth.token')->get('/data-pegawai', 'App\Http\Controllers\Api\ProfilPegawaiController@index');
 Route::middleware('auth.token')->get('/data-pegawai-v2', 'App\Http\Controllers\Api\ProfilPegawaiV2Controller@index');
 Route::middleware('auth.token')->get('/data-dokumen-pegawai', 'App\Http\Controllers\Api\DokumenPegawaiController@index');
+Route::middleware('auth.token')->get('/data-slks-pegawai', 'App\Http\Controllers\Api\SlksController@index');
+
+
 Route::middleware('auth.token')->get('/data-unit-kerja', 'App\Http\Controllers\Api\UnitKerjaController@index');
 Route::middleware('auth.token')->get('/data-bukan-pegawai', 'App\Http\Controllers\Api\NotPegawaiController@index');

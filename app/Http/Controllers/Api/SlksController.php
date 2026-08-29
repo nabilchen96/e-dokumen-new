@@ -104,6 +104,6 @@ class SlksController extends Controller
         // 🔢 Urutkan hasil
         $result = $result->sortBy(['name', 'masa_kerja'])->values();
 
-        return response()->json(['data' => $result]);
+        return response()->json($result, 200);
     }
 }
